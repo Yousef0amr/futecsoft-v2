@@ -1,0 +1,215 @@
+.menu {
+    display: flex;
+    flex-direction: column;
+
+    list-style: none;
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+    margin: 0;
+    background-color: var(--background-color-dark);
+    gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+
+.menu li {
+    color: white;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+}
+
+.menu li svg {
+    color: rgba(255, 255, 255, 0.38);
+}
+
+
+.menu::-webkit-scrollbar {
+    width: 8px;
+
+}
+
+.menu::-webkit-scrollbar-track {
+    background: var(--background-color-dark);
+
+}
+
+.menu::-webkit-scrollbar-thumb {
+    transition: 0.5s;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.menu:hover::-webkit-scrollbar-thumb {
+    background: var(--border-color-1);
+
+}
+
+/* .menu li:hover {
+    background-color: rgb(41.5, 48, 61);
+} */
+
+/* .menu li:hover svg {
+    color: white;
+} */
+
+
+/* From Uiverse.io by Creatlydev */
+.toggle {
+    background-color: var(--background-color);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+.input {
+    display: none;
+}
+
+.icon {
+    grid-column: 1 / 1;
+    grid-row: 1 / 1;
+    transition: transform 500ms;
+}
+
+.icon--moon {
+    transition-delay: 50ms;
+}
+
+.icon--sun {
+    transform: scale(0);
+}
+
+#switch:checked+.icon--moon {
+    transform: rotate(360deg) scale(0);
+}
+
+#switch:checked~.icon--sun {
+    transition-delay: 50ms;
+    transform: scale(1) rotate(360deg);
+}
+
+
+.language-popup {
+    /* total */
+    --total_text_color: #e0e0e0;
+    /* button */
+    --btn_bg: #e0e0e0;
+    --btn_height: 2em;
+    --btn_border_radius: 0.3125em;
+    --btn_outline_width: 0.0625em;
+    --btn_outline_color: #A0A0A0;
+    --btn_outline_offset: 0.0625em;
+    --btn_gap: 0.3125em;
+    /* list */
+    --list_padding: 0.5em;
+    --list_bg: var(--btn_bg);
+    --list_border_radius: var(--btn_border_radius);
+    --list_gap: 0.1875em;
+    --list_btn_hover_bg: #5A5656;
+    --list_btn_active: #b9b9b970;
+    --list_btn_border_radius: 0.25em;
+    --list_btn_padding: 0.35em 1em;
+    --list_btn_gap: 0.4375em;
+    --list_btn_outline_width: 0.0625em;
+    --list_btn_outline_color: rgb(212, 210, 210);
+    --list_offset: 0.35em;
+    --list_btn_font_size: 14px;
+
+}
+
+
+#arabic,
+#english,
+#checkboxlang,
+.language-popup__list-container {
+    display: none;
+    transition: 1s;
+}
+
+.language-popup {
+    color: var(--total_text_color);
+    font-family: var(--total_font_family);
+    position: relative;
+    user-select: none;
+    height: 24px;
+}
+
+.language-popup__list-container {
+    position: absolute;
+    top: calc(var(--btn_height) + var(--list_offset));
+}
+
+.language-popup__button {
+    width: 46px;
+
+    text-align: center;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: var(--btn_gap);
+    border: none;
+    color: var(--text-color);
+    outline: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.4s;
+
+}
+
+.language-popup__list {
+    margin: 0;
+    list-style-type: none;
+    padding: var(--list_padding);
+    border-radius: var(--list_border_radius);
+    background-color: var(--border-color-1);
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--list_gap);
+
+}
+
+.language-popup__list label {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    column-gap: var(--list_btn_gap);
+    padding: var(--list_btn_padding);
+    border-radius: var(--list_btn_border_radius);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.language-popup__list label span {
+    font-size: var(--list_btn_font_size);
+}
+
+/* actions */
+
+#checkboxlang:checked~.language-popup__button {
+    border: none;
+    outline: none;
+    color: var(--secondary-color);
+}
+
+#checkboxlang:checked~.language-popup__list-container {
+    display: block;
+}
+
+.language-popup__list label:hover {
+    background-color: var(--primary-color);
+}
+
+#arabic:checked~.language-popup__list-container label[for="arabic"],
+#english:checked~.language-popup__list-container label[for="english"] {
+    background-color: var(--list_btn_active);
+}

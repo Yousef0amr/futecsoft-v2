@@ -1,0 +1,25 @@
+export const BASEURL = 'https://retailapi.futec-soft.com/';
+export const VERSION = 'v1.0'
+export const PROFILE = `Profile/${VERSION}`;
+export const BRANCHES = `Branches/${VERSION}`;
+export const CATEGORIES = `Category/${VERSION}`;
+export const FLAVORS = `Flavors/${VERSION}`;
+export const OFFERS = `Offers/${VERSION}`;
+export const DISCOUNT = `Discount/${VERSION}`;
+export const CURRENCIES = `CurrenciesGuide/${VERSION}`;
+export const PAYMENTS_TYPES = `PaymentsType/${VERSION}`;
+export const SUPPLIERS = `Suppliers/${VERSION}`;
+export const DELIVERY_COMPANY = `DeliveyCompany/${VERSION}`;
+export const ITEMS = `Item/${VERSION}`;
+export const TAXES = `Tax/${VERSION}`;
+export const UNITS = `Units/${VERSION}`;
+export const USERS = `Users/${VERSION}`;
+export const USERS_GROUP = `UsersGroup/${VERSION}`;
+export const USERS_PERMISSIONS = `UsersPermissions/${VERSION}`;
+export const INVOICES = `PurchaseInvoice/${VERSION}`;
+export const VOUCHER_INPUT = `VoucherInput/${VERSION}`;
+export const VOUCHER_OUTPUT = `VoucherOutput/${VERSION}`;
+export const VOUCHER_TRANSFER = `VoucherTransfer/${VERSION}`;
+export const REPORTS_CONTROLLER = `ReportsController/${VERSION}`;
+export const POS_STATIONS = `POSStations/${VERSION}`;
+
