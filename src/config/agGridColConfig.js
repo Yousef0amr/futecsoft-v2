@@ -420,6 +420,100 @@ export const useInvoicesItemsColDefs = ({
     ], [t, products, units, getSelectedVaule]);
 };
 
+
+export const useItemsUnitsColDefs = ({
+    units = []
+}) => {
+    const { t } = useTranslation();
+
+    return useMemo(() => [
+        {
+            field: 'UnitId',
+            headerName: t(AppStrings.unit),
+            type: 'singleSelect',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            valueOptions: units.map((u) => u.value),
+            getOptionLabel: (value) => {
+                const selectedUnit = units.find((u) => u.value === value);
+                return selectedUnit ? selectedUnit.label : '';
+            },
+            required: true
+        },
+        {
+            field: 'Barcode',
+            headerName: t(AppStrings.barcode),
+            type: 'number',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: true
+        },
+        {
+            field: 'Factor',
+            headerName: t(AppStrings.factor),
+            type: 'number',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: true
+        },
+        {
+            field: 'IsSmall',
+            headerName: t(AppStrings.isSmall),
+            type: 'singleSelect',
+            valueOptions: [true, false],
+            getOptionLabel: (v) => v === true ? t(AppStrings.yes) : t(AppStrings.no),
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: false,
+            defaultValue: false
+        },
+        {
+            field: 'Price1',
+            headerName: t(AppStrings.price1),
+            type: 'number',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: false,
+            defaultValue: 0
+        },
+        {
+            field: 'Price2',
+            headerName: t(AppStrings.price2),
+            type: 'number',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: false,
+            defaultValue: 0
+        },
+        {
+            field: 'Price3',
+            headerName: t(AppStrings.price3),
+            type: 'number',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: false,
+            defaultValue: 0
+        },
+        {
+            field: 'Price4',
+            headerName: t(AppStrings.price4),
+            type: 'number',
+            flex: 1,
+            headerAlign: 'center',
+            editable: true,
+            required: false,
+            defaultValue: 0
+        },
+    ], [t, units]);
+};
+
 export const useVoucherInputItemsColDefs = ({
     products = [],
     units = [],

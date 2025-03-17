@@ -84,7 +84,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
 
 
     const columns = useInvoicesItemsColDefs({
-        products, units, getSelectedVaule: (value) => {
+        products: products ? products : [], units: units ? units : [], getSelectedVaule: (value) => {
             setSelectedItem(value);
             setInfoOpen(true);
         }

@@ -22,7 +22,7 @@ const InvoiceInfoFormFields = ({ register, errors, setValue, watch }) => {
         : [];
 
     return (
-        <FormFieldsComponent fields={invoiceInfFormFields} options={{ Warehouse: branches, Supplier: suppliers, PayType: payTypes }} setValue={setValue} errors={errors} register={register} watch={watch} />
+        <FormFieldsComponent fields={invoiceInfFormFields} options={{ Warehouse: branches ? branches : [], Supplier: suppliers ? suppliers : [], PayType: payTypes ? payTypes : [] }} setValue={setValue} errors={errors} register={register} watch={watch} />
     )
 }
 

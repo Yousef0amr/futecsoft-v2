@@ -440,5 +440,8 @@
     "try_in_a_while": "Try in a while",
     "relogin": "Re-Login",
     "relogin_message": "Please re-login",
-    "session_expired": "Session Expired"
+    "session_expired": "Session Expired",
+    "factor": "Factor",
+    "isSmall": "Is Small",
+    "add_new_item": "Add New Item"
 }

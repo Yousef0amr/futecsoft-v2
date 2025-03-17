@@ -262,13 +262,6 @@ export const menuList = [
                 // ]
             },
             {
-                label: AppStrings.assembled_material_components,
-                icon: faBarcode,
-                href: routes.product.compositeComponents,
-                subHref: routes.product.compositeComponentsAdd,
-                type: 'unExpanded',
-            },
-            {
                 label: AppStrings.prices_and_costs,
                 icon: faMoneyBill1Wave,
                 type: 'unExpanded',

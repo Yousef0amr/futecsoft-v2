@@ -63,9 +63,9 @@ function EditToolbar(props) {
                     startIcon={<AddIcon />}
                     onClick={handleClick}
                 >
-                    {t(AppStrings.add_new_product)}
+                    {t(AppStrings.add_new_item)}
                 </Button>
-                {props.info}
+
             </div>
 
 
@@ -75,7 +75,7 @@ function EditToolbar(props) {
 
 export default function TableWithCRUD({
     columns, onSubmit, handleOnDeleteClick, initialRows,
-    isDeleting, isLoading, info, setInfoOpen
+    isDeleting, isLoading,
 }) {
     const { t, i18n } = useTranslation()
     const [rows, setRows] = React.useState([]);
@@ -121,7 +121,7 @@ export default function TableWithCRUD({
             ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-        setInfoOpen(false);
+
 
         const editedRow = rows.find((row) => row.id === id);
         if (editedRow.isNew) {
@@ -249,7 +249,6 @@ export default function TableWithCRUD({
                         setRows,
                         setRowModesModel,
                         id: rows.length,
-                        info,
                         showQuickFilter: true,
                         columns: columns.map((column) => ({
                             field: column.field

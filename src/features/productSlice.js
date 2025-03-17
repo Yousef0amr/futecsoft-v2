@@ -114,6 +114,12 @@ export const productsApi = createApi({
             }),
 
         }),
+        getProductUnits: builder.query({
+            query: (id) => ({
+                url: `/AppGetItemUnits?ItemID=${id}`,
+            }),
+            transformResponse: (response) => response.Response
+        }),
         deleteProduct: builder.mutation({
             query: (id) => ({
                 url: `/Delete`,
@@ -153,6 +159,13 @@ export const productsApi = createApi({
             }),
             transformResponse: (response) => response.Response
         }),
+        updateProductUnits: builder.mutation({
+            query: (product) => ({
+                url: `/UpdateWithUnits`,
+                method: 'POST',
+                body: convertToFormData(product),
+            }),
+        }),
         getProductsCost: builder.query({
             query: ({ CatID, Warehouse }) => ({
                 url: `/GetItemsCost?CateID=${CatID}&Warehouse=${Warehouse}`,
@@ -185,5 +198,7 @@ export const {
     useDeleteComponentMutation,
     useGetAllProductsQuery,
     useLazyGetProductUnitsByIdQuery,
-    useGetProductsCostsQuery
+    useGetProductsCostsQuery,
+    useGetProductUnitsQuery,
+    useUpdateProductUnitsMutation
 } = productsApi;

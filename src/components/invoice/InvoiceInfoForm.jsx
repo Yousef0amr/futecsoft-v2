@@ -4,12 +4,12 @@ import InvoiceInfoFormFields from './InvoiceInfoFormFields';
 import FormComponent from './../common/FormComponent';
 import ListInvoiceItems from './ListInvoiceItems';
 
-const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { invoiceSchema, invoiceUpdatedSchema } = useValidators();
 
 
     return (
-        <FormComponent customSubmit={true} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />

@@ -49,7 +49,7 @@ const AddInvoice = () => {
                 <NavButton icon={'list'} title={AppStrings.list_invoices} path={routes.invoice.list} />
             </>
         }  >
-            <InvoiceInfoForm onSubmit={onSave} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice, ...defaultInvoiceItem }} />
+            <InvoiceInfoForm customSubmit={true} onSubmit={onSave} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice, ...defaultInvoiceItem }} />
         </FormCard>
     )
 }

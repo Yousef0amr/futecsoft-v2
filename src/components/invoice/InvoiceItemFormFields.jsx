@@ -1,11 +1,11 @@
 import React from 'react'
 import { invoiceItemsFormFields } from '../../config/formFields'
 import FormFieldsComponent from '../common/FormFieldsComponent'
-import { useGetProductUnitsByIdQuery, useGetStandardAndRawMaterialsQuery } from '../../features/productSlice'
+import { useGetProductUnitsByIdQuery, useGetAllProductsQuery } from '../../features/productSlice'
 
 const InvoiceItemFormFields = ({ register, errors, setValue, watch }) => {
 
-    const { data: productsData, isLoading: isLoadingProducts } = useGetStandardAndRawMaterialsQuery(
+    const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         watch('Warehouse') ? {
             Warehouse: watch('Warehouse'),
             pageNumber: 1,

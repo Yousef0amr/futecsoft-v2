@@ -27,22 +27,7 @@ const MainMenuValidators = () => {
         NameAr: yup.string().required(t(AppStrings.productNameAr_required)).nullable(),
         NameEn: yup.string().required(t(AppStrings.productNameEn_required)).nullable(),
         Father: yup.string().required(t(AppStrings.category_required)).nullable(),
-        Barcode: yup.string().required(t(AppStrings.barcode_required)).nullable(),
-        Price: yup
-            .string()
-            .required(t(AppStrings.price_required))
-            .nullable(),
-        Price2: yup
-            .string()
-            .nullable(),
-        Price3: yup
-            .string()
-            .nullable(),
-        Price4: yup
-            .string()
-            .nullable(),
         Warehouse: yup.array().min(1).required(t(AppStrings.branch_required)).nullable(),
-        UnitID: yup.string().required(t(AppStrings.unit_required)).nullable(),
         TaxPercentage: yup.string().optional(),
         Discountable: yup.boolean().optional(),
         IsService: yup.boolean().optional(),
