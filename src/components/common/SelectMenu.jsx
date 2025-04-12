@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FormControl, MenuItem, Select, Checkbox, TextField } from '@mui/material';
+import { FormControl, MenuItem, Select, Checkbox } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AppStrings from '../../config/appStrings';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -22,30 +22,34 @@ const SelectMenu = ({
 
     const handleClose = () => {
         setOpen(false);
-        setSearchTerm(''); // Clear search term when dropdown is closed
+        setSearchTerm('');
     };
 
     const handleOpen = () => setOpen(true);
 
-    const selectedValue = multiple
-        ? Array.isArray(watch(name)) ? watch(name) : []
-        : watch(name) || (options.length > 0 ? options[0].value : "");
+    const availableOptionValues = options.map(opt => String(opt.value));
+    const rawValue = watch(name);
 
-    // Filter options based on the search term
+    const selectedValue = multiple
+        ? Array.isArray(rawValue)
+            ? rawValue.map(String).filter(val => availableOptionValues.includes(val))
+            : []
+        : rawValue !== undefined && availableOptionValues.includes(String(rawValue))
+            ? String(rawValue)
+            : '';
+
     const filteredOptions = useMemo(() => {
-        return options.filter((option) =>
+        return options.filter(option =>
             option.label.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [options, searchTerm]);
 
     const menuItems = useMemo(() => (
         filteredOptions.length > 0 ? (
-            filteredOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+            filteredOptions.map(option => (
+                <MenuItem key={option.value} value={String(option.value)}>
                     {multiple && (
-                        <Checkbox
-                            checked={selectedValue.includes(option.value)}
-                        />
+                        <Checkbox checked={selectedValue.includes(String(option.value))} />
                     )}
                     {option.label}
                 </MenuItem>
@@ -59,17 +63,19 @@ const SelectMenu = ({
 
     useEffect(() => {
         if (options.length > 0 && selectedValue !== undefined) {
-            if (watch(name) !== selectedValue) {
-                setValue(name, selectedValue);
-                onChange({
+            const currentValue = watch(name);
+            const newValue = multiple ? selectedValue : String(selectedValue);
+            if (String(currentValue) !== String(newValue)) {
+                setValue(name, newValue);
+                onChange?.({
                     target: {
                         name,
-                        value: selectedValue,
+                        value: newValue,
                     },
                 });
             }
         }
-    }, [options, selectedValue, name, setValue, onChange, watch]);
+    }, [options, selectedValue, name, setValue, onChange, watch, multiple]);
 
     return (
         <FormControl className="select-menu" style={{ width: '100%' }}>
@@ -91,12 +97,14 @@ const SelectMenu = ({
                     e.preventDefault();
                 }}
                 onChange={(event) => {
-                    const value = event.target.value;
+                    const value = multiple
+                        ? event.target.value.map(String)
+                        : String(event.target.value);
                     setValue(name, value);
-                    onChange({
+                    onChange?.({
                         target: {
                             name,
-                            value: multiple ? [...value] : value,
+                            value,
                         },
                     });
                 }}
@@ -135,17 +143,19 @@ const SelectMenu = ({
                 }}
                 renderValue={(selected) => {
                     if (multiple) {
-                        return selected.length === 0 ? t(AppStrings.choose) : selected.map(val => options.find(opt => opt.value === val)?.label).join(', ');
+                        return selected.length === 0
+                            ? t(AppStrings.choose)
+                            : selected
+                                .map(val => options.find(opt => String(opt.value) === String(val))?.label)
+                                .filter(Boolean)
+                                .join(', ');
                     }
-                    const valueSelected = options.find(opt => +opt.value === +selected)
-                    return valueSelected?.label;
+                    const valueSelected = options.find(opt => String(opt.value) === String(selected));
+                    return valueSelected?.label || t(AppStrings.choose);
                 }}
             >
-
                 <MenuItem>
-
                     <input
-
                         placeholder={t(`${AppStrings.search}`)}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -164,11 +174,8 @@ const SelectMenu = ({
                             color: 'var(--text-color)',
                             border: 'none',
                             outline: 'none',
-
                         }}
                     />
-
-
                 </MenuItem>
                 {menuItems}
             </Select>

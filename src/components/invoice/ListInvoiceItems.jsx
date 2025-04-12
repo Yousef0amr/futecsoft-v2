@@ -55,7 +55,8 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
         const operationType = data.isNew ? "add" : "update";
         setInfoOpen(false);
 
-        const invoiceData = { ...invoice, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID, ItemDiscountPercentage: data.DiscountPercentage, ItemDiscount: data.Discount }
+        const invoiceData = { ...invoice, DocID: invoice.DocID, LineId: data.id, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID, ItemDiscountPercentage: data.DiscountPercentage, ItemDiscount: data.Discount }
+
         if (data.id === 0) {
             return await onFirstSubmit(invoiceData)
         }
@@ -75,7 +76,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
     const handleOnDeleteClick = async (data) => {
         return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID },
+            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID, LineID: data.id },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
@@ -107,9 +108,8 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
                         </p>
                         <div className='d-flex gap-2'>
                             {
-                                unitsData?.map((item) =>
-                                    <Button disabled classsName='fw-bold fs-6' variant='danger' size='sm' key={item.UnitId
-                                    }>{item.UnitAr}</Button>
+                                unitsData?.map((item, index) =>
+                                    <Button key={index} disabled classsName='fw-bold fs-6' variant='danger' size='sm'>{item.UnitAr}</Button>
                                 )
                             }
                         </div>
@@ -127,7 +127,8 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
                     Qty: 0,
                     UnitPrice: 0,
                     DiscountPercentage: 0,
-                    Discount: 0
+                    Discount: 0,
+
                 }]} />}
         </FormCard>
     )
