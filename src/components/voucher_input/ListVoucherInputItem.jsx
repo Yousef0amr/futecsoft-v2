@@ -88,30 +88,13 @@ const ListVoucherInputItem = ({ voucher }) => {
     return (
         <FormCard icon={faTruck} title={t(AppStrings.list_products)} >
             {!isLoadingProducts && <TableWithCRUD
-                info={
-                    infoOpen && <div className='fs-6 d-flex align-items-center  gap-2'>
-                        <p className='mb-0'>
-                            {
-                                t(AppStrings.units_can_used)
-                            }
-                        </p>
-                        <div className='d-flex gap-2'>
-                            {
-                                unitsData?.map((item) =>
-                                    <Button disabled classsName='fw-bold fs-6' variant='danger' size='sm' key={item.UnitId
-                                    }>{item.UnitAr}</Button>
-                                )
-                            }
-                        </div>
-                    </div>
-                }
-                setInfoOpen={setInfoOpen}
                 isLoading={isLoading}
                 isDeleting={isDeleting}
-                handleOnDeleteClick={handleOnDeleteClick}
-                onSubmit={onSubmit}
+                onDelete={handleOnDeleteClick}
+                onSave={onSubmit}
                 columns={columns}
-                initialRows={data} />}
+                initialData={data} 
+                />}
         </FormCard>
     )
 }

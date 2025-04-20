@@ -72,26 +72,12 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
     return (
         <FormCard icon={faWeight} title={t(AppStrings.list_products)} >
             <TableWithCRUD
-
-                info={
-                    []
-                }
-                setInfoOpen={() => { }}
                 isLoading={isLoading}
                 isDeleting={false}
-                handleOnDeleteClick={() => { }}
-                onSubmit={onSubmit}
+                onDelete={() => { }}
+                onSave={onSubmit}
                 columns={columns}
-                initialRows={data ? data : [{
-                    UnitId: 0,
-                    Barcode: product.Barcode ? product.Barcode : 0,
-                    Price1: 0,
-                    Price2: 0,
-                    Price3: 0,
-                    Price4: 0,
-                    Factor: 0,
-                    IsSmall: false
-                }]} />
+                initialRows={data} />
         </FormCard>
     )
 }

@@ -1,241 +1,154 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import {
-    GridRowModes,
-    DataGrid,
-    GridToolbarContainer,
-    GridActionsCellItem,
-    GridRowEditStopReasons,
-    GridToolbarQuickFilter
-} from '@mui/x-data-grid';
-import { enUS, arSD } from '@mui/x-data-grid/locales';
-import { useTranslation } from 'react-i18next';
-import AppStrings from '../../config/appStrings';
-import DialogModel from './DialogModel';
-import DeleteComponent from './DeleteComponent';
+import React, { useMemo, useState, useRef, useEffect } from "react";
+import { AgGridReact } from "ag-grid-react";
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { Button } from "@mui/material";
+import AppStrings from "../../config/appStrings";
+import { useTranslation } from "react-i18next";
+import { AG_GRID_LOCALE_EG, AG_GRID_LOCALE_EN } from '@ag-grid-community/locale';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd, faSave } from "@fortawesome/free-solid-svg-icons";
+import { DeleteOutline } from "@mui/icons-material";
+import DialogModel from './../../components/common/DialogModel';
+import DeleteComponent from './../../components/common/DeleteComponent';
 
-function EditToolbar({ columns, id, setRows, setRowModesModel }) {
+
+const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting }) => {
+    const gridRef = useRef();
     const { t, i18n } = useTranslation();
+    const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);
+    const localeText = useMemo(() => (isRtl ? AG_GRID_LOCALE_EG : AG_GRID_LOCALE_EN), [isRtl]);
 
-    const handleClick = () => {
-        const defaultData = columns.reduce((acc, column) => {
-            acc[column.field] = '';
-            return acc;
-        }, {});
+    const [rowData, setRowData] = useState([]);
+    const [dirtyRows, setDirtyRows] = useState(new Set());
+    const [open, setOpen] = useState({ data: null, isOpen: false });
 
-        const newRow = { id, ...defaultData, isNew: true };
+    const containerStyle = useMemo(() => ({ width: "100%", height: "60vh" }), []);
+    const defaultColDef = useMemo(() => ({ resizable: true, flex: 1, editable: true }), []);
+    const initialized = useRef(false);
 
-        setRows(oldRows => [...oldRows, newRow]);
-        setRowModesModel(oldModel => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit }
-        }));
+    useEffect(() => {
+        if (!isLoading && !initialized.current) {
+            const data = initialData.map((row, index) => ({ id: index, ...row }));
+            setRowData(data);
+            initialized.current = true;
+        }
+    }, [initialData, isLoading]);
+
+    const handleAddRow = () => {
+        const newRow = {
+            id: rowData.length + 1,
+            ...Object.fromEntries(columns.map(col => [col.field, ""]))
+        };
+        setRowData(prev => [...prev, newRow]);
+        setDirtyRows(prev => new Set(prev).add(newRow.id));
+    };
+
+    const handleOpen = (data) => {
+        setOpen({ data, isOpen: true });
+    };
+
+    const handleCancel = () => {
+        setOpen({ data: null, isOpen: false });
+    };
+
+    const handleSaveAll = () => {
+        const updatedRows = rowData.filter(row => dirtyRows.has(row.id));
+        if (updatedRows.length > 0) {
+            updatedRows.map(
+                (row) => onSave(row)
+            )
+            setDirtyRows(new Set());
+        }
+    };
+
+    const colDefs = useMemo(() => [
+        {
+            headerName: t(AppStrings.actions),
+            field: "actions",
+            editable: false,
+            cellRenderer: (params) => (
+                <div className="buttonCell px-0 py-1">
+                    <button
+                        className="button-secondary removeButton "
+                        onClick={() => handleOpen(params.data)}
+                    >
+                        <DeleteOutline />
+                    </button>
+                </div>
+
+            ),
+        },
+        ...columns.map(col => ({ ...col, editable: true })),
+    ], [columns, t]);
+
+    const handleCellValueChanged = (params) => {
+        setDirtyRows(prev => {
+            const updated = new Set(prev);
+            updated.add(params.data.id);
+            return updated;
+        });
     };
 
     return (
-        <GridToolbarContainer
-            sx={{
-                display: 'flex',
-                flexDirection: 'row-reverse',
-                justifyContent: 'space-between',
-                padding: '10px'
-            }}
-        >
-            <div style={{ flexGrow: 1, textAlign: i18n.language === 'en' ? 'right' : 'left' }}>
-                <GridToolbarQuickFilter />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={containerStyle} className="ag-theme-alpine w-100 p-1 mt-4">
+            <div className="mb-3 d-flex gap-2">
                 <Button
+                    onClick={handleAddRow}
+                    className='d-flex align-items-center gap-2'
                     variant='outlined'
                     sx={{
-                        textTransform: 'capitalize',
+                        textTransform: "capitalize",
                         backgroundColor: 'var(--border-color-1)',
                         borderColor: 'var(--border-color-1)',
                         fontSize: '14px',
                         color: '#ccc'
                     }}
-                    startIcon={<AddIcon />}
-                    onClick={handleClick}
                 >
-                    {t(AppStrings.add_new_item)}
+                    <FontAwesomeIcon icon={faAdd} />
+                    {t(AppStrings.add_new_unit)}
+                </Button>
+
+                <Button
+                    onClick={handleSaveAll}
+                    disabled={dirtyRows.size === 0}
+                    className='d-flex align-items-center gap-2'
+                    variant='contained'
+                    sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: 'var(--primary-color)',
+                        fontSize: '14px',
+                        color: '#fff'
+                    }}
+                >
+                    <FontAwesomeIcon icon={faSave} />
+                    {t(AppStrings.save_all)}
                 </Button>
             </div>
-        </GridToolbarContainer>
-    );
-}
 
-export default function TableWithCRUD({
-    columns,
-    onSubmit,
-    handleOnDeleteClick,
-    initialRows,
-    isDeleting,
-    isLoading,
-    totalRowCount = 0 // ✅ added prop for proper pagination
-}) {
-    const { t, i18n } = useTranslation();
-    const [rows, setRows] = React.useState([]);
-    const [rowModesModel, setRowModesModel] = React.useState({});
-    const [open, setOpen] = React.useState({ data: null, isOpen: false });
-
-    const handleRowEditStop = (params, event) => {
-        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            event.defaultMuiPrevented = true;
-        }
-    };
-
-    React.useEffect(() => {
-        if (initialRows && Array.isArray(initialRows)) {
-            setRows(initialRows.map((row, index) => ({ ...row, id: index })));
-        }
-    }, [initialRows]);
-
-    const handleEditClick = id => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-    };
-
-    const handleSaveClick = data => () => {
-        setRowModesModel({ ...rowModesModel, [data.id]: { mode: GridRowModes.View } });
-    };
-
-    const handleDeleteClick = async () => {
-        const data = open.data;
-        const res = await handleOnDeleteClick(data.row);
-        handleClose();
-        if (res?.Success) {
-            setRows(rows.filter(row => row.id !== data.id));
-        }
-    };
-
-    const handleCancelClick = id => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true }
-        });
-
-        const editedRow = rows.find(row => row.id === id);
-        if (editedRow?.isNew) {
-            setRows(rows.filter(row => row.id !== id));
-        }
-    };
-
-    const processRowUpdate = async newRow => {
-        const res = await onSubmit(newRow);
-        if (res?.Success) {
-            const updatedRow = { ...newRow, isNew: false };
-            setRows(rows.map(row => (row.id === newRow.id ? updatedRow : row)));
-            return updatedRow;
-        }
-        setRows(rows => rows.filter(row => row.id !== newRow.id));
-        return {};
-    };
-
-    const handleRowModesModelChange = newRowModesModel => {
-        setRowModesModel(newRowModesModel);
-    };
-
-    const handleOpen = data => {
-        setOpen({ data, isOpen: true });
-    };
-
-    const handleClose = () => {
-        setOpen({ data: null, isOpen: false });
-    };
-
-    return (
-        <div dir={i18n.language === 'en' ? 'ltr' : 'rtl'} style={{ height: 500, width: '100%' }}>
-            <DataGrid
-                paginationMode="server"
-                rowCount={totalRowCount} // ✅ Fixed count warning
-                rows={rows}
-                density="compact"
-                editMode="row"
-                loading={isLoading}
-                columns={[
-                    {
-                        field: 'actions',
-                        type: 'actions',
-                        headerName: t(AppStrings.actions),
-                        width: 200,
-                        align: 'center',
-                        getActions: data => {
-                            const isInEditMode = rowModesModel[data.id]?.mode === GridRowModes.Edit;
-                            if (isInEditMode) {
-                                return [
-                                    <GridActionsCellItem
-                                        icon={<SaveIcon />}
-                                        label="Save"
-                                        sx={{ color: 'primary.main' }}
-                                        onClick={handleSaveClick(data)}
-                                    />,
-                                    <GridActionsCellItem
-                                        icon={<CancelIcon />}
-                                        label="Cancel"
-                                        onClick={handleCancelClick(data.id)}
-                                        color="inherit"
-                                    />
-                                ];
-                            }
-
-                            return [
-                                <GridActionsCellItem
-                                    icon={<EditIcon />}
-                                    label="Edit"
-                                    onClick={handleEditClick(data.id)}
-                                    color="inherit"
-                                />,
-                                <GridActionsCellItem
-                                    icon={<DeleteIcon />}
-                                    label="Delete"
-                                    onClick={() => handleOpen(data)}
-                                    color="inherit"
-                                />
-                            ];
-                        }
-                    },
-                    ...columns
-                ]}
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                localeText={
-                    i18n.language === 'en'
-                        ? enUS.components.MuiDataGrid.defaultProps.localeText
-                        : arSD.components.MuiDataGrid.defaultProps.localeText
-                }
-                slots={{ toolbar: EditToolbar }}
-                slotProps={{
-                    toolbar: {
-                        setRows,
-                        setRowModesModel,
-                        id: rows.length,
-                        columns
-                    }
-                }}
-                sx={{
-                    '& .MuiDataGrid-cell': {
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    },
-                    '& .MuiDataGrid-columnHeader': {
-                        justifyContent: 'center'
-                    }
-                }}
+            <AgGridReact
+                ref={gridRef}
+                rowData={rowData}
+                columnDefs={colDefs}
+                defaultColDef={defaultColDef}
+                editType="fullRow"
+                stopEditingWhenCellsLoseFocus={true}
+                domLayout='normal'
+                enableRtl={isRtl}
+                localeText={localeText}
+                getRowId={(params) => params.data.id}
+                onCellValueChanged={handleCellValueChanged}
             />
+
             <DialogModel open={open.isOpen}>
                 <DeleteComponent
-                    handleDelete={handleDeleteClick}
-                    handleCancel={handleClose}
+                    handleDelete={() => onDelete(open.data, handleCancel)}
+                    handleCancel={handleCancel}
                     isLoading={isDeleting}
                 />
             </DialogModel>
         </div>
     );
-}
+};
+
+export default TableWithCRUD;
