@@ -428,7 +428,9 @@ const AppStrings = {
     visaReturnValueTotal: 'visaReturnValueTotal',
     page_not_found: 'page_not_found',
     go_back_home: 'go_back_home',
-
+    recieving_voucher: 'recieving_voucher',
+    provide_voucher: 'provide_voucher',
+    purchase_order: 'purchase_order',
 }
 
 

@@ -443,5 +443,8 @@
     "session_expired": "Session Expired",
     "factor": "Factor",
     "isSmall": "Is Small",
-    "add_new_item": "Add New Item"
+    "add_new_item": "Add New Item",
+    "recieving_voucher": "Recieving Vouchers",
+    "provide_voucher": "Provide Vouchers",
+    "purchase_order": "Purchase Orders"
 }

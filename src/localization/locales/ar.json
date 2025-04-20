@@ -434,5 +434,8 @@
     "units_can_used": "الوحدات المستخدمة لهذا المنتج",
     "factor": "التعبة",
     "isSmall": "وحدة صغرى",
-    "add_new_item": "اضافة عنصر جديد"
+    "add_new_item": "اضافة عنصر جديد",
+    "recieving_voucher": "سندات استلام",
+    "provide_voucher": "سندات تقديم",
+    "purchase_order": "سندات شراء"
 }

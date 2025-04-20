@@ -107,6 +107,21 @@ export const routes = {
         add: '/purchases/transfer-vouchers/add',
         edit: '/purchases/transfer-vouchers/edit'
     },
+    purchase_order: {
+        list: '/purchases/purchase-orders/list',
+        add: '/purchases/purchase-orders/add',
+        edit: '/purchases/purchase-orders/edit'
+    },
+    provide_voucher: {
+        list: '/purchases/provide-vouchers/list',
+        add: '/purchases/provide-vouchers/add',
+        edit: '/purchases/provide-vouchers/edit'
+    },
+    recieving_voucher: {
+        list: '/purchases/recieving-vouchers/list',
+        add: '/purchases/recieving-vouchers/add',
+        edit: '/purchases/recieving-vouchers/edit'
+    },
     reports: {
         fullSales: '/reports/full-sales',
         salesCategory: '/reports/sales-category',
@@ -326,7 +341,40 @@ export const menuList = [
                 //     { label: AppStrings.list, href: routes.transfer_voucher.list },
                 //     { label: AppStrings.add, href: routes.transfer_voucher.add },
                 // ]
-            }
+            },
+            {
+                label: AppStrings.purchase_order,
+                icon: faTruck,
+                type: 'unExpanded',
+                href: routes.purchase_order.list,
+                subHref: routes.purchase_order.add,
+                // subActions: [
+                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
+                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
+                // ]
+            },
+            {
+                label: AppStrings.provide_voucher,
+                icon: faTruck,
+                type: 'unExpanded',
+                href: routes.provide_voucher.list,
+                subHref: routes.provide_voucher.add,
+                // subActions: [
+                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
+                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
+                // ]
+            },
+            {
+                label: AppStrings.recieving_voucher,
+                icon: faTruck,
+                type: 'unExpanded',
+                href: routes.recieving_voucher.list,
+                subHref: routes.recieving_voucher.add,
+                // subActions: [
+                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
+                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
+                // ]
+            },
         ]
     },
     {
