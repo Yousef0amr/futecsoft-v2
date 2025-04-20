@@ -23,6 +23,9 @@ import { voucherOutputsApi, voucherOutputDetailsApi } from "../features/voucherO
 import { voucherTransferDetailsApi, voucherTransferApi } from "../features/voucherTransferSlice";
 import { reportsApi } from "../features/reportsControllerSlice";
 import { posStationApi } from "../features/posStationSlice";
+import { voucherProvideApi, voucherProvideDetailsApi } from "../features/voucherProvideSlice";
+import { voucherRecievingApi, voucherRecievingDetailsApi } from "../features/voucherRecievingSlice";
+import { purchaseOrderApi, purchaseOrderDetailsApi } from "../features/purchaseOrderSlice";
 
 
 const apis = [
@@ -31,7 +34,9 @@ const apis = [
     paymentTypesApi, suppliersApi, deliveryDiscountApi, userGroupsApi, usersApi,
     userPermissionsApi, invoicesApi, invoiceDetailsApi, voucherInputsApi,
     voucherInputDetailsApi, voucherOutputsApi, voucherOutputDetailsApi,
-    voucherTransferApi, voucherTransferDetailsApi, reportsApi, posStationApi
+    voucherTransferApi, voucherTransferDetailsApi, reportsApi, posStationApi,
+    voucherRecievingApi, voucherProvideApi,
+    voucherProvideDetailsApi, voucherRecievingDetailsApi, purchaseOrderApi, purchaseOrderDetailsApi
 ];
 
 

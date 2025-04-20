@@ -606,14 +606,55 @@ export const useVoucherInputColDefs = () => {
     ], [t]);
 }
 
+
+export const useVoucherRecievingColDefs = () => {
+    const { t } = useTranslation();
+
+    return useMemo(() => [
+        { field: "DocID", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
+        { field: "DocDate", headerName: t(AppStrings.date), filter: 'agTextColumnFilter' },
+        { field: "Reciever", headerName: t(AppStrings.reciever), filter: 'agTextColumnFilter' },
+        { field: "Sender", headerName: t(AppStrings.sender), filter: 'agTextColumnFilter' },
+        { field: "SourceID", headerName: t(AppStrings.source_id), filter: 'agTextColumnFilter' },
+        { field: "Note", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },
+    ], [t]);
+}
+export const useVoucherProvideColDefs = () => {
+    const { t } = useTranslation();
+
+    return useMemo(() => [
+        { field: "ReqNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
+        { field: "ReqDate", headerName: t(AppStrings.date), filter: 'agTextColumnFilter' },
+        { field: "FromDate", headerName: t(AppStrings.from_date), filter: 'agTextColumnFilter' },
+        { field: "ToDate", headerName: t(AppStrings.to_date), filter: 'agTextColumnFilter' },
+        { field: "DayName", headerName: t(AppStrings.day_name), filter: 'agTextColumnFilter' },
+        { field: "DiffRate", headerName: t(AppStrings.diff_rate), filter: 'agTextColumnFilter' },
+        { field: "AllDays", headerName: t(AppStrings.all_days), filter: 'agTextColumnFilter', cellRenderer: (params) => params.value ? t(AppStrings.yes) : t(AppStrings.no) },
+        { field: "Provided", headerName: t(AppStrings.provided), filter: 'agTextColumnFilter', cellRenderer: (params) => params.value ? t(AppStrings.yes) : t(AppStrings.no) },
+        { field: "FromWarehouse", headerName: t(AppStrings.from_branch), filter: 'agTextColumnFilter' },
+        { field: "Warehouse", headerName: t(AppStrings.to_branch), filter: 'agTextColumnFilter' },
+        { field: "Notes", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },
+    ], [t]);
+}
+export const usePurchaseOrderColDefs = () => {
+    const { t } = useTranslation();
+
+    return useMemo(() => [
+        { field: "DocID", headerName: t(AppStrings.invoiceId), filter: 'agTextColumnFilter' },
+        { field: "Status", headerName: t(AppStrings.status), filter: 'agTextColumnFilter' },
+        { field: "Warehouse", headerName: t(AppStrings.branch), filter: 'agTextColumnFilter' },
+        { field: "Note", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },
+    ], [t]);
+}
+
 export const useVoucherOutputColDefs = () => {
     const { t } = useTranslation();
 
     return useMemo(() => [
         { field: "DocNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
-        { field: "CreatedByDesc", headerName: t(AppStrings.createdBy), filter: 'agTextColumnFilter' },
         { field: "DocDate", headerName: t(AppStrings.date), filter: 'agTextColumnFilter' },
         { field: "Note", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },
+        { field: "PaymentDescAr", headerName: t(AppStrings.paymentType), filter: 'agTextColumnFilter' },
         { field: "WarehouseName", headerName: t(AppStrings.branch), filter: 'agTextColumnFilter' },
     ], [t]);
 }
@@ -623,8 +664,7 @@ export const useVoucherTransferColDefs = () => {
     const { t } = useTranslation();
 
     return useMemo(() => [
-        { field: "DocNo", headerName: t(AppStrings.invoiceId), filter: 'agTextColumnFilter' },
-        { field: "TransferNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
+        { field: "DocNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
         { field: "CreatedByDesc", headerName: t(AppStrings.createdBy), filter: 'agTextColumnFilter' },
         { field: "DocDate", headerName: t(AppStrings.date), filter: 'agTextColumnFilter' },
         { field: "Note", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },

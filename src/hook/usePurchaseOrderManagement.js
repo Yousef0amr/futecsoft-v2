@@ -1,9 +1,9 @@
-import { useAddPurchaseOrderMutation, useDeletePurchaseOrderDetailsMutation, useDeletePurchaseOrderMutation, useGetAllPurchaseOrderDetailsQuery, useGetPurchaseOrdersQuery, useUpdatePurchaseOrderDetailsMutation, useUpdatePurchaseOrderMutation, purchaseOrderDetailsApi, purchaseOrdersApi } from "../features/purchaseOrderSlice";
+import { useAddPurchaseOrderMutation, useDeletePurchaseOrderDetailsMutation, useDeletePurchaseOrderMutation, useGetAllPurchaseOrderDetailsQuery, useGetPurchaseOrdersQuery, useUpdatePurchaseOrderDetailsMutation, useUpdatePurchaseOrderMutation, purchaseOrderDetailsApi, purchaseOrderApi } from "../features/purchaseOrderSlice";
 import useEntityManagement from "./../hooks/useEntityManagement";
 
 const usePurchaseOrderManagement = () => {
     return useEntityManagement({
-        apiSlice: purchaseOrdersApi,
+        apiSlice: purchaseOrderApi,
         queryHook: useGetPurchaseOrdersQuery,
         addMutationHook: useAddPurchaseOrderMutation,
         updateMutationHook: useUpdatePurchaseOrderMutation,

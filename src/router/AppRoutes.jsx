@@ -7,6 +7,7 @@ import Loader from '../components/common/Loader';
 import { routes } from '../config/constants';
 import NotFound from '../components/common/NotFound';
 
+
 // Lazy imports
 const Login = React.lazy(() => import('../pages/Login'));
 const AddBranch = React.lazy(() => import('../pages/branch/AddBranch'));
@@ -81,7 +82,17 @@ const ItemTransactions = React.lazy(() => import('../pages/report/ItemTransactio
 const InventoryStatement = React.lazy(() => import('../pages/report/InventoryStatement'));
 const ItemsProfit = React.lazy(() => import('../pages/report/ItemsProfit'));
 const DailyProfits = React.lazy(() => import('../pages/report/DailyProfits'));
+const ListPurchaseOrder = React.lazy(() => import('../pages/purchase_order/ListPurchaseOrder'));
+const AddPurchaseOrder = React.lazy(() => import('../pages/purchase_order/AddPurchaseOrder'));
+const EditPurchaseOrder = React.lazy(() => import('../pages/purchase_order/EditPurchaseOrder'));
 
+const ListVoucherProvide = React.lazy(() => import('../pages/voucher_provide/ListVoucherProvide'));
+const AddVoucherProvide = React.lazy(() => import('../pages/voucher_provide/AddVoucherProvide'));
+const EditVoucherProvide = React.lazy(() => import('../pages/voucher_provide/EditVoucherProvide'));
+
+const ListVoucherRecieving = React.lazy(() => import('../pages/voucher_recieving/ListVoucherRecieving'));
+const AddVoucherRecieving = React.lazy(() => import('../pages/voucher_recieving/AddVoucherRecieving'));
+const EditVoucherRecieving = React.lazy(() => import('../pages/voucher_recieving/EditVoucherRecieving'));
 
 
 
@@ -163,11 +174,26 @@ const pagesList = [
     { path: routes.output_voucher.list, component: <ListOutputVoucher /> },
     { path: routes.output_voucher.add, component: <AddOutputVoucher /> },
     { path: routes.output_voucher.edit, component: <EditOutputVoucher /> },
+
     //Transfer Vouchers
     { path: routes.transfer_voucher.list, component: <ListTransferVoucher /> },
     { path: routes.transfer_voucher.add, component: <AddTransferVoucher /> },
     { path: routes.transfer_voucher.edit, component: <EditTransferVoucher /> },
 
+    //Purchase Order
+    { path: routes.purchase_order.list, component: <ListPurchaseOrder /> },
+    { path: routes.purchase_order.add, component: <AddPurchaseOrder /> },
+    { path: routes.purchase_order.edit, component: <EditPurchaseOrder /> },
+
+    //Provide Voucher
+    { path: routes.provide_voucher.list, component: <    ListVoucherProvide /> },
+    { path: routes.provide_voucher.add, component: <AddVoucherProvide /> },
+    { path: routes.provide_voucher.edit, component: <EditVoucherProvide /> },
+
+    //Recieving Voucher
+    { path: routes.recieving_voucher.list, component: <ListVoucherRecieving /> },
+    { path: routes.recieving_voucher.add, component: <AddVoucherRecieving /> },
+    { path: routes.recieving_voucher.edit, component: <EditVoucherRecieving /> },
 ];
 
 const reportsPages = [

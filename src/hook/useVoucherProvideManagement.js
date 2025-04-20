@@ -1,9 +1,9 @@
-import { useAddVoucherProvideMutation, useDeleteVoucherProvideDetailsMutation, useDeleteVoucherProvideMutation, useGetAllVoucherProvideDetailsQuery, useGetVoucherProvidesQuery, useUpdateVoucherProvideDetailsMutation, useUpdateVoucherProvideMutation, voucherProvideDetailsApi, voucherProvidesApi } from "../features/voucherProvideSlice";
+import { useAddVoucherProvideMutation, useDeleteVoucherProvideDetailsMutation, useDeleteVoucherProvideMutation, useGetAllVoucherProvideDetailsQuery, useGetVoucherProvidesQuery, useUpdateVoucherProvideDetailsMutation, useUpdateVoucherProvideMutation, voucherProvideDetailsApi, voucherProvideApi } from "../features/voucherProvideSlice";
 import useEntityManagement from "./../hooks/useEntityManagement";
 
 const useVoucherProvideManagement = () => {
     return useEntityManagement({
-        apiSlice: voucherProvidesApi,
+        apiSlice: voucherProvideApi,
         queryHook: useGetVoucherProvidesQuery,
         addMutationHook: useAddVoucherProvideMutation,
         updateMutationHook: useUpdateVoucherProvideMutation,
@@ -13,7 +13,7 @@ const useVoucherProvideManagement = () => {
             pageNumber: 1,
             pageSize: 10,
         },
-        identifier: 'DocID'
+        identifier: 'ReqNo'
     });
 }
 

@@ -431,6 +431,25 @@ const AppStrings = {
     recieving_voucher: 'recieving_voucher',
     provide_voucher: 'provide_voucher',
     purchase_order: 'purchase_order',
+    add_new_voucher_receiving: 'add_new_voucher_receiving',
+    list_vouchers_receiving: 'list_vouchers_receiving',
+    reciever: 'reciever',
+    sender: 'sender',
+    source_id: 'source_id',
+    list_purchase_orders: 'list_purchase_orders',
+    purchase_order_deleted_successfully: 'purchase_order_deleted_successfully',
+    add_new_purchase_order: 'add_new_purchase_order',
+    status: "status",
+    day_name: "day_name",
+    diff_rate: "diff_rate",
+    all_days: "all_days",
+    provided: "provided",
+    list_vouchers_provide: "list_vouchers_provide",
+    add_new_voucher_provide: "add_new_voucher_provide",
+
+    edit_voucher_receiving: "edit_voucher_receiving",
+    edit_voucher_provide: "edit_voucher_provide",
+    edit_purchase_order: "edit_purchase_order",
 }
 
 

@@ -7,7 +7,6 @@ import convertToFormData from '../utils/convertToFormData.js';
 
 const transformVoucherRecievingData = (data) => ({
     ...data,
-    DocID: data.DocId,
     DocDate: data.DocDate
         ? new Date(data.DocDate).toISOString().split('T')[0]
         : null,

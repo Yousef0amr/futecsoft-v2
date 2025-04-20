@@ -1,9 +1,9 @@
-import { useAddVoucherRecievingMutation, useDeleteVoucherRecievingDetailsMutation, useDeleteVoucherRecievingMutation, useGetAllVoucherRecievingDetailsQuery, useGetVoucherRecievingsQuery, useUpdateVoucherRecievingDetailsMutation, useUpdateVoucherRecievingMutation, voucherRecievingDetailsApi, voucherRecievingsApi } from "../features/voucherRecievingSlice";
+import { useAddVoucherRecievingMutation, useDeleteVoucherRecievingDetailsMutation, useDeleteVoucherRecievingMutation, useGetAllVoucherRecievingDetailsQuery, useGetVoucherRecievingsQuery, useUpdateVoucherRecievingDetailsMutation, useUpdateVoucherRecievingMutation, voucherRecievingDetailsApi, voucherRecievingApi } from "../features/voucherRecievingSlice";
 import useEntityManagement from "./../hooks/useEntityManagement";
 
 const useVoucherRecievingManagement = () => {
     return useEntityManagement({
-        apiSlice: voucherRecievingsApi,
+        apiSlice: voucherRecievingApi,
         queryHook: useGetVoucherRecievingsQuery,
         addMutationHook: useAddVoucherRecievingMutation,
         updateMutationHook: useUpdateVoucherRecievingMutation,
