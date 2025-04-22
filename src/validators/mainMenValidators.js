@@ -1,6 +1,7 @@
 import AppStrings from "./../config/appStrings";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
+import { Source } from "@mui/icons-material";
 
 
 const MainMenuValidators = () => {
@@ -367,6 +368,19 @@ const MainMenuValidators = () => {
         FatherID: yup.string().required(t(AppStrings.categoryId_required)).nullable(),
     }
 
+    const voucherReceivingSchemaValidator = {
+        DocID: yup.string().required(t(AppStrings.voucherId)).nullable(),
+        DocDate: yup.string().required(t(AppStrings.date_required)).nullable(),
+        SourceID: yup.string().required(t(AppStrings.sourceId_required)).nullable(),
+        Sender: yup.string().required(t(AppStrings.sender_required)).nullable(),
+        Reciever: yup.string().required(t(AppStrings.reciever_required)).nullable(),
+        FromWarehouse: yup.string().required(t(AppStrings.from_branch)).nullable(),
+        Warehouse: yup.string().required(t(AppStrings.to_branch)).nullable(),
+        Note: yup.string().optional(),
+    }
+
+
+
     return {
         branchSchemaValidator,
         ItemTransactionSchemaValidator,
@@ -393,6 +407,7 @@ const MainMenuValidators = () => {
         invoiceSchemaValidator,
         invoiceUpdatedSchemaValidator,
         voucherInputSchemaValidator,
+        voucherReceivingSchemaValidator,
         voucherInputUpdatedSchemaValidator,
         voucherOutputSchemaValidator,
         voucherOutputUpdatedSchemaValidator,

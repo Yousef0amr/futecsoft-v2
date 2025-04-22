@@ -21,27 +21,22 @@ const ProductForm = ({ onSubmit, isLoading, customSubmit = false, onFirstSubmit,
                         <ProductImageField register={register} errors={errors} setValue={setValue} watch={watch} />
                         <ProductFormFields2 register={register} errors={errors} watch={watch} setValue={setValue} />
                     </Row>
-                    {
-                        isAdd && <>
-                            <ListProductUnits onFirstSubmit={onFirstSubmit} product={{
-                                ...defaultValuesEdit,
-                                Warehouse: watch('Warehouse'),
-                                Discountable: watch('Discountable'),
-                                IsService: watch('IsService'),
-                                IsActive: watch('IsActive'),
-                                Saleable: watch('Saleable'),
-                                Taxable: watch('Taxable'),
-                                Icon: watch('Icon'),
-                                Id: watch('Id'),
-                                NameAr: watch('NameAr'),
-                                NameEn: watch('NameEn'),
-                                Father: watch('Father'),
-                                TaxPercentage: watch('TaxPercentage'),
-                            }} />
-                        </>
-                    }
+                    <ListProductUnits onFirstSubmit={onFirstSubmit} product={{
+                        ...defaultValuesEdit,
+                        Warehouse: watch('Warehouse'),
+                        Discountable: watch('Discountable'),
+                        IsService: watch('IsService'),
+                        IsActive: watch('IsActive'),
+                        Saleable: watch('Saleable'),
+                        Taxable: watch('Taxable'),
+                        Icon: watch('Icon'),
+                        Id: watch('Id'),
+                        NameAr: watch('NameAr'),
+                        NameEn: watch('NameEn'),
+                        Father: watch('Father'),
+                        TaxPercentage: watch('TaxPercentage'),
+                    }} />
                 </>
-
             )}
         </FormComponent>
     );

@@ -10,7 +10,7 @@ import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import useUnitManagement from '../../hook/useUnitManagement'
 import Loader from '../common/Loader';
-import { Button } from 'react-bootstrap';
+
 
 const ListVoucherInputItem = ({ voucher }) => {
     const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID });
@@ -36,9 +36,6 @@ const ListVoucherInputItem = ({ voucher }) => {
             skip: !selectedItem
         }
     );
-    const [infoOpen, setInfoOpen] = React.useState(false);
-
-
 
     const units = !isLoadingUnits
         ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
@@ -49,7 +46,6 @@ const ListVoucherInputItem = ({ voucher }) => {
         : [];
     const onSubmit = async (data) => {
         const operationType = data.isNew ? "add" : "update";
-        setInfoOpen(false);
         return await handleEntityOperation({
             operation: operationType,
             data: { ...voucher, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID },
@@ -76,7 +72,6 @@ const ListVoucherInputItem = ({ voucher }) => {
     const columns = useVoucherInputItemsColDefs({
         products, units, getSelectedVaule: (value) => {
             setSelectedItem(value);
-            setInfoOpen(true);
         }
     })
 
@@ -93,8 +88,8 @@ const ListVoucherInputItem = ({ voucher }) => {
                 onDelete={handleOnDeleteClick}
                 onSave={onSubmit}
                 columns={columns}
-                initialData={data} 
-                />}
+                initialData={data}
+            />}
         </FormCard>
     )
 }

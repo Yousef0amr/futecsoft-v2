@@ -7,16 +7,13 @@ import ProductForm from '../../components/product/ProductForm'
 import EditComponent from '../../components/common/EditComponent'
 import useProductManagement from '../../hook/useProductManagement'
 import { routes } from '../../config/constants'
-import { useState } from 'react'
-import ListProductUnits from '../../components/product/ListProductUnits'
-import { Button } from 'react-bootstrap'
 import { Stack } from '@mui/material'
 
 
 const EditProduct = () => {
     const location = useLocation()
     const { t } = useTranslation();
-    const [addNew, setAddNew] = useState(false)
+
 
     return (
         <Stack gap={2}>
@@ -31,11 +28,6 @@ const EditProduct = () => {
                 Form={ProductForm}
                 editData={{ ...location.state, Icon: location.state.ImgPath ? location.state.ImgPath : 'لا يوجد صورة', Father: location.state.CatID, Warehouse: location.state.Tag.split(',') }}
             />
-
-            <Button variant="success" onClick={() => setAddNew(!addNew)}>{t(AppStrings.add_new_unit)}</Button>
-            {
-                addNew && <ListProductUnits product={location.state} onFirstSubmit={() => { }} />
-            }
         </Stack>
     )
 }

@@ -338,6 +338,46 @@ export const voucherTransferItemsFormFields = [
 ]
 
 
+export const purchaseOrderFormFields = [
+    { name: 'DocID', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
+    { name: 'LineDate', label: AppStrings.voucherId, required: false, type: 'text' },
+    { name: 'Status', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
+    { name: 'Warehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+]
+
+
+export const voucherRecievingFormFields = [
+    { name: 'DocID', label: AppStrings.voucherId, required: true, type: 'number', disabled: true },
+    { name: 'SourceID', label: AppStrings.source_id, required: false, type: 'text' },
+    { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'Sender', label: AppStrings.sender, required: false, type: 'text' },
+    { name: 'Reciever', label: AppStrings.reciever, required: false, type: 'text' },
+    { name: 'FromWarehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+    { name: 'Warehouse', label: AppStrings.to_branch, required: false, options: [], type: 'select' },
+    { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
+]
+
+
+export const voucherProvideFormFields = [
+    { name: 'ReqNo', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
+    { name: 'ByUser', label: AppStrings.voucherId, required: false, type: 'select' },
+    { name: 'ReqDate', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'Notes', label: AppStrings.note, required: false, type: 'text' },
+    { name: 'Manual', label: AppStrings.note, required: false, type: 'text' },
+    { name: 'FromDate', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'ToDate', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'AllDays', label: AppStrings.all_days, type: 'check' },
+    { name: 'Provided', label: AppStrings.all_days, type: 'check' },
+    { name: 'Posted', label: AppStrings.all_days, type: 'check' },
+    { name: 'Approved', label: AppStrings.all_days, type: 'check' },
+    { name: 'DayName', label: AppStrings.day_name, type: 'text' },
+    { name: 'DiffRate', label: AppStrings.diff_rate, type: 'text' },
+    { name: 'Warehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+    { name: 'FromWarehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+]
+
+
 export const reportFormFields = [
     { name: 'FromDate', label: AppStrings.from_date, required: true, type: 'date' },
     { name: 'ToDate', label: AppStrings.to_date, required: true, type: 'date' },

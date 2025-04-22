@@ -3,8 +3,7 @@ import useValidators from '../../hooks/useValidators';
 import { useTranslation } from 'react-i18next';
 import FormComponent from '../common/FormComponent';
 import VoucherInputFormFields from './VoucherInputFormFields';
-import VoucherInputItemFormFields from './VoucherInputItemFormFields';
-import AppStrings from '../../config/appStrings';
+import ListVoucherInputItem from './ListVoucherInputItem';
 
 const VoucherInputForm = ({ onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { voucherInputSchema, voucherInputUpdatedSchema } = useValidators();
@@ -15,12 +14,12 @@ const VoucherInputForm = ({ onSubmit, isLoading, defaultValuesEdit = {}, isAdd =
             {({ register, errors, setValue, watch }) =>
                 <>
                     <VoucherInputFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
-                    {
-                        isAdd && <>
-                            <p className="text-danger mt-3">{t(AppStrings.add_first_item_voucher)}</p>
-                            <VoucherInputItemFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
-                        </>
-                    }
+                    <ListVoucherInputItem voucher={
+                        {
+
+                        }
+                    } />
+
                 </>
             }
         </FormComponent>

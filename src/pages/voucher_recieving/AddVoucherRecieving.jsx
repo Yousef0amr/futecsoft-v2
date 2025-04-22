@@ -1,20 +1,20 @@
 import React from 'react';
-import useVoucherInputManagement from '../../hook/useVoucherInputManagement';
+import useVoucherRecievingManagement from '../../hook/useVoucherRecievingManagement';
 import { useTranslation } from 'react-i18next';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import FormCard from '../../components/common/FormCard';
 import NavButton from '../../components/common/NavButton';
-import { defaultInvoiceItem, defaultVoucherTypes, routes } from '../../config/constants';
+import { routes } from '../../config/constants';
 import useEntityOperations from '../../hooks/useEntityOperations';
-import { useGetCurrentVoucherInputKeyQuery } from '../../features/voucherInputSlice';
+import { useGetCurrentVoucherRecievingKeyQuery } from '../../features/voucherRecievingSlice';
 import AppStrings from '../../config/appStrings';
-import VoucherInputForm from '../../components/voucher_input/VoucherInputForm';
+import VoucherReceivingForm from '../../components/voucher_receiving/VoucherReceivingForm';
 
 const AddReceivingVoucher = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useVoucherInputManagement();
+    const { addEntity, isAdding, refetch } = useVoucherRecievingManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
-    const { data: currentKey } = useGetCurrentVoucherInputKeyQuery();
+    const { data: currentKey } = useGetCurrentVoucherRecievingKeyQuery();
 
     const onSubmit = async (data) => {
         handleEntityOperation({
@@ -28,18 +28,14 @@ const AddReceivingVoucher = () => {
 
     return (
         <FormCard icon={faArrowDown} title={t(AppStrings.add_new_voucher_receiving)} optionComponent={
-            <NavButton icon={'list'} title={AppStrings.list_vouchers_receiving} path={routes.receiving_voucher.list} />
+            <NavButton icon={'list'} title={AppStrings.list_vouchers_receiving} path={routes.recieving_voucher.list} />
         }>
-            <VoucherInputForm
-                isAdd={true}
+            <VoucherReceivingForm
                 isLoading={isAdding}
-                resetForm={!isAdding}
                 onSubmit={onSubmit}
                 defaultValuesEdit={{
                     DocID: currentKey,
                     DocDate: new Date().toISOString().split("T")[0],
-                    Vtype: defaultVoucherTypes.receivingVoucher,
-                    ...defaultInvoiceItem
                 }}
             />
         </FormCard>

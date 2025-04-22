@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import EditComponent from '../../components/common/EditComponent'
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons'
 import { routes } from '../../config/constants'
@@ -9,15 +9,13 @@ import AppStrings from '../../config/appStrings'
 import useInvoiceManagement, { useInvoiceItemsManagement } from '../../hook/useInvoiceManagement'
 
 import { Stack } from '@mui/material'
-import { Button } from 'react-bootstrap'
-import ListInvoiceItems from '../../components/invoice/ListInvoiceItems'
 import useEntityOperations from '../../hooks/useEntityOperations'
 
 
 const EditInvoice = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
-    const [addNew, setAddNew] = useState(false)
+
 
     const { addEntity, refetch } = useInvoiceItemsManagement({
         id: loaction.state?.DocID
@@ -48,10 +46,6 @@ const EditInvoice = () => {
                 Form={InvoiceInfoForm}
                 editData={loaction.state}
             />
-            <Button variant="success" onClick={() => setAddNew(!addNew)}>{t(AppStrings.add_item_for_invoice)}</Button>
-            {
-                addNew && <ListInvoiceItems invoice={loaction.state} onFirstSubmit={onFirstSubmit} />
-            }
         </Stack>
     )
 }

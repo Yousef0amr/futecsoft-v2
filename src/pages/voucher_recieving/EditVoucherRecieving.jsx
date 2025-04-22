@@ -4,9 +4,9 @@ import useVoucherRecievingManagement from '../../hook/useVoucherRecievingManagem
 import EditComponent from '../../components/common/EditComponent';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { routes } from '../../config/constants';
-import VoucherInputForm from '../../components/voucher_input/VoucherInputForm';
+import VoucherReceivingForm from '../../components/voucher_receiving/VoucherReceivingForm';
 import { Button, Stack } from 'react-bootstrap';
-import ListVoucherInputItem from '../../components/voucher_input/ListVoucherInputItem';
+import ListVoucherReceivingItems from '../../components/voucher_receiving/ListVoucherReceivingItems';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,8 @@ const EditReceivingVoucher = () => {
     const { t } = useTranslation();
     const [addNew, setAddNew] = useState(false);
 
+
+    console.log(location.state);
     return (
         <Stack gap={2}>
             <EditComponent
@@ -25,13 +27,9 @@ const EditReceivingVoucher = () => {
                 icon={faArrowDown}
                 title={t(AppStrings.edit_voucher_receiving) + ' | ' + location.state.DocID}
                 path={routes.recieving_voucher.list}
-                Form={VoucherInputForm}
+                Form={VoucherReceivingForm}
                 editData={location.state}
             />
-            <Button variant="success" onClick={() => setAddNew(!addNew)}>
-                {t(AppStrings.add_item_for_voucher)}
-            </Button>
-            {addNew && <ListVoucherInputItem voucher={location.state} />}
         </Stack>
     );
 };

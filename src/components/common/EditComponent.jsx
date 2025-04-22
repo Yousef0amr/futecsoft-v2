@@ -10,7 +10,6 @@ const EditComponent = ({ composite = false, icon, title, successMessage, errorMe
     const { handleEntityOperation } = useEntityOperations({ updateEntity })
 
     const onSubmit = async (data) => {
-        console.log(data)
         handleEntityOperation({
             operation: 'update',
             data,

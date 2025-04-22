@@ -1,13 +1,11 @@
 import React from 'react'
-import { useGetProductUnitsQuery, useUpdateProductUnitsMutation } from '../../features/productSlice'
+import { useDeleteComponentMutation, useGetProductUnitsQuery, useUpdateProductUnitsMutation } from '../../features/productSlice'
 import TableWithCRUD from '../../components/common/TableWithCRUD'
 import { useItemsUnitsColDefs } from '../../config/agGridColConfig'
 import useUnitManagement from '../../hook/useUnitManagement'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import AppStrings from '../../config/appStrings'
-import { faWeight } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from 'react-i18next'
-import FormCard from '../../components/common/FormCard'
 
 
 const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
@@ -17,11 +15,15 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
             skip: !product?.Id,
         }
     )
+
+
     const { t } = useTranslation();
     const [updateProductUnits, { isLoading: isUpdating }] = useUpdateProductUnitsMutation()
+    const [deleteComponent, { isLoading: isDeleting }] = useDeleteComponentMutation()
 
     const { handleEntityOperation } = useEntityOperations({
-        updateEntity: updateProductUnits
+        updateEntity: updateProductUnits,
+        deleteEntity: deleteComponent
     });
 
     const { data: units, isLoading: isLoadingUnits } = useUnitManagement();
@@ -29,6 +31,17 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
     const unitsData = !isLoadingUnits
         ? units?.map((item) => ({ value: item?.UnitID, label: item.Unit_AR }))
         : [];
+
+    const handleOnDeleteClick = async (data, handleCancel) => {
+        handleEntityOperation({
+            operation: "delete",
+            data: { ItemID: product.Id, SubItem: data.UnitId },
+            cacheUpdater: refetch,
+            successMessage: AppStrings.unit_deleted_successfully,
+            errorMessage: AppStrings.something_went_wrong,
+            finalCallback: handleCancel,
+        });
+    };
 
 
     const onSubmit = async (data) => {
@@ -44,12 +57,7 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
             IsSmall: data.IsSmall,
             Factor: data.Factor,
             Warehouse: product.Warehouse ? product.Warehouse : product.Tag,
-
             Icon: product.Icon ? product.Icon : 'لا يوجد صورة',
-        }
-
-        if (data.id === 0) {
-            return await onFirstSubmit(unitData)
         }
 
         return await handleEntityOperation({
@@ -58,7 +66,6 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
             cacheUpdater: refetch,
             successMessage: AppStrings.product_updated_successfully,
             errorMessage: AppStrings.something_went_wrong
-
         });
     };
 
@@ -70,15 +77,15 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
     )
 
     return (
-        <FormCard icon={faWeight} title={t(AppStrings.list_products)} >
-            <TableWithCRUD
-                isLoading={isLoading}
-                isDeleting={false}
-                onDelete={() => { }}
-                onSave={onSubmit}
-                columns={columns}
-                initialRows={data} />
-        </FormCard>
+
+        <TableWithCRUD
+            isLoading={isLoading}
+            isDeleting={isDeleting}
+            onDelete={handleOnDeleteClick}
+            onSave={onSubmit}
+            columns={columns}
+            initialData={data} />
+
     )
 }
 

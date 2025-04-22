@@ -341,7 +341,7 @@ export const useInvoicesColDefs = () => {
 export const useInvoicesItemsColDefs = ({
     products = [],
     units = [],
-    getSelectedVaule
+    getSelectedVaule,
 }) => {
     const { t } = useTranslation();
 
@@ -349,248 +349,351 @@ export const useInvoicesItemsColDefs = ({
         {
             field: 'ItemID',
             headerName: t(AppStrings.productId),
-            type: 'singleSelect',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            valueOptions: products.map((product) => product.value),
-            getOptionLabel: (value) => {
-                const selectedProduct = products.find((product) => product.value === value);
-                return selectedProduct ? selectedProduct.label : '';
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: products.map((p) => p.value),
             },
-            preProcessEditCellProps: (params) => {
-                getSelectedVaule(params.props.value);
-                return params.props;
+            valueFormatter: (params) => {
+                const selected = products.find((p) => p.value === params.value);
+                return selected ? selected.label : '';
             },
-            required: true
+            onCellValueChanged: (params) => {
+                getSelectedVaule?.(params.newValue);
+            },
         },
-
         {
             field: 'UnitID',
             headerName: t(AppStrings.unit),
-            type: 'singleSelect',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            valueOptions: units.map((unit) => unit.value),
-            getOptionLabel: (value) => {
-                const selectedUnit = units.find((unit) => unit.value === value);
-                return selectedUnit ? selectedUnit.label : '';
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: units.map((u) => u.value),
             },
-            required: true
+            valueParser: params => {
+                return Number(params.newValue);
+            },
+            valueFormatter: params => {
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            }
         },
         {
             field: 'Qty',
             headerName: t(AppStrings.quantity),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: true
+            valueParser: (params) => Number(params.newValue),
         },
         {
             field: 'UnitPrice',
             headerName: t(AppStrings.price),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: true
+            valueParser: (params) => Number(params.newValue),
         },
         {
             field: 'DiscountPercentage',
             headerName: t(AppStrings.discount_percentage),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: 0
+            valueParser: (params) => Number(params.newValue),
         },
         {
             field: 'Discount',
             headerName: t(AppStrings.taxValue),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: 0
+            valueParser: (params) => Number(params.newValue),
         },
     ], [t, products, units, getSelectedVaule]);
 };
 
 
-export const useItemsUnitsColDefs = ({
-    units = []
-}) => {
+export const useItemsUnitsColDefs = ({ units = [] }) => {
     const { t } = useTranslation();
 
     return useMemo(() => [
         {
             field: 'UnitId',
             headerName: t(AppStrings.unit),
-            type: 'singleSelect',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            valueOptions: units.map((u) => u.value),
-            getOptionLabel: (value) => {
-                const selectedUnit = units.find((u) => u.value === value);
-                return selectedUnit ? selectedUnit.label : '';
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: units.map(u => Number(u.value)),
             },
-            required: true
+            valueParser: params => {
+                return Number(params.newValue);
+            },
+            valueFormatter: params => {
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            },
         },
         {
             field: 'Barcode',
             headerName: t(AppStrings.barcode),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: true
+            valueParser: params => Number(params.newValue),
         },
         {
             field: 'Factor',
             headerName: t(AppStrings.factor),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: true
+            valueParser: params => Number(params.newValue),
         },
         {
             field: 'IsSmall',
             headerName: t(AppStrings.isSmall),
-            type: 'singleSelect',
-            valueOptions: [true, false],
-            getOptionLabel: (v) => v === true ? t(AppStrings.yes) : t(AppStrings.no),
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: false
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: ["true", "false"],
+            },
+            valueFormatter: params =>
+                params.value === "true" ? t(AppStrings.yes) : t(AppStrings.no),
         },
         {
             field: 'Price1',
             headerName: t(AppStrings.price1),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: 0
+            valueParser: params => Number(params.newValue),
         },
         {
             field: 'Price2',
             headerName: t(AppStrings.price2),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: 0
+            valueParser: params => Number(params.newValue),
         },
         {
             field: 'Price3',
             headerName: t(AppStrings.price3),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: 0
+            valueParser: params => Number(params.newValue),
         },
         {
             field: 'Price4',
             headerName: t(AppStrings.price4),
-            type: 'number',
             flex: 1,
-            headerAlign: 'center',
+            headerClass: 'ag-header-center',
             editable: true,
-            required: false,
-            defaultValue: 0
+            valueParser: params => Number(params.newValue),
         },
     ], [t, units]);
 };
-
 export const useVoucherInputItemsColDefs = ({
     products = [],
     units = [],
-    getSelectedVaule
+    getSelectedVaule,
 }) => {
     const { t, i18n } = useTranslation();
 
     return useMemo(() => [
         {
-            field: "ItemID", type: 'singleSelect', headerName: t(AppStrings.productId), flex: 1, editable: true, valueOptions: products.map((product) => product.value),
-            getOptionLabel: (value) => {
-                const selectedProduct = products.find((product) => product.value === value);
-                return selectedProduct ? selectedProduct.label : '';
+            field: 'ItemID',
+            headerName: t(AppStrings.productId),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: products.map((p) => p.value),
             },
-            preProcessEditCellProps: (params) => {
-                getSelectedVaule(params.props.value);
-                return params.props;
-            }, headerAlign: "center", filterable: true
+            valueFormatter: (params) => {
+                const selected = products.find((p) => p.value === params.value);
+                return selected ? selected.label : '';
+            },
+            onCellValueChanged: (params) => {
+                getSelectedVaule?.(params.newValue);
+            },
+            filter: true,
         },
         {
-            field: "UnitID",
+            field: 'UnitID',
             headerName: t(i18n.language === 'en' ? AppStrings.unitNameEn : AppStrings.unitNameAr),
             flex: 1,
-            type: 'singleSelect',
+            headerClass: 'ag-header-center',
             editable: true,
-            headerAlign: "center",
-            valueOptions: units.map((unit) => unit.value),
-            getOptionLabel: (value) => {
-                const selectedUnit = units.find((unit) => unit.value === value);
-                return selectedUnit ? selectedUnit.label : '';
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: units.map((u) => u.value),
             },
-            filterable: true
+            valueFormatter: (params) => {
+                const selected = units.find((u) => u.value === params.value);
+                return selected ? selected.label : '';
+            },
+            filter: true,
         },
-        { field: "Qty", headerName: t(AppStrings.quantity), flex: 1, editable: true, headerAlign: "center", filterable: true },
-        { field: "UnitPrice", headerName: t(AppStrings.price), flex: 1, editable: true, headerAlign: "center", filterable: true },
-    ], [t, i18n, products, units, getSelectedVaule]);
-}
+        {
+            field: 'Qty',
+            headerName: t(AppStrings.quantity),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'UnitPrice',
+            headerName: t(AppStrings.price),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+    ], [t, i18n.language, products, units, getSelectedVaule]);
+};
 
-export const useVoucherItemsColDefs = (
-    {
-        products = [],
-        units = [],
-        getSelectedVaule
-    }
-) => {
+export const useVoucherItemsColDefs = ({
+    products = [],
+    units = [],
+    getSelectedVaule,
+}) => {
     const { t, i18n } = useTranslation();
 
     return useMemo(() => [
         {
-            field: "ItemID", type: 'singleSelect', headerName: t(AppStrings.productId), flex: 1, editable: true, valueOptions: products.map((product) => product.value),
-            getOptionLabel: (value) => {
-                const selectedProduct = products.find((product) => product.value === value);
-                return selectedProduct ? selectedProduct.label : '';
+            field: 'ItemID',
+            headerName: t(AppStrings.productId),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: products.map((p) => p.value),
             },
-            preProcessEditCellProps: (params) => {
-                getSelectedVaule(params.props.value);
-                return params.props;
-            }, headerAlign: "center", filterable: true
+            valueFormatter: (params) => {
+                const selected = products.find((p) => p.value === params.value);
+                return selected ? selected.label : '';
+            },
+            onCellValueChanged: (params) => {
+                getSelectedVaule?.(params.newValue);
+            },
+            filter: true,
         },
         {
-            field: "UnitID",
+            field: 'UnitID',
             headerName: t(i18n.language === 'en' ? AppStrings.unitNameEn : AppStrings.unitNameAr),
             flex: 1,
-            type: 'singleSelect',
+            headerClass: 'ag-header-center',
             editable: true,
-            headerAlign: "center",
-            valueOptions: units.map((unit) => unit.value),
-            getOptionLabel: (value) => {
-                const selectedUnit = units.find((unit) => unit.value === value);
-                return selectedUnit ? selectedUnit.label : '';
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: units.map((u) => u.value),
             },
-            filterable: true
+            valueFormatter: (params) => {
+                const selected = units.find((u) => u.value === params.value);
+                return selected ? selected.label : '';
+            },
+            filter: true,
         },
-        { field: "Qty", headerName: t(AppStrings.quantity), flex: 1, editable: true, headerAlign: "center", filterable: true },
-        { field: "Cost", headerName: t(AppStrings.price), flex: 1, editable: true, headerAlign: "center", filterable: true },
-    ], [t, i18n, products, units, getSelectedVaule]);
-}
+        {
+            field: 'Qty',
+            headerName: t(AppStrings.quantity),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'Cost',
+            headerName: t(AppStrings.price),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+    ], [t, i18n.language, products, units, getSelectedVaule]);
+};
+
+
+export const useVoucherReceivingItemsColDefs = ({
+    products = [],
+    getSelectedVaule,
+}) => {
+    const { t, i18n } = useTranslation();
+
+    return useMemo(() => [
+        {
+            field: 'ItemID',
+            headerName: t(AppStrings.productId),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: products.map((p) => p.value),
+            },
+            valueFormatter: (params) => {
+                const selected = products.find((p) => p.value === params.value);
+                return selected ? selected.label : '';
+            },
+            filter: true,
+        },
+        {
+            field: 'SentQty',
+            headerName: t(AppStrings.sent_qty),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'RecievedQty',
+            headerName: t(AppStrings.received_qty),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'UnitPrice',
+            headerName: t(AppStrings.price),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'Difference',
+            headerName: t(AppStrings.diff_rate),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+    ], [t, i18n.language, products, getSelectedVaule]);
+};
+
 
 export const useVoucherInputColDefs = () => {
     const { t } = useTranslation();
