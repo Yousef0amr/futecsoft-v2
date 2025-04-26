@@ -5,12 +5,15 @@ import { useGetAllProductsQuery } from '../../features/productSlice'
 import AppStrings from '../../config/appStrings'
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useVoucherReceivingItemsColDefs } from './../../config/agGridColConfig'
+import useUnitManagement from '../../hook/useUnitManagement'
 
 
 
-const ListVoucherReceivingItems = ({ voucher }) => {
+const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
     const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherRecievingItemsManagement({ id: voucher.DocID });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
+    const [isAddItem, setIsAddItem] = React.useState(isAdd);
+    const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         voucher.Warehouse ? {
@@ -23,29 +26,60 @@ const ListVoucherReceivingItems = ({ voucher }) => {
         }
     );
 
+
+    const units = !isLoadingUnits
+        ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
+        : [];
     const products = !isLoadingProducts
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr }))
         : [];
 
     const onSubmit = async (data) => {
-        const operationType = data.isNew ? "add" : "update";
-        return await handleEntityOperation({
-            operation: operationType,
-            data: { ...voucher, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID },
-            cacheUpdater: refetch,
-            successMessage: operationType === "update"
-                ? AppStrings.product_updated_successfully
-                : AppStrings.product_added_successfully,
-            errorMessage: operationType === "add"
-                ? AppStrings.something_went_wrong
-                : AppStrings.material_already_added,
-        });
+
+        const products = data.reduce((acc, item,) => {
+            acc.push({
+                DocID: voucher.DocID,
+                ItemID: item.ItemID,
+                SentQty: item.SentQty,
+                RecievedQty: item.RecievedQty,
+                Difference: item.Difference,
+                Unit: item.Unit,
+                UnitPrice: item.UnitPrice,
+                Description: item.Description,
+                Warehouse: voucher.Warehouse,
+                LineID: 4
+            });
+            return acc;
+        }, []);
+
+        if (isAddItem) {
+            const invoiceData = {
+                ...voucher,
+                Voucher_Recieving_Insert_Details: products
+            }
+            const result = await onFirstSubmit(invoiceData)
+            if (result?.Success) {
+                setIsAddItem(false)
+            }
+            return;
+        }
+
+        Promise.all(data.map(async (item) => {
+            return await handleEntityOperation({
+                operation: "update",
+                data: { ...voucher, LineId: 4, WareHouse: voucher.Warehouse, ItemID: item.ItemID, SentQty: item.SentQty, RecievedQty: item.RecievedQty, Difference: item.Difference, Unit: item.UnitID, UnitPrice: item.UnitPrice, Description: item.Description },
+                cacheUpdater: refetch,
+                successMessage: AppStrings.product_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong
+            });
+        }))
+
     };
 
     const handleOnDeleteClick = async (data) => {
         handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: voucher.DocID, WareHouse: voucher.Warehouse, Unit: data.UnitID },
+            data: { ItemId: data.ItemID, DocID: voucher.DocID, WareHouse: voucher.Warehouse, Unit: data.UnitID, LineID: data.LineID },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
@@ -54,7 +88,7 @@ const ListVoucherReceivingItems = ({ voucher }) => {
 
 
     const columns = useVoucherReceivingItemsColDefs({
-        products
+        products, units
     })
 
     return (

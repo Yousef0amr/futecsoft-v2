@@ -16,6 +16,8 @@ const transformData = (data) => ({
 export const voucherTransferApi = createDynamicApi({
     reducerPath: 'voucherTransferApi',
     baseEndpoint: BASEURL + VOUCHER_TRANSFER,
+    active: true,
+    isJson: true,
     transformData
 });
 

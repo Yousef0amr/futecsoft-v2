@@ -18,6 +18,7 @@ export const invoicesApi = createDynamicApi({
     reducerPath: 'invoicesApi',
     baseEndpoint: BASEURL + INVOICES,
     transformData: (data) => transformData(data),
+    isJson: true,
     active: false
 });
 

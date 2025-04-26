@@ -455,5 +455,13 @@
     "add_new_voucher_provide": "إضافة سند صرف جديد",
     "edit_voucher_receiving": "تعديل سند الاستلام",
     "edit_voucher_provide": "تعديل سند الصرف",
-    "edit_purchase_order": "تعديل أمر الشراء"
+    "edit_purchase_order": "تعديل أمر الشراء",
+    "purchase_order_updated_successfully": "تم تحديث أمر الشراء بنجاح",
+    "purchase_order_added_successfully": "تم اضافة أمر الشراء بنجاح",
+    "available_quantity": "الكمية المتاحة",
+    "sent_qty": "الكمية المرسلة",
+    "received_qty": "الكمية المستلمة",
+    "posted": "منشور",
+    "approved": "موافق",
+    "manual": "يدوي"
 }

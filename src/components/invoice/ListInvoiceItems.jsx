@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import AppStrings from '../../config/appStrings'
-import { useTranslation } from 'react-i18next'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import { useInvoiceItemsManagement } from '../../hook/useInvoiceManagement'
 import useUnitManagement from '../../hook/useUnitManagement'
@@ -8,12 +7,12 @@ import { useInvoicesItemsColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 
-import Loader from '../common/Loader'
-const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
+
+const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
     const { data: allUnits } = useUnitManagement();
-    const { t } = useTranslation();
 
     const [selectedItem, setSelectedItem] = useState(null);
+    const [isAddItem, setIAdd] = useState(isAdd);
 
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         invoice?.Warehouse ? {
@@ -39,7 +38,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
 
     const units = !isLoadingUnits
-        ? allUnits?.map((item) => ({ value: item.UnitID.toString(), label: item.Unit_AR }))
+        ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
         : [];
 
     const products = !isLoadingProducts
@@ -48,15 +47,42 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
 
     const onSubmit = async (data) => {
 
-        const invoiceData = { ...invoice, DocID: invoice.DocID, LineId: data.id, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID, ItemDiscountPercentage: data.DiscountPercentage, ItemDiscount: data.Discount }
+        const products = data.reduce((acc, item,) => {
+            acc.push({
+                ItemId: item.ItemID,
+                Qty: item.Qty,
+                Unit: item.UnitID,
+                UnitPrice: item.UnitPrice,
+                ItemDiscountPercentage: item.DiscountPercentage,
+                ItemDiscount: item.Discount
+            });
+            return acc;
+        }, []);
 
-        return await handleEntityOperation({
-            operation: "update",
-            data: invoiceData,
-            cacheUpdater: refetch,
-            successMessage: AppStrings.product_added_successfully,
-            errorMessage: AppStrings.something_went_wrong
-        });
+        if (isAddItem) {
+            const invoiceData = {
+                ...invoice, DocID: invoice.DocID,
+                purchase_Invoice_Insert_Details: products
+            }
+            const result = await onFirstSubmit(invoiceData)
+
+            if (result?.Success) {
+                setIAdd(false)
+            }
+            return;
+        }
+
+        Promise.all(
+            products.map(async (item) => {
+                return await handleEntityOperation({
+                    operation: "add",
+                    data: { ...invoice, LindId: 4, UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                    cacheUpdater: refetch,
+                    successMessage: AppStrings.product_added_successfully,
+                    errorMessage: AppStrings.something_went_wrong
+                });
+            })
+        )
     };
 
     const handleOnDeleteClick = async (data, handleCancel) => {
@@ -76,10 +102,6 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [] }) => {
             setSelectedItem(value);
         }
     })
-
-    if (isLoadingProducts) {
-        return <Loader />;
-    }
 
     return (
         <TableWithCRUD

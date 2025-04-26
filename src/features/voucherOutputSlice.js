@@ -16,6 +16,8 @@ const transformData = (data) => ({
 export const voucherOutputsApi = createDynamicApi({
     reducerPath: 'voucherOutputsApi',
     baseEndpoint: BASEURL + VOUCHER_OUTPUT,
+    active: true,
+    isJson: true,
     transformData
 });
 
@@ -31,7 +33,7 @@ export const voucherOutputDetailsApi = createApi({
     endpoints: (builder) => ({
         getAllVoucherOutputDetails: builder.query({
             query: ({ id }) => ({
-                url: `/GetDetailsByDocNo?DocNo=${id}`,
+                url: `/GetDatailsByDocID?DocID=${id}`,
             }),
             keepUnusedDataFor: longCacheTime,
             transformResponse: (response) => response.Response || response,

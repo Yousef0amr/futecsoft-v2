@@ -92,7 +92,7 @@ export const productsApi = createApi({
             query: ({ product }) => ({
                 url: `/Insert`,
                 method: 'POST',
-                body: convertToFormData(product),
+                body: product,
             }),
             onQueryStarted: async (branch, { dispatch, queryFulfilled }) => {
                 try {

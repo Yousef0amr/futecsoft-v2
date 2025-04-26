@@ -7,15 +7,23 @@ import ListVoucherTransferItem from './ListVoucherTransferItem';
 
 
 
-const VoucherTransferForm = ({ onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const VoucherTransferForm = ({ customSubmit, onFirstSubmit, onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { voucherTransferSchema, voucherTransferUpdatedSchema } = useValidators();
 
     return (
-        <FormComponent isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? voucherTransferSchema : voucherTransferUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? voucherTransferSchema : voucherTransferUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
                     <VoucherTransferFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
-                    <ListVoucherTransferItem voucher={defaultValuesEdit} />
+                    <ListVoucherTransferItem voucher={
+                        {
+                            ...defaultValuesEdit,
+                            Note: watch('Note'),
+                            FromWarehouse: watch('FromWarehouse'),
+                            ToWarehouse: watch('ToWarehouse'),
+                            TransferNo: watch('TransferNo')
+                        }
+                    } isAdd={isAdd} onFirstSubmit={onFirstSubmit} />
                 </>
             }
         </FormComponent>

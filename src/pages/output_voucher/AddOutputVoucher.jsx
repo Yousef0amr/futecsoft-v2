@@ -17,8 +17,8 @@ const AddOutputVoucher = () => {
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherOutputKeyQuery();
 
-    const onSubmit = async (data) => {
-        handleEntityOperation({
+    const onFirstSubmit = async (data) => {
+        return await handleEntityOperation({
             operation: 'add',
             data,
             cacheUpdater: refetch,
@@ -32,7 +32,7 @@ const AddOutputVoucher = () => {
                 <NavButton icon={'list'} title={AppStrings.list_vouchers_output} path={routes.output_voucher.list} />
             </>
         }  >
-            <VoucherOutputForm isAdd={true} isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], DocType: defaultVoucherTypes.outputVoucher, ...defaultInvoiceItem }} />
+            <VoucherOutputForm isAdd={true} isLoading={isAdding} customSubmit={true} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], DocType: defaultVoucherTypes.outputVoucher, ...defaultInvoiceItem }} />
         </FormCard>
     )
 }

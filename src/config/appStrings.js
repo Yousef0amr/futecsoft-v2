@@ -17,6 +17,8 @@ const AppStrings = {
     print: 'print',
     factor: 'factor',
     isSmall: 'isSmall',
+    available_quantity: 'available_quantity',
+    purchase_order_added_successfully: 'purchase_order_added_successfully',
     add_new_item: 'add_new_item',
     save: 'save',
     cancel: 'cancel',
@@ -27,6 +29,7 @@ const AppStrings = {
     reset: 'reset',
     edit: 'edit',
     delete: 'delete',
+    manual: "manual",
     home: 'home',
     reload_page: 'reload_page',
     relogin: 'relogin',
@@ -450,6 +453,12 @@ const AppStrings = {
     edit_voucher_receiving: "edit_voucher_receiving",
     edit_voucher_provide: "edit_voucher_provide",
     edit_purchase_order: "edit_purchase_order",
+
+    sent_qty: "sent_qty",
+    received_qty: "received_qty",
+    posted: "posted",
+    approved: "approved",
+
 }
 
 

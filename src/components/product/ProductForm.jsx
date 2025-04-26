@@ -8,7 +8,7 @@ import ProductImageField from './ProductImageField';
 import ListProductUnits from './ListProductUnits';
 
 
-const ProductForm = ({ onSubmit, isLoading, customSubmit = false, onFirstSubmit, isAdd = false, defaultValuesEdit = {} }) => {
+const ProductForm = ({ isAdd, onSubmit, isLoading, customSubmit = false, onFirstSubmit, defaultValuesEdit = {} }) => {
     const { productSchema } = useValidators();
 
 
@@ -21,7 +21,7 @@ const ProductForm = ({ onSubmit, isLoading, customSubmit = false, onFirstSubmit,
                         <ProductImageField register={register} errors={errors} setValue={setValue} watch={watch} />
                         <ProductFormFields2 register={register} errors={errors} watch={watch} setValue={setValue} />
                     </Row>
-                    <ListProductUnits onFirstSubmit={onFirstSubmit} product={{
+                    <ListProductUnits isAdd={isAdd} onFirstSubmit={onFirstSubmit} product={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
                         Discountable: watch('Discountable'),

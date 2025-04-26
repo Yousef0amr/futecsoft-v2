@@ -8,16 +8,15 @@ import NavButton from '../../components/common/NavButton';
 import useProductManagement from '../../hook/useProductManagement';
 import { defaultProductValues, routes } from '../../config/constants';
 import useEntityOperations from '../../hooks/useEntityOperations';
-import useNotification from '../../hooks/useNotification';
+
 
 const AddProduct = () => {
     const { t } = useTranslation();
     const { addEntity, isAdding, refetch } = useProductManagement()
     const { handleEntityOperation } = useEntityOperations({ addEntity });
 
-    const { success } = useNotification();
     const onFirstSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data: { product: data },
             cacheUpdater: refetch,
@@ -27,9 +26,6 @@ const AddProduct = () => {
         })
     }
 
-    const onSave = async () => {
-        success(t(AppStrings.opertion_saved));
-    }
     return (
         <FormCard icon={faBarcode} title={t(AppStrings.add_new_product)}
             navButton={
@@ -37,7 +33,7 @@ const AddProduct = () => {
                     <NavButton icon={"list"} title={AppStrings.list_products} path={routes.product.list} />
                 </div>
             }>
-            <ProductForm customSubmit={true} onSubmit={onSave} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={defaultProductValues} />
+            <ProductForm isAdd={true} customSubmit={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={defaultProductValues} />
         </FormCard>
     )
 }

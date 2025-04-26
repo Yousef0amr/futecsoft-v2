@@ -29,27 +29,28 @@ const AddInvoice = () => {
     }
 
     const onFirstSubmit = async (data) => {
-        return await handleEntityOperation({
+        const result = await handleEntityOperation({
             operation: 'add',
             data,
             cacheUpdater: refetch,
             successMessage: AppStrings.invoice_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
+
+        if (result.Success) {
+            setFetchKey(true)
+        }
+
+        return result
     }
 
-    const onSave = async () => {
-        fetchData()
-        setFetchKey(true)
-        success(t(AppStrings.opertion_saved));
-    }
     return (
         <FormCard icon={faFileInvoice} title={t(AppStrings.add_new_invoice)} optionComponent={
             <>
                 <NavButton icon={'list'} title={AppStrings.list_invoices} path={routes.invoice.list} />
             </>
         }  >
-            <InvoiceInfoForm customSubmit={true} onSubmit={onSave} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice, ...defaultInvoiceItem }} />
+            <InvoiceInfoForm customSubmit={true} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice, ...defaultInvoiceItem }} />
         </FormCard>
     )
 }

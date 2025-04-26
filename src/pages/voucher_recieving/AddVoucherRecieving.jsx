@@ -16,8 +16,8 @@ const AddReceivingVoucher = () => {
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherRecievingKeyQuery();
 
-    const onSubmit = async (data) => {
-        handleEntityOperation({
+    const onFirstSubmit = async (data) => {
+        return await handleEntityOperation({
             operation: 'add',
             data,
             cacheUpdater: refetch,
@@ -31,11 +31,12 @@ const AddReceivingVoucher = () => {
             <NavButton icon={'list'} title={AppStrings.list_vouchers_receiving} path={routes.recieving_voucher.list} />
         }>
             <VoucherReceivingForm
+                customSubmit={true}
                 isLoading={isAdding}
-                onSubmit={onSubmit}
+                isAdd={true}
+                onFirstSubmit={onFirstSubmit}
                 defaultValuesEdit={{
                     DocID: currentKey,
-                    DocDate: new Date().toISOString().split("T")[0],
                 }}
             />
         </FormCard>

@@ -1,24 +1,20 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next';
 import useEntityOperations from '../../hooks/useEntityOperations';
 import AppStrings from '../../config/appStrings';
-import FormCard from '../common/FormCard';
-import { faTruck } from '@fortawesome/free-solid-svg-icons';
 import { useVoucherInputItemsColDefs } from '../../config/agGridColConfig';
 import { useVoucherInputItemsManagement } from '../../hook/useVoucherInputManagement';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import useUnitManagement from '../../hook/useUnitManagement'
-import Loader from '../common/Loader';
 
 
-const ListVoucherInputItem = ({ voucher }) => {
+
+const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID });
-    const { t } = useTranslation();
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const [selectedItem, setSelectedItem] = useState(null);
     const { data: allUnits } = useUnitManagement();
-
+    const [isAddItem, setIsAddItem] = useState(isAdd);
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         voucher.Warehouse ? {
             Warehouse: voucher.Warehouse,
@@ -45,18 +41,41 @@ const ListVoucherInputItem = ({ voucher }) => {
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr }))
         : [];
     const onSubmit = async (data) => {
-        const operationType = data.isNew ? "add" : "update";
-        return await handleEntityOperation({
-            operation: operationType,
-            data: { ...voucher, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID },
-            cacheUpdater: refetch,
-            successMessage: operationType === "update"
-                ? AppStrings.product_updated_successfully
-                : AppStrings.product_added_successfully,
-            errorMessage: operationType === "add"
-                ? AppStrings.something_went_wrong
-                : AppStrings.material_already_added,
-        });
+
+        const products = data.reduce((acc, item,) => {
+            acc.push({
+                ItemId: item.ItemID,
+                Qty: item.Qty,
+                Unit: item.UnitID,
+                UnitPrice: item.UnitPrice,
+                ItemDiscountPercentage: item.DiscountPercentage,
+                ItemDiscount: item.Discount
+            });
+            return acc;
+        }, []);
+
+        if (isAddItem) {
+            const invoiceData = {
+                ...voucher, DocID: voucher.DocID,
+                voucher_Input_Insert_Detail: products
+            }
+            const result = await onFirstSubmit(invoiceData)
+            if (result?.Success) {
+                setIsAddItem(false)
+            }
+            return;
+        }
+
+        Promise.all(data.map(async (item) => {
+            return await handleEntityOperation({
+                operation: "update",
+                data: { ...voucher, LindId: 4, UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                cacheUpdater: refetch,
+                successMessage: AppStrings.product_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong
+            });
+        }))
+
     };
 
     const handleOnDeleteClick = async (data) => {
@@ -75,22 +94,16 @@ const ListVoucherInputItem = ({ voucher }) => {
         }
     })
 
-    if (isLoadingProducts) {
-        return <Loader />;
-    }
-
 
     return (
-        <FormCard icon={faTruck} title={t(AppStrings.list_products)} >
-            {!isLoadingProducts && <TableWithCRUD
-                isLoading={isLoading}
-                isDeleting={isDeleting}
-                onDelete={handleOnDeleteClick}
-                onSave={onSubmit}
-                columns={columns}
-                initialData={data}
-            />}
-        </FormCard>
+        <TableWithCRUD
+            isLoading={isLoading}
+            isDeleting={isDeleting}
+            onDelete={handleOnDeleteClick}
+            onSave={onSubmit}
+            columns={columns}
+            initialData={data}
+        />
     )
 }
 

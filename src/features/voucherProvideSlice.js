@@ -18,9 +18,21 @@ const transformVoucherProvideData = (data) => ({
         : null,
 });
 
+
+const transformVoucherItemsProvideData = (data) => ({
+    ...data,
+    ItemID: data.ItemNo,
+    Qty: data.ProvideQty,
+    UnitID: data.Unit,
+
+});
+
 export const voucherProvideApi = createDynamicApi({
     reducerPath: 'voucherProvideApi',
     baseEndpoint: BASEURL + VOUCHER_PROVIDE,
+    active: true,
+    isJson: true,
+    updateString: 'UpdateHeader',
     transformData: transformVoucherProvideData
 });
 
@@ -36,14 +48,21 @@ export const voucherProvideDetailsApi = createApi({
     endpoints: (builder) => ({
         getAllVoucherProvideDetails: builder.query({
             query: ({ id }) => ({
-                url: `/GetDatailsByDocID?DocID=${id}`,
+                url: `/GetDatailsByDocID?ReqNo=${id}`,
             }),
             keepUnusedDataFor: longCacheTime,
-            transformResponse: (response) => response.Response || response,
+            transformResponse: (response) => {
+                const data = response.Response || response;
+                if (Array.isArray(data)) {
+                    return data.map(item => transformVoucherItemsProvideData(item));
+                } else {
+                    return [];
+                }
+            }
         }),
         updateVoucherProvideDetails: builder.mutation({
             query: (data) => ({
-                url: '/UpdateHeader',
+                url: '/Update',
                 method: 'POST',
                 body: convertToFormData(data),
             }),

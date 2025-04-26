@@ -1,22 +1,17 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next';
 import useEntityOperations from '../../hooks/useEntityOperations';
 import AppStrings from '../../config/appStrings';
-import FormCard from '../common/FormCard';
-import { faTruck } from '@fortawesome/free-solid-svg-icons';
 import { useVoucherItemsColDefs } from '../../config/agGridColConfig';
 import { useVoucherOutputItemsManagement } from '../../hook/useVoucherOutputManagement';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import useUnitManagement from '../../hook/useUnitManagement'
-import Loader from '../common/Loader';
-import { Button } from 'react-bootstrap';
-const ListVoucherOutputItems = ({ voucher }) => {
+
+const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
     const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ id: voucher.DocNo });
-    const { t } = useTranslation();
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits } = useUnitManagement();
-
+    const [isAddItem, setIsAddItem] = useState(isAdd);
     const [selectedItem, setSelectedItem] = useState(null);
 
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
@@ -36,9 +31,6 @@ const ListVoucherOutputItems = ({ voucher }) => {
             skip: !selectedItem
         }
     );
-    const [infoOpen, setInfoOpen] = React.useState(false);
-
-
 
     const units = !isLoadingUnits
         ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
@@ -49,19 +41,39 @@ const ListVoucherOutputItems = ({ voucher }) => {
         : [];
 
     const onSubmit = async (data) => {
-        const operationType = data.isNew ? "add" : "update";
-        setInfoOpen(false);
-        return await handleEntityOperation({
-            operation: operationType,
-            data: { ...voucher, UnitPrice: data.UnitPrice, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID },
-            cacheUpdater: refetch,
-            successMessage: operationType === "update"
-                ? AppStrings.product_updated_successfully
-                : AppStrings.product_added_successfully,
-            errorMessage: operationType === "add"
-                ? AppStrings.something_went_wrong
-                : AppStrings.material_already_added,
-        });
+
+        const products = data.reduce((acc, item,) => {
+            acc.push({
+                ItemId: item.ItemID,
+                Qty: item.Qty,
+                Unit: item.UnitID,
+                Cost: item.Cost,
+                OutputType: voucher.OutputType
+            });
+            return acc;
+        }, []);
+
+        if (isAddItem) {
+            const invoiceData = {
+                ...voucher,
+                voucher_Ouput_Insert_Detail: products
+            }
+            const result = await onFirstSubmit(invoiceData)
+            if (result?.Success) {
+                setIsAddItem(false)
+            }
+            return;
+        }
+
+        Promise.all(data.map(async (item) => {
+            return await handleEntityOperation({
+                operation: "update",
+                data: { ...voucher, RowId: 4, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                cacheUpdater: refetch,
+                successMessage: AppStrings.product_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong
+            });
+        }))
     };
 
     const handleOnDeleteClick = async (data) => {
@@ -78,42 +90,18 @@ const ListVoucherOutputItems = ({ voucher }) => {
     const columns = useVoucherItemsColDefs({
         products, units, getSelectedVaule: (value) => {
             setSelectedItem(value);
-            setInfoOpen(true);
         }
     })
 
-    if (isLoadingProducts) {
-        return <Loader />;
-    }
-
     return (
-        <FormCard icon={faTruck} title={t(AppStrings.list_products)} >
-            {!isLoadingProducts && <TableWithCRUD
-                info={
-                    infoOpen && <div className='fs-6 d-flex align-items-center  gap-2'>
-                        <p className='mb-0'>
-                            {
-                                t(AppStrings.units_can_used)
-                            }
-                        </p>
-                        <div className='d-flex gap-2'>
-                            {
-                                unitsData?.map((item) =>
-                                    <Button disabled classsName='fw-bold fs-6' variant='danger' size='sm' key={item.UnitId
-                                    }>{item.UnitAr}</Button>
-                                )
-                            }
-                        </div>
-                    </div>
-                }
-                setInfoOpen={setInfoOpen}
-                isLoading={isLoading}
-                isDeleting={isDeleting}
-                handleOnDeleteClick={handleOnDeleteClick}
-                onSubmit={onSubmit}
-                columns={columns}
-                initialRows={data} />}
-        </FormCard>
+        <TableWithCRUD
+
+            isLoading={isLoading}
+            isDeleting={isDeleting}
+            onDelete={handleOnDeleteClick}
+            onSave={onSubmit}
+            columns={columns}
+            initialData={data} />
     )
 }
 

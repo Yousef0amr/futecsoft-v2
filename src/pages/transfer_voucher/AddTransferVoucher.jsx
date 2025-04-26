@@ -16,8 +16,8 @@ const AddTransferVoucher = () => {
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherTransferKeyQuery();
 
-    const onSubmit = async (data) => {
-        handleEntityOperation({
+    const onFirstSubmit = async (data) => {
+        return await handleEntityOperation({
             operation: 'add',
             data,
             cacheUpdater: refetch,
@@ -31,7 +31,7 @@ const AddTransferVoucher = () => {
                 <NavButton icon={'list'} title={AppStrings.list_vouchers_transfer} path={routes.transfer_voucher.list} />
             </>
         }  >
-            <VoucherTransferForm isAdd={true} isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], ...defaultInvoiceItem }} />
+            <VoucherTransferForm isAdd={true} isLoading={isAdding} customSubmit={true} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], ...defaultInvoiceItem }} />
         </FormCard>
     )
 }

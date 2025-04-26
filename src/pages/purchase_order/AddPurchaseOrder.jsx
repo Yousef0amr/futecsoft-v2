@@ -1,23 +1,23 @@
 import React from 'react';
-import useVoucherInputManagement from '../../hook/useVoucherInputManagement';
+import usePurchaseOrderManagement from '../../hook/usePurchaseOrderManagement';
 import { useTranslation } from 'react-i18next';
 import { faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons';
 import FormCard from '../../components/common/FormCard';
 import NavButton from '../../components/common/NavButton';
-import { defaultInvoiceItem, defaultVoucherTypes, routes } from '../../config/constants';
+import { defaultVoucherTypes, routes } from '../../config/constants';
 import useEntityOperations from '../../hooks/useEntityOperations';
-import { useGetCurrentVoucherInputKeyQuery } from '../../features/voucherInputSlice';
+import { useGetCurrentPurchaseOrderKeyQuery } from '../../features/purchaseOrderSlice';
 import AppStrings from '../../config/appStrings';
-import VoucherInputForm from '../../components/voucher_input/VoucherInputForm';
+import PurchaseOrderForm from '../../components/purchase_order/PurchaseOrderForm';
 
 const AddPurchaseOrder = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useVoucherInputManagement();
+    const { addEntity, isAdding, refetch } = usePurchaseOrderManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
-    const { data: currentKey } = useGetCurrentVoucherInputKeyQuery();
+    const { data: currentKey } = useGetCurrentPurchaseOrderKeyQuery();
 
-    const onSubmit = async (data) => {
-        handleEntityOperation({
+    const onFirstSubmit = async (data) => {
+        return await handleEntityOperation({
             operation: 'add',
             data,
             cacheUpdater: refetch,
@@ -30,16 +30,15 @@ const AddPurchaseOrder = () => {
         <FormCard icon={faFileInvoiceDollar} title={t(AppStrings.add_new_purchase_order)} optionComponent={
             <NavButton icon={'list'} title={AppStrings.list_purchase_orders} path={routes.purchase_order.list} />
         }>
-            <VoucherInputForm
+            <PurchaseOrderForm
                 isAdd={true}
                 isLoading={isAdding}
-                resetForm={!isAdding}
-                onSubmit={onSubmit}
+                customSubmit={true}
+                onFirstSubmit={onFirstSubmit}
                 defaultValuesEdit={{
                     DocID: currentKey,
-                    DocDate: new Date().toISOString().split("T")[0],
+                    LineDate: new Date().toISOString().split("T")[0],
                     Vtype: defaultVoucherTypes.purchaseOrder,
-                    ...defaultInvoiceItem
                 }}
             />
         </FormCard>

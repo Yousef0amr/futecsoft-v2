@@ -526,7 +526,8 @@ export const defaultVoucherTypes = {
     invoice: 11,
     inputVoucher: 1,
     outputVoucher: 2,
-    transferVoucher: -1
+    transferVoucher: -1,
+    purchaseOrder: 14
 }
 
 export const defaultInvoiceItem = {

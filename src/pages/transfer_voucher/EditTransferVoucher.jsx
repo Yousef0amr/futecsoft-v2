@@ -28,10 +28,6 @@ const EditTransferVoucher = () => {
                 Form={VoucherTransferForm}
                 editData={loaction.state}
             />
-            <Button variant="success" onClick={() => setAddNew(!addNew)}>{t(AppStrings.add_item_for_voucher)}</Button>
-            {
-                addNew && <ListVoucherTransferItem voucher={loaction.state} />
-            }
         </Stack>
     )
 }

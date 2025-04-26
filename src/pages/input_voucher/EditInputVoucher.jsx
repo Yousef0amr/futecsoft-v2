@@ -5,17 +5,14 @@ import EditComponent from '../../components/common/EditComponent';
 import { faTruck } from '@fortawesome/free-solid-svg-icons';
 import { routes } from '../../config/constants';
 import VoucherInputForm from '../../components/voucher_input/VoucherInputForm';
-import { Button, Stack } from 'react-bootstrap';
-import ListVoucherInputItem from '../../components/voucher_input/ListVoucherInputItem';
+import { Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 
 const EditInputVoucher = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
-    const [addNew, setAddNew] = useState(false)
     return (
         <Stack gap={2}>
             <EditComponent
@@ -29,10 +26,6 @@ const EditInputVoucher = () => {
                 Form={VoucherInputForm}
                 editData={loaction.state}
             />
-            <Button variant="success" onClick={() => setAddNew(!addNew)}>{t(AppStrings.add_item_for_voucher)}</Button>
-            {
-                addNew && <ListVoucherInputItem voucher={loaction.state} />
-            }
         </Stack>
     )
 }

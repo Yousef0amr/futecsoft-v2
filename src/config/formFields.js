@@ -340,8 +340,8 @@ export const voucherTransferItemsFormFields = [
 
 export const purchaseOrderFormFields = [
     { name: 'DocID', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
-    { name: 'LineDate', label: AppStrings.voucherId, required: false, type: 'text' },
-    { name: 'Status', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'LineDate', label: AppStrings.date, required: false, type: 'date' },
+    { name: 'Status', label: AppStrings.status, required: false, type: 'text' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
 ]
@@ -361,20 +361,25 @@ export const voucherRecievingFormFields = [
 
 export const voucherProvideFormFields = [
     { name: 'ReqNo', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
-    { name: 'ByUser', label: AppStrings.voucherId, required: false, type: 'select' },
+    { name: 'ByUser', label: AppStrings.createdBy, required: false, type: 'text' },
     { name: 'ReqDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Notes', label: AppStrings.note, required: false, type: 'text' },
-    { name: 'Manual', label: AppStrings.note, required: false, type: 'text' },
-    { name: 'FromDate', label: AppStrings.date, required: false, type: 'date' },
-    { name: 'ToDate', label: AppStrings.date, required: false, type: 'date' },
-    { name: 'AllDays', label: AppStrings.all_days, type: 'check' },
-    { name: 'Provided', label: AppStrings.all_days, type: 'check' },
-    { name: 'Posted', label: AppStrings.all_days, type: 'check' },
-    { name: 'Approved', label: AppStrings.all_days, type: 'check' },
+    { name: 'Manual', label: AppStrings.manual, required: false, type: 'text' },
+    { name: 'FromDate', label: AppStrings.from_date, required: false, type: 'date' },
+    { name: 'ToDate', label: AppStrings.to_date, required: false, type: 'date' },
     { name: 'DayName', label: AppStrings.day_name, type: 'text' },
     { name: 'DiffRate', label: AppStrings.diff_rate, type: 'text' },
-    { name: 'Warehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+
+
     { name: 'FromWarehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+    { name: 'Warehouse', label: AppStrings.from_branch, required: false, options: [], type: 'select' },
+
+    { name: 'Posted', label: AppStrings.posted, type: 'check' },
+    { name: 'Approved', label: AppStrings.approved, type: 'check' },
+    { name: 'AllDays', label: AppStrings.all_days, type: 'check' },
+    { name: 'Provided', label: AppStrings.provided, type: 'check' },
+
+
 ]
 
 

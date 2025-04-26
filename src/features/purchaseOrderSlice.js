@@ -8,15 +8,17 @@ import convertToFormData from '../utils/convertToFormData.js';
 const transformPurchaseOrderData = (data) => ({
     ...data,
     DocID: data.DocId,
-    DocDate: data.DocDate
-        ? new Date(data.DocDate).toISOString().split('T')[0]
+    LineDate: data.LineDate
+        ? new Date(data.LineDate).toISOString().split('T')[0]
         : null,
 });
 
 export const purchaseOrderApi = createDynamicApi({
     reducerPath: 'purchaseOrderApi',
     baseEndpoint: BASEURL + PURCHASE_ORDER,
-    transformData: transformPurchaseOrderData
+    transformData: transformPurchaseOrderData,
+    active: true,
+    isJson: true
 });
 
 export const purchaseOrderDetailsApi = createApi({

@@ -1,22 +1,22 @@
 import React from 'react';
-import useVoucherInputManagement from '../../hook/useVoucherInputManagement';
+import useVoucherProvideManagement from '../../hook/useVoucherProvideManagement';
 import { useTranslation } from 'react-i18next';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import FormCard from '../../components/common/FormCard';
 import NavButton from '../../components/common/NavButton';
-import { defaultInvoiceItem, defaultVoucherTypes, routes } from '../../config/constants';
+import { routes } from '../../config/constants';
 import useEntityOperations from '../../hooks/useEntityOperations';
-import { useGetCurrentVoucherInputKeyQuery } from '../../features/voucherInputSlice';
+import { useGetCurrentVoucherProvideKeyQuery } from '../../features/voucherProvideSlice';
 import AppStrings from '../../config/appStrings';
-import VoucherInputForm from '../../components/voucher_input/VoucherInputForm';
+import VoucherProvideForm from '../../components/voucher_provide/VoucherProvideForm';
 
 const AddProvideVoucher = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useVoucherInputManagement();
+    const { addEntity, isAdding, refetch } = useVoucherProvideManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
-    const { data: currentKey } = useGetCurrentVoucherInputKeyQuery();
+    const { data: currentKey } = useGetCurrentVoucherProvideKeyQuery();
 
-    const onSubmit = async (data) => {
+    const onFirstSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
             data,
@@ -30,16 +30,13 @@ const AddProvideVoucher = () => {
         <FormCard icon={faArrowRight} title={t(AppStrings.add_new_voucher_provide)} optionComponent={
             <NavButton icon={'list'} title={AppStrings.list_vouchers_provide} path={routes.provide_voucher.list} />
         }>
-            <VoucherInputForm
+            <VoucherProvideForm
                 isAdd={true}
                 isLoading={isAdding}
-                resetForm={!isAdding}
-                onSubmit={onSubmit}
+                customSubmit={true}
+                onFirstSubmit={onFirstSubmit}
                 defaultValuesEdit={{
-                    DocID: currentKey,
-                    DocDate: new Date().toISOString().split("T")[0],
-                    Vtype: defaultVoucherTypes.provideVoucher,
-                    ...defaultInvoiceItem
+                    ReqNo: currentKey,
                 }}
             />
         </FormCard>

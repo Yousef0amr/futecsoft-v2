@@ -5,19 +5,17 @@ import { useItemsUnitsColDefs } from '../../config/agGridColConfig'
 import useUnitManagement from '../../hook/useUnitManagement'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import AppStrings from '../../config/appStrings'
-import { useTranslation } from 'react-i18next'
 
 
-const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
+
+const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
     const { data, isLoading, refetch } = useGetProductUnitsQuery(
         product?.Id ? product?.Id : 0,
         {
             skip: !product?.Id,
         }
     )
-
-
-    const { t } = useTranslation();
+    const [isAddItem, setIAdd] = React.useState(isAdd);
     const [updateProductUnits, { isLoading: isUpdating }] = useUpdateProductUnitsMutation()
     const [deleteComponent, { isLoading: isDeleting }] = useDeleteComponentMutation()
 
@@ -45,29 +43,54 @@ const ListProductUnits = ({ onFirstSubmit, product = [] }) => {
 
 
     const onSubmit = async (data) => {
+        if (isAddItem && data.length > 0) {
+            const firstUnitData = {
+                ...product,
+                Price: data[0].Price1,
+                Price2: data[0].Price2,
+                Price3: data[0].Price3,
+                Price4: data[0].Price4,
+                Barcode: data[0].Barcode,
+                UnitID: data[0].UnitId,
+                IsSmall: data[0].IsSmall,
+                Factor: data[0].Factor,
+                Warehouse: product.Warehouse || product.Tag,
+                Icon: product.Icon || 'لا يوجد صورة',
+            };
 
-        const unitData = {
-            ...product,
-            Price: data.Price1,
-            Price2: data.Price2,
-            Price3: data.Price3,
-            Price4: data.Price4,
-            Barcode: data.Barcode,
-            UnitID: data.UnitId,
-            IsSmall: data.IsSmall,
-            Factor: data.Factor,
-            Warehouse: product.Warehouse ? product.Warehouse : product.Tag,
-            Icon: product.Icon ? product.Icon : 'لا يوجد صورة',
+            const result = await onFirstSubmit(firstUnitData);
+
+            if (result?.Success) {
+                setIAdd(false);
+            }
+            return;
         }
 
-        return await handleEntityOperation({
-            operation: 'update',
-            data: unitData,
-            cacheUpdater: refetch,
-            successMessage: AppStrings.product_updated_successfully,
-            errorMessage: AppStrings.something_went_wrong
-        });
+        for (const item of data) {
+            const unitData = {
+                ...product,
+                Price: item.Price1,
+                Price2: item.Price2,
+                Price3: item.Price3,
+                Price4: item.Price4,
+                Barcode: item.Barcode,
+                UnitID: item.UnitId,
+                IsSmall: item.IsSmall,
+                Factor: item.Factor,
+                Warehouse: product.Warehouse || product.Tag,
+                Icon: product.Icon || 'لا يوجد صورة',
+            };
+
+            await handleEntityOperation({
+                operation: 'update',
+                data: unitData,
+                cacheUpdater: refetch,
+                successMessage: AppStrings.product_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong,
+            });
+        }
     };
+
 
 
     const columns = useItemsUnitsColDefs(

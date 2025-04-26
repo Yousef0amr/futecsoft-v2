@@ -464,5 +464,13 @@
     "add_new_voucher_provide": "Add New Provide Voucher",
     "edit_voucher_receiving": "Edit Receiving Voucher",
     "edit_voucher_provide": "Edit Provide Voucher",
-    "edit_purchase_order": "Edit Purchase Order"
+    "edit_purchase_order": "Edit Purchase Order",
+    "purchase_order_updated_successfully": "Purchase Order updated successfully",
+    "purchase_order_added_successfully": "Purchase Order added successfully",
+    "available_quantity": "Available Quantity",
+    "sent_qty": "Sent Quantity",
+    "received_qty": "Received Quantity",
+    "posted": "Posted",
+    "approved": "Approved",
+    "manual": "Manual"
 }

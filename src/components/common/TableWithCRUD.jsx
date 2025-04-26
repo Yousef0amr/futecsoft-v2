@@ -8,13 +8,13 @@ import { useTranslation } from "react-i18next";
 import { AG_GRID_LOCALE_EG, AG_GRID_LOCALE_EN } from '@ag-grid-community/locale';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd, faSave } from "@fortawesome/free-solid-svg-icons";
-import { DeleteOutline } from "@mui/icons-material";
+import { Close, Delete, DeleteOutline } from "@mui/icons-material";
 import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
 
 
 const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting }) => {
-    const gridRef = useRef();
+    const gridRef = useRef(null);
     const { t, i18n } = useTranslation();
     const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);
     const localeText = useMemo(() => (isRtl ? AG_GRID_LOCALE_EG : AG_GRID_LOCALE_EN), [isRtl]);
@@ -55,11 +55,19 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
     const handleSaveAll = () => {
         const updatedRows = rowData.filter(row => dirtyRows.has(row.id));
         if (updatedRows.length > 0) {
-            updatedRows.map(
-                (row) => onSave(row)
-            )
+            onSave(updatedRows)
             setDirtyRows(new Set());
         }
+    };
+
+
+    const handleRemoveRow = (data) => {
+        setRowData(prev => prev.filter(row => row.id !== data.id));
+        setDirtyRows(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(data.id);
+            return newSet;
+        });
     };
 
     const colDefs = useMemo(() => [
@@ -68,15 +76,27 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
             field: "actions",
             editable: false,
             cellRenderer: (params) => (
-                <div className="buttonCell px-0 py-1">
-                    <button
-                        className="button-secondary removeButton "
-                        onClick={() => handleOpen(params.data)}
-                    >
-                        <DeleteOutline />
-                    </button>
-                </div>
+                <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => handleRemoveRow(params.data)}
+                        >
+                            <Close color="error" />
+                        </button>
+                    </div>
 
+                    <div className="buttonCell px-0 py-1">
+                        <button
+                            type='button'
+                            className="button-secondary removeButton "
+                            onClick={() => handleOpen(params.data)}
+                        >
+                            <DeleteOutline />
+                        </button>
+                    </div>
+                </div>
             ),
         },
         ...columns.map(col => ({ ...col, editable: true })),
@@ -136,7 +156,6 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
                 domLayout='normal'
                 enableRtl={isRtl}
                 localeText={localeText}
-                getRowId={(params) => params.data.id}
                 onCellValueChanged={handleCellValueChanged}
             />
 

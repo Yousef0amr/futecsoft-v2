@@ -16,7 +16,7 @@ const AddInputVoucher = () => {
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherInputKeyQuery();
 
-    const onSubmit = async (data) => {
+    const onFirstSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
             data,
@@ -31,7 +31,7 @@ const AddInputVoucher = () => {
                 <NavButton icon={'list'} title={AppStrings.list_vouchers_input} path={routes.input_voucher.list} />
             </>
         }  >
-            <VoucherInputForm isAdd={true} isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.inputVoucher, ...defaultInvoiceItem }} />
+            <VoucherInputForm customSubmit={true} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.inputVoucher, ...defaultInvoiceItem }} />
         </FormCard>
     )
 }

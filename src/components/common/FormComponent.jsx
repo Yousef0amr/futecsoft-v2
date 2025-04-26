@@ -49,28 +49,13 @@ const FormComponent = ({
             {typeof children === 'function' ? children({ register, errors, setValue, watch, defaultValues }) : children}
             <Stack direction="horizontal" gap={3} className="mt-4">
                 {
-                    customSubmit ? <Button
-                        onClick={
-                            () => {
-                                reset()
-                                onSubmit()
-                            }
-                        }
-                        sx={{
-                            fontSize: '16px',
-                            width: '50%',
-                            color: 'white',
-                            padding: '3px',
-                            backgroundColor: 'var(--primary-color)',
-                        }}
-                    >
-                        {isLoading ? <SpinnerLoader /> : t(AppStrings.save)}
-                    </Button> :
+                    customSubmit ? null :
                         <Button
                             type="submit"
                             sx={{
                                 fontSize: '16px',
                                 width: '50%',
+                                marginTop: '30px',
                                 color: 'white',
                                 padding: '3px',
                                 backgroundColor: 'var(--primary-color)',
@@ -84,6 +69,7 @@ const FormComponent = ({
                     onClick={() => reset()}
                     sx={{
                         fontSize: '16px',
+                        marginTop: '30px',
                         width: '50%',
                         color: 'white',
                         padding: '3px',

@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AppStrings from '../../config/appStrings';
 import usePurchaseOrderManagement from '../../hook/usePurchaseOrderManagement';
 import EditComponent from '../../components/common/EditComponent';
 import { faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons';
 import { routes } from '../../config/constants';
-import VoucherInputForm from '../../components/voucher_input/VoucherInputForm';
-import { Button, Stack } from 'react-bootstrap';
-import ListVoucherInputItem from '../../components/voucher_input/ListVoucherInputItem';
+import PurchaseOrderForm from '../../components/purchase_order/PurchaseOrderForm';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Stack } from 'react-bootstrap';
+
 
 const EditPurchaseOrder = () => {
     const location = useLocation();
     const { t } = useTranslation();
-    const [addNew, setAddNew] = useState(false);
+
 
     return (
         <Stack gap={2}>
@@ -25,13 +25,9 @@ const EditPurchaseOrder = () => {
                 icon={faFileInvoiceDollar}
                 title={t(AppStrings.edit_purchase_order) + ' | ' + location.state.DocID}
                 path={routes.purchase_order.list}
-                Form={VoucherInputForm}
+                Form={PurchaseOrderForm}
                 editData={location.state}
             />
-            <Button variant="success" onClick={() => setAddNew(!addNew)}>
-                {t(AppStrings.add_item_for_invoice)}
-            </Button>
-            {addNew && <ListVoucherInputItem voucher={location.state} />}
         </Stack>
     );
 };

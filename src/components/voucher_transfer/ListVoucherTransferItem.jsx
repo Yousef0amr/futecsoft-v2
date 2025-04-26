@@ -1,24 +1,19 @@
 import React from 'react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import AppStrings from '../../config/appStrings'
 import { useVoucherTransferItemsManagement } from '../../hook/useVoucherTransferManagement'
 import useEntityOperations from '../../hooks/useEntityOperations'
-import { faTruck } from '@fortawesome/free-solid-svg-icons'
-import FormCard from '../common/FormCard'
 import { useVoucherItemsColDefs } from '../../config/agGridColConfig'
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import useUnitManagement from '../../hook/useUnitManagement'
-import Loader from '../common/Loader';
-import { Button } from 'react-bootstrap';
 
-const ListVoucherTransferItem = ({ voucher }) => {
+
+const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherTransferItemsManagement({ id: voucher.DocNo });
-    const { t } = useTranslation();
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits } = useUnitManagement();
-
+    const [isAddItem, setIsAddItem] = useState(isAdd);
 
     const [selectedItem, setSelectedItem] = useState(null);
 
@@ -39,8 +34,6 @@ const ListVoucherTransferItem = ({ voucher }) => {
             skip: !selectedItem
         }
     );
-    const [infoOpen, setInfoOpen] = React.useState(false);
-
 
 
     const units = !isLoadingUnits
@@ -52,21 +45,39 @@ const ListVoucherTransferItem = ({ voucher }) => {
         : [];
 
     const onSubmit = async (data) => {
-        const operationType = data.isNew ? "add" : "update";
-        setInfoOpen(false);
-        return await handleEntityOperation({
-            operation: operationType,
-            data: { ...voucher, Cost: data.Cost, Qty: data.Qty, ItemId: data.ItemID, Unit: data.UnitID },
-            cacheUpdater: refetch,
-            successMessage: operationType === "update"
-                ? AppStrings.product_updated_successfully
-                : AppStrings.product_added_successfully,
-            errorMessage: operationType === "add"
-                ? AppStrings.something_went_wrong
-                : AppStrings.material_already_added,
-        });
-    };
 
+        const products = data.reduce((acc, item,) => {
+            acc.push({
+                ItemID: item.ItemID,
+                Qty: item.Qty,
+                Unit: item.UnitID,
+                Cost: item.Cost,
+            });
+            return acc;
+        }, []);
+
+        if (isAddItem) {
+            const invoiceData = {
+                ...voucher,
+                Voucher_Transfer_Insert_Details: products
+            }
+            const result = await onFirstSubmit(invoiceData)
+            if (result?.Success) {
+                setIsAddItem(false)
+            }
+            return;
+        }
+
+        Promise.all(data.map(async (item) => {
+            return await handleEntityOperation({
+                operation: "update",
+                data: { ...voucher, RowId: 4, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                cacheUpdater: refetch,
+                successMessage: AppStrings.product_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong
+            });
+        }))
+    };
     const handleOnDeleteClick = async (data, handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
@@ -82,13 +93,9 @@ const ListVoucherTransferItem = ({ voucher }) => {
     const columns = useVoucherItemsColDefs({
         products, units, getSelectedVaule: (value) => {
             setSelectedItem(value);
-            setInfoOpen(true);
         }
     })
 
-    if (isLoadingProducts) {
-        return <Loader />;
-    }
     return (
         <TableWithCRUD
             isLoading={isLoading}

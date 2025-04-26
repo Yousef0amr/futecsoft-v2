@@ -462,12 +462,15 @@ export const useItemsUnitsColDefs = ({ units = [] }) => {
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
-            cellEditor: 'agSelectCellEditor',
+            cellEditor: 'agCheckboxCellEditor',
             cellEditorParams: {
-                values: ["true", "false"],
+                values: [true, false]
             },
-            valueFormatter: params =>
-                params.value === "true" ? t(AppStrings.yes) : t(AppStrings.no),
+            valueFormatter: (params) => params.value ? t(AppStrings.yes) : t(AppStrings.no),
+            valueGetter: (params) => {
+
+                return params.data.IsSmall ?? false
+            }
         },
         {
             field: 'Price1',
@@ -532,7 +535,7 @@ export const useVoucherInputItemsColDefs = ({
         },
         {
             field: 'UnitID',
-            headerName: t(i18n.language === 'en' ? AppStrings.unitNameEn : AppStrings.unitNameAr),
+            headerName: t(AppStrings.unit),
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
@@ -540,11 +543,13 @@ export const useVoucherInputItemsColDefs = ({
             cellEditorParams: {
                 values: units.map((u) => u.value),
             },
-            valueFormatter: (params) => {
-                const selected = units.find((u) => u.value === params.value);
-                return selected ? selected.label : '';
+            valueParser: params => {
+                return Number(params.newValue);
             },
-            filter: true,
+            valueFormatter: params => {
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            }
         },
         {
             field: 'Qty',
@@ -564,7 +569,7 @@ export const useVoucherInputItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, i18n.language, products, units, getSelectedVaule]);
+    ], [t, products, units, getSelectedVaule]);
 };
 
 export const useVoucherItemsColDefs = ({
@@ -596,7 +601,7 @@ export const useVoucherItemsColDefs = ({
         },
         {
             field: 'UnitID',
-            headerName: t(i18n.language === 'en' ? AppStrings.unitNameEn : AppStrings.unitNameAr),
+            headerName: t(AppStrings.unit),
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
@@ -604,11 +609,13 @@ export const useVoucherItemsColDefs = ({
             cellEditorParams: {
                 values: units.map((u) => u.value),
             },
-            valueFormatter: (params) => {
-                const selected = units.find((u) => u.value === params.value);
-                return selected ? selected.label : '';
+            valueParser: params => {
+                return Number(params.newValue);
             },
-            filter: true,
+            valueFormatter: params => {
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            }
         },
         {
             field: 'Qty',
@@ -628,12 +635,13 @@ export const useVoucherItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, i18n.language, products, units, getSelectedVaule]);
+    ], [t, products, units, getSelectedVaule]);
 };
 
 
-export const useVoucherReceivingItemsColDefs = ({
+export const usePurcahseOrderColDefs = ({
     products = [],
+    units = [],
     getSelectedVaule,
 }) => {
     const { t, i18n } = useTranslation();
@@ -653,7 +661,105 @@ export const useVoucherReceivingItemsColDefs = ({
                 const selected = products.find((p) => p.value === params.value);
                 return selected ? selected.label : '';
             },
+            onCellValueChanged: (params) => {
+                getSelectedVaule?.(params.newValue);
+            },
             filter: true,
+        },
+        {
+            field: 'UnitID',
+            headerName: t(AppStrings.unit),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: units.map((u) => u.value),
+            },
+            valueParser: params => {
+                return Number(params.newValue);
+            },
+            valueFormatter: params => {
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            }
+        },
+        {
+            field: 'ReqQty',
+            headerName: t(AppStrings.quantity),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'AvailableQty',
+            headerName: t(AppStrings.available_quantity),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'UnitCost',
+            headerName: t(AppStrings.price),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+    ], [t, products, units, getSelectedVaule]);
+};
+
+
+
+export const useVoucherReceivingItemsColDefs = ({
+    products = [],
+    getSelectedVaule,
+    units
+}) => {
+    const { t, i18n } = useTranslation();
+
+    return useMemo(() => [
+        {
+            field: 'ItemID',
+            headerName: t(AppStrings.productId),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: products.map((p) => p.value),
+            },
+            valueFormatter: (params) => {
+                const selected = products.find((p) => p.value === params.value);
+                return selected ? selected.label : '';
+            },
+            onCellValueChanged: (params) => {
+                getSelectedVaule?.(params.newValue);
+            },
+            filter: true,
+        },
+        {
+            field: 'Unit',
+            headerName: t(AppStrings.unit),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: units.map((u) => u.value),
+            },
+            valueParser: params => {
+                return Number(params.newValue);
+            },
+            valueFormatter: params => {
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            }
         },
         {
             field: 'SentQty',
@@ -691,7 +797,16 @@ export const useVoucherReceivingItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, i18n.language, products, getSelectedVaule]);
+        {
+            field: 'Description',
+            headerName: t(AppStrings.description),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+    ], [t, products, units, getSelectedVaule]);
 };
 
 

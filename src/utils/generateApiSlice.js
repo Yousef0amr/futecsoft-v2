@@ -3,7 +3,7 @@ import convertToFormData from './../utils/convertToFormData.js';
 import getCookie from './../utils/getCookie.js';
 import { longCacheTime } from '../config/constants.js';
 
-const createDynamicApi = ({ active = true, reducerPath, baseEndpoint, transformData }) => {
+const createDynamicApi = ({ active = true, updateString, reducerPath, baseEndpoint, transformData, isJson = false }) => {
     const api = createApi({
         reducerPath,
         baseQuery: fetchBaseQuery({
@@ -40,7 +40,7 @@ const createDynamicApi = ({ active = true, reducerPath, baseEndpoint, transformD
                     query: (data) => ({
                         url: '/Insert',
                         method: 'POST',
-                        body: convertToFormData(data),
+                        body: isJson ? data : convertToFormData(data),
                     }),
                     onQueryStarted: async (data, { dispatch, queryFulfilled }) => {
                         try {
@@ -55,7 +55,7 @@ const createDynamicApi = ({ active = true, reducerPath, baseEndpoint, transformD
                 }),
                 update: builder.mutation({
                     query: (data) => ({
-                        url: '/Update',
+                        url: updateString ? updateString : '/Update',
                         method: 'POST',
                         body: convertToFormData(data),
                     }),
