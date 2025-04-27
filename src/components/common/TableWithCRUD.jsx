@@ -53,11 +53,13 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
         setOpen({ data: null, isOpen: false });
     };
 
-    const handleSaveAll = () => {
+    const handleSaveAll = async () => {
         const updatedRows = rowData.filter(row => dirtyRows.has(row.id));
         if (updatedRows.length > 0) {
-            onSave(updatedRows)
-            setDirtyRows(new Set());
+            const result = await onSave(updatedRows)
+            if (result?.Success) {
+                setDirtyRows(new Set());
+            }
         }
     };
 

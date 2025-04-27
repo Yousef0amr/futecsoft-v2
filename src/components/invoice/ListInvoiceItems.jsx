@@ -73,7 +73,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
             if (result?.Success) {
                 setIAdd(false)
             }
-            return;
+            return result;
         }
 
         Promise.all(

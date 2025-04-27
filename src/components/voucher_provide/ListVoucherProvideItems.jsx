@@ -60,7 +60,7 @@ const ListVoucherProvideItems = ({ voucher, isAdd, onFirstSubmit }) => {
             if (result?.Success) {
                 setIsAddItem(false)
             }
-            return;
+            return result;
         }
 
         Promise.all(data.map(async (item) => {

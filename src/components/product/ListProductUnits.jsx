@@ -63,7 +63,7 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
             if (result?.Success) {
                 setIAdd(false);
             }
-            return;
+            return result;
         }
 
         for (const item of data) {
@@ -81,7 +81,7 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
                 Icon: product.Icon || 'لا يوجد صورة',
             };
 
-            await handleEntityOperation({
+            return await handleEntityOperation({
                 operation: 'update',
                 data: unitData,
                 cacheUpdater: refetch,

@@ -71,7 +71,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             if (result?.Success) {
                 setIAdd(false)
             }
-            return;
+            return result;
         }
 
         Promise.all(

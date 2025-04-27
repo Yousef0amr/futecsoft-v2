@@ -61,7 +61,7 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
             if (result?.Success) {
                 setIsAddItem(false)
             }
-            return;
+            return result;
         }
 
         Promise.all(data.map(async (item) => {
