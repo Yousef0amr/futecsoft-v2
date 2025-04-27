@@ -5,10 +5,12 @@ import ListVoucherProvideItems from './ListVoucherProvideItems'
 import useValidators from '../../hooks/useValidators'
 
 const VoucherProvideForm = ({ customSubmit, onFirstSubmit, onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
-    const { voucherInputSchema } = useValidators();
+    const { voucherProvideSchema } = useValidators();
+
+
 
     return (
-        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={voucherInputSchema} onSubmit={onSubmit}>
+        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={voucherProvideSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
                     <VoucherProvideFormFields register={register} errors={errors} setValue={setValue} watch={watch} />

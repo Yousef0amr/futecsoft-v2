@@ -30,7 +30,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             skip: !selectedItem
         }
     );
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
         = useInvoiceItemsManagement({
             id: invoice?.DocID
         });
@@ -46,11 +46,11 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
 
     const onSubmit = async (data) => {
 
-        const products = data.reduce((acc, item,) => {
+        const products = data.reduce((acc, item, index) => {
             acc.push({
                 DocID: invoice.DocID,
                 Vtype: invoice.Vtype,
-                LineID: 4,
+                LineID: index + 1,
                 ItemId: item.ItemID,
                 ReqQty: item.ReqQty,
                 Unit: item.UnitID,
@@ -78,7 +78,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             data.map(async (item) => {
                 return await handleEntityOperation({
                     operation: "add",
-                    data: { ...invoice, ItemID: item.ItemID, UnitID: item.UnitID, ReqQty: item.ReqQty, AvailableQty: item.AvailableQty, UnitCost: item.UnitCost },
+                    data: { ...invoice, LineId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LineId + 1 : 1, ItemID: item.ItemID, Unit: item.UnitID, ReqQty: item.ReqQty, AvailableQty: item.AvailableQty, UnitCost: item.UnitCost },
                     cacheUpdater: refetch,
                     successMessage: AppStrings.product_added_successfully,
                     errorMessage: AppStrings.something_went_wrong
@@ -90,7 +90,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
     const handleOnDeleteClick = async (data, handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID },
+            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID, LineID: data.LineId },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
@@ -111,7 +111,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data} />
+            initialData={voucherProducts} />
     )
 }
 

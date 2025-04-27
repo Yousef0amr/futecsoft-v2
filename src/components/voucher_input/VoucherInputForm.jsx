@@ -8,7 +8,7 @@ const VoucherInputForm = ({ customSubmit, onFirstSubmit, onSubmit, isLoading, de
     const { voucherInputSchema, voucherInputUpdatedSchema } = useValidators();
 
     return (
-        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? voucherInputSchema : voucherInputUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={voucherInputUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
                     <VoucherInputFormFields register={register} errors={errors} setValue={setValue} watch={watch} />

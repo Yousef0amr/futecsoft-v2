@@ -8,7 +8,7 @@ import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../featu
 import useUnitManagement from '../../hook/useUnitManagement'
 
 const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ id: voucher.DocNo });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ id: voucher.DocNo });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits } = useUnitManagement();
     const [isAddItem, setIsAddItem] = useState(isAdd);
@@ -68,7 +68,7 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
         Promise.all(data.map(async (item) => {
             return await handleEntityOperation({
                 operation: "update",
-                data: { ...voucher, RowId: 4, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                data: { ...voucher, RowId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1]?.RowId + 1 : 1, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
                 cacheUpdater: refetch,
                 successMessage: AppStrings.product_updated_successfully,
                 errorMessage: AppStrings.something_went_wrong
@@ -77,10 +77,10 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
     };
 
     const handleOnDeleteClick = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocNo: voucher.DocNo, Warehouse: voucher.Warehouse, Unit: data.UnitID },
-            cacheUpdater: deleteEntityFromCache(data.ItemID),
+            data: { ItemId: data.ItemID, DocNo: voucher.DocNo, Warehouse: voucher.Warehouse, Unit: data.UnitID, RowId: data.RowId },
+            cacheUpdater: refetch,
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
         })
@@ -101,7 +101,7 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data} />
+            initialData={voucherProducts} />
     )
 }
 

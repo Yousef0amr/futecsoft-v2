@@ -256,7 +256,7 @@ const MainMenuValidators = () => {
 
     const voucherInputSchemaValidator = {
         DocID: yup.string().required().nullable(),
-        Vtype: yup.number().required().nullable(),
+        Vtype: yup.number().optional(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
         Warehouse: yup.string().required(t(AppStrings.branch_required)).nullable(),
@@ -268,7 +268,6 @@ const MainMenuValidators = () => {
 
     const voucherInputUpdatedSchemaValidator = {
         DocID: yup.string().required().nullable(),
-        Vtype: yup.number().required().nullable(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
         Warehouse: yup.string().required(t(AppStrings.branch_required)).nullable(),
@@ -380,6 +379,32 @@ const MainMenuValidators = () => {
     }
 
 
+    const voucherProvideSchemaValidator = {
+        ReqNo: yup.string().required(t(AppStrings.invoiceId)).nullable(),
+        ReqDate: yup.string().required(t(AppStrings.date_required)).nullable(),
+        ByUser: yup.string().required(t(AppStrings.createdBy)).nullable(),
+        Notes: yup.string().optional(),
+        Manual: yup.string().optional(),
+        FromDate: yup.string().required(t(AppStrings.from_date_required)).nullable(),
+        ToDate: yup.string().required(t(AppStrings.to_date_required)).nullable(),
+        DayName: yup.string().optional(),
+        DiffRate: yup.string().optional(),
+        FromWarehouse: yup.string().required(t(AppStrings.from_branch)).nullable(),
+        Warehouse: yup.string().required(t(AppStrings.to_branch)).nullable(),
+        Posted: yup.boolean().optional(),
+        Approved: yup.boolean().optional(),
+        AllDays: yup.boolean().optional(),
+        Provided: yup.boolean().optional(),
+    }
+
+
+    const purchaseOrderSchemaValidator = {
+        DocID: yup.string().required(t(AppStrings.invoiceId)).nullable(),
+        LineDate: yup.string().required(t(AppStrings.date_required)).nullable(),
+        Status: yup.string().optional(),
+        Note: yup.string().optional(),
+        Warehouse: yup.string().required(t(AppStrings.from_branch)).nullable(),
+    }
 
     return {
         branchSchemaValidator,
@@ -391,6 +416,7 @@ const MainMenuValidators = () => {
         itemsProfitsSchemaValidator,
         unitSchemaValidator,
         flavorSchemaValidator,
+        purchaseOrderSchemaValidator,
         offerSchemaValidator,
         discountSchemaValidator,
         taxSchemaValidator,
@@ -401,6 +427,7 @@ const MainMenuValidators = () => {
         deliveryDiscountSchemaValidator,
         userGroupSchemaValidator,
         userSchemaValidator,
+        voucherProvideSchemaValidator,
         userPermissionsSchemaValidator,
         inventoryStatementSchemaValidator,
         permissionSchemaValidator,

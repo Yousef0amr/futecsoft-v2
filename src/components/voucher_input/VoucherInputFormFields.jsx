@@ -9,6 +9,8 @@ const VoucherInputFormFields = ({ errors, register, watch, setValue }) => {
         ? branchesData?.map((item) => ({ value: item.BranchId.toString(), label: item.BranchNameAr }))
         : [];
 
+    console.log(errors)
+
     return (
         <FormFieldsComponent options={{ Warehouse: branches }} errors={errors} register={register} setValue={setValue} watch={watch} fields={voucherInputFormFields} />
     )

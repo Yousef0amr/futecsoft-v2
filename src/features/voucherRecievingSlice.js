@@ -17,6 +17,7 @@ export const voucherRecievingApi = createDynamicApi({
     baseEndpoint: BASEURL + VOUCHER_RECEIVING,
     active: true,
     isJson: true,
+    updateString: 'UpdateHeader',
     transformData: transformVoucherRecievingData
 });
 
@@ -39,7 +40,7 @@ export const voucherRecievingDetailsApi = createApi({
         }),
         updateVoucherRecievingDetails: builder.mutation({
             query: (data) => ({
-                url: '/UpdateHeader',
+                url: '/Update',
                 method: 'POST',
                 body: convertToFormData(data),
             }),

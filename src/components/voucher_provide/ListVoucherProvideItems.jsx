@@ -9,7 +9,7 @@ import useUnitManagement from '../../hook/useUnitManagement'
 
 
 const ListVoucherProvideItems = ({ voucher, isAdd, onFirstSubmit }) => {
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherProvideItemsManagement({ id: voucher.ReqNo });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherProvideItemsManagement({ id: voucher.ReqNo });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const [selectedItem, setSelectedItem] = useState(null);
     const { data: allUnits } = useUnitManagement();
@@ -66,7 +66,7 @@ const ListVoucherProvideItems = ({ voucher, isAdd, onFirstSubmit }) => {
         Promise.all(data.map(async (item) => {
             return await handleEntityOperation({
                 operation: "update",
-                data: { ...voucher, RowId: 4, UnitPrice: item.UnitPrice, RequestQty: item.Qty, ProvideQty: item.Qty, ItemNo: item.ItemID, Unit: item.UnitID },
+                data: { ...voucher, RowId: +voucherProducts[voucherProducts.length - 1].RowId + 1, UnitPrice: item.UnitPrice, RequestQty: item.Qty, ProvideQty: item.Qty, ItemNo: item.ItemID, Unit: item.UnitID },
                 cacheUpdater: refetch,
                 successMessage: AppStrings.product_updated_successfully,
                 errorMessage: AppStrings.something_went_wrong
@@ -100,7 +100,7 @@ const ListVoucherProvideItems = ({ voucher, isAdd, onFirstSubmit }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data}
+            initialData={voucherProducts}
         />
     )
 }

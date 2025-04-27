@@ -10,7 +10,7 @@ import useUnitManagement from '../../hook/useUnitManagement'
 
 
 const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const [selectedItem, setSelectedItem] = useState(null);
     const { data: allUnits } = useUnitManagement();
@@ -69,7 +69,7 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
         Promise.all(data.map(async (item) => {
             return await handleEntityOperation({
                 operation: "update",
-                data: { ...voucher, LindId: 4, UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                data: { ...voucher, LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1]?.LindId + 1 : 1, UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
                 cacheUpdater: refetch,
                 successMessage: AppStrings.product_updated_successfully,
                 errorMessage: AppStrings.something_went_wrong
@@ -81,7 +81,7 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     const handleOnDeleteClick = async (data) => {
         return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: voucher.DocID, Warehouse: voucher.Warehouse, Unit: data.UnitID },
+            data: { ItemId: data.ItemID, DocID: voucher.DocID, Warehouse: voucher.Warehouse, Unit: data.UnitID, LineID: data.LineId },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
@@ -102,7 +102,7 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data}
+            initialData={voucherProducts}
         />
     )
 }

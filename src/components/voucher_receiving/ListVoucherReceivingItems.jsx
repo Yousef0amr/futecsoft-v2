@@ -10,7 +10,7 @@ import useUnitManagement from '../../hook/useUnitManagement'
 
 
 const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherRecievingItemsManagement({ id: voucher.DocID });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherRecievingItemsManagement({ id: voucher.DocID });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const [isAddItem, setIsAddItem] = React.useState(isAdd);
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
@@ -36,7 +36,7 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
 
     const onSubmit = async (data) => {
 
-        const products = data.reduce((acc, item,) => {
+        const products = data.reduce((acc, item, index) => {
             acc.push({
                 DocID: voucher.DocID,
                 ItemID: item.ItemID,
@@ -47,7 +47,7 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
                 UnitPrice: item.UnitPrice,
                 Description: item.Description,
                 Warehouse: voucher.Warehouse,
-                LineID: 4
+                LineID: index + 1
             });
             return acc;
         }, []);
@@ -67,7 +67,7 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
         Promise.all(data.map(async (item) => {
             return await handleEntityOperation({
                 operation: "update",
-                data: { ...voucher, LineId: 4, WareHouse: voucher.Warehouse, ItemID: item.ItemID, SentQty: item.SentQty, RecievedQty: item.RecievedQty, Difference: item.Difference, Unit: item.UnitID, UnitPrice: item.UnitPrice, Description: item.Description },
+                data: { ...voucher, LineId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LineId + 1 : 1, WareHouse: voucher.Warehouse, ItemID: item.ItemID, SentQty: item.SentQty, RecievedQty: item.RecievedQty, Difference: item.Difference, Unit: item.Unit, UnitPrice: item.UnitPrice, Description: item.Description },
                 cacheUpdater: refetch,
                 successMessage: AppStrings.product_updated_successfully,
                 errorMessage: AppStrings.something_went_wrong
@@ -77,10 +77,10 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
     };
 
     const handleOnDeleteClick = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: voucher.DocID, WareHouse: voucher.Warehouse, Unit: data.UnitID, LineID: data.LineID },
-            cacheUpdater: deleteEntityFromCache(data.ItemID),
+            data: { ItemId: data.ItemID, DocID: voucher.DocID, WareHouse: voucher.Warehouse, Unit: data.Unit, LineID: data.LineId },
+            cacheUpdater: refetch,
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
         })
@@ -98,7 +98,7 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data} />
+            initialData={voucherProducts} />
     )
 }
 

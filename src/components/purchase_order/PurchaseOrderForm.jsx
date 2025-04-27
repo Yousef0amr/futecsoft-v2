@@ -6,9 +6,9 @@ import ListPurchaseOrderItems from './ListPurchaseOrderItems'
 
 
 const PurchaseOrderForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
-    const { PurchaseOrderForm } = useValidators();
+    const { purchaseOrderSchema } = useValidators();
     return (
-        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={PurchaseOrderForm} onSubmit={onSubmit}>
+        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={purchaseOrderSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
                     <PurchaseOrderFormFields register={register} errors={errors} setValue={setValue} watch={watch} />

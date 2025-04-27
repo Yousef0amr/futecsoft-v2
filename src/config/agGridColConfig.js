@@ -341,6 +341,7 @@ export const useInvoicesColDefs = () => {
 export const useInvoicesItemsColDefs = ({
     products = [],
     units = [],
+    filterUnits = [],
     getSelectedVaule,
 }) => {
     const { t } = useTranslation();

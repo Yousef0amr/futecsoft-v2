@@ -11,7 +11,9 @@ const useValidators = () => {
         unitSchemaValidator,
         flavorSchemaValidator,
         offerSchemaValidator,
+        voucherProvideSchemaValidator,
         discountSchemaValidator,
+        purchaseOrderSchemaValidator,
         taxSchemaValidator,
         currencySchemaValidator,
         deliveryCompaniesSchemaValidator,
@@ -75,17 +77,21 @@ const useValidators = () => {
     const dailyProfitSchema = yup.object(dailyProfitSchemaValidator);
     const itemsProfitsSchema = yup.object(itemsProfitsSchemaValidator);
     const voucherReceivingSchema = yup.object(voucherReceivingSchemaValidator);
+    const voucherProvideSchema = yup.object(voucherProvideSchemaValidator);
+    const purchaseOrderSchema = yup.object(purchaseOrderSchemaValidator);
 
 
     return {
         returnByInvoiceSchema,
         itemTransactionSchema,
         branchSchema,
+        purchaseOrderSchema,
         productSchema,
         componentSchema,
         pricesAndCostsSchema,
         categorySchema,
         unitSchema,
+        voucherProvideSchema,
         flavorSchema,
         offerSchema,
         discountSchema,

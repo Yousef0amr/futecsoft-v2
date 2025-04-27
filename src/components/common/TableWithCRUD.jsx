@@ -11,6 +11,7 @@ import { faAdd, faSave } from "@fortawesome/free-solid-svg-icons";
 import { Close, Delete, DeleteOutline } from "@mui/icons-material";
 import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
+import { Await } from "react-router-dom";
 
 
 const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting }) => {
@@ -161,7 +162,14 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
 
             <DialogModel open={open.isOpen}>
                 <DeleteComponent
-                    handleDelete={() => onDelete(open.data, handleCancel)}
+                    handleDelete={async () => {
+                        const result = await onDelete(open.data, handleCancel)
+                        handleCancel()
+                        if (result?.Success) {
+                            setRowData(prev => prev.filter(row => row.id !== open.data.id));
+                        }
+                    }
+                    }
                     handleCancel={handleCancel}
                     isLoading={isDeleting}
                 />

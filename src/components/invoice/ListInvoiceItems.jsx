@@ -9,7 +9,7 @@ import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../featu
 
 
 const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
-    const { data: allUnits } = useUnitManagement();
+    const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
     const [selectedItem, setSelectedItem] = useState(null);
     const [isAddItem, setIAdd] = useState(isAdd);
@@ -25,13 +25,13 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
         }
     );
 
-    const { data: unitsData, isLoading: isLoadingUnits } = useGetProductUnitsByIdQuery(
+    const { data: unitsData, isLoading: isLoadingFilterUnits } = useGetProductUnitsByIdQuery(
         selectedItem ? selectedItem : null,
         {
             skip: !selectedItem
         }
     );
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
         = useInvoiceItemsManagement({
             id: invoice?.DocID
         });
@@ -39,6 +39,10 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
 
     const units = !isLoadingUnits
         ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
+        : [];
+
+    const filterUnits = !isLoadingFilterUnits
+        ? unitsData?.map((item) => ({ value: item.UnitId, label: item.UnitAr }))
         : [];
 
     const products = !isLoadingProducts
@@ -73,10 +77,13 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
         }
 
         Promise.all(
-            products.map(async (item) => {
+            data.map(async (item) => {
                 return await handleEntityOperation({
                     operation: "add",
-                    data: { ...invoice, LindId: 4, UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                    data: {
+                        ...invoice, LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1, UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID, ItemDiscountPercentage: item.DiscountPercentage,
+                        ItemDiscount: item.Discount
+                    },
                     cacheUpdater: refetch,
                     successMessage: AppStrings.product_added_successfully,
                     errorMessage: AppStrings.something_went_wrong
@@ -85,11 +92,12 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
         )
     };
 
+
     const handleOnDeleteClick = async (data, handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID },
-            cacheUpdater: deleteEntityFromCache(data.ItemID),
+            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID, LineID: data.LineId },
+            cacheUpdater: refetch,
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
             finalCallback: handleCancel
@@ -98,7 +106,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
 
 
     const columns = useInvoicesItemsColDefs({
-        products: products ? products : [], units: units ? units : [], getSelectedVaule: (value) => {
+        products: products ? products : [], filterUnits: filterUnits ? filterUnits : [], units: units ? units : [], getSelectedVaule: (value) => {
             setSelectedItem(value);
         }
     })
@@ -110,7 +118,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data} />
+            initialData={voucherProducts} />
     )
 }
 

@@ -10,7 +10,7 @@ import useUnitManagement from '../../hook/useUnitManagement'
 
 
 const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherTransferItemsManagement({ id: voucher.DocNo });
+    const { data: voucherPorducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherTransferItemsManagement({ id: voucher.DocNo });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits } = useUnitManagement();
     const [isAddItem, setIsAddItem] = useState(isAdd);
@@ -71,7 +71,7 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
         Promise.all(data.map(async (item) => {
             return await handleEntityOperation({
                 operation: "update",
-                data: { ...voucher, RowId: 4, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
+                data: { ...voucher, RowId: voucherPorducts.length > 0 ? +voucherPorducts[voucherPorducts.length - 1].RowID + 1 : 1, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
                 cacheUpdater: refetch,
                 successMessage: AppStrings.product_updated_successfully,
                 errorMessage: AppStrings.something_went_wrong
@@ -81,7 +81,7 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     const handleOnDeleteClick = async (data, handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
-            data: { ItemID: data.ItemID, DocNo: data.DocNo, Unit: data.UnitID },
+            data: { ItemID: data.ItemID, DocNo: data.DocNo, Unit: data.UnitID, RowID: data.RowID },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
@@ -103,7 +103,7 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
             columns={columns}
-            initialData={data} />
+            initialData={voucherPorducts} />
     )
 }
 

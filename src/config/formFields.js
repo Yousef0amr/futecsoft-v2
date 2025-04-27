@@ -364,7 +364,7 @@ export const voucherProvideFormFields = [
     { name: 'ByUser', label: AppStrings.createdBy, required: false, type: 'text' },
     { name: 'ReqDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Notes', label: AppStrings.note, required: false, type: 'text' },
-    { name: 'Manual', label: AppStrings.manual, required: false, type: 'text' },
+
     { name: 'FromDate', label: AppStrings.from_date, required: false, type: 'date' },
     { name: 'ToDate', label: AppStrings.to_date, required: false, type: 'date' },
     { name: 'DayName', label: AppStrings.day_name, type: 'text' },
@@ -378,7 +378,7 @@ export const voucherProvideFormFields = [
     { name: 'Approved', label: AppStrings.approved, type: 'check' },
     { name: 'AllDays', label: AppStrings.all_days, type: 'check' },
     { name: 'Provided', label: AppStrings.provided, type: 'check' },
-
+    { name: 'Manual', label: AppStrings.manual, required: false, type: 'check' },
 
 ]
 
