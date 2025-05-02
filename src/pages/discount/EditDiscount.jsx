@@ -19,6 +19,7 @@ const EditDiscount = () => {
             successMessage={AppStrings.discount_updated_successfully}
             fetchHook={useDiscountManagement}
             icon={faPercent}
+            isRefetch={true}
             title={t(AppStrings.edit_discount) + '  | ' + loaction.state.Serial}
             path={routes.discountType.list}
             Form={DiscountForm}

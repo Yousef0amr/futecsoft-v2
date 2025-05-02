@@ -11,10 +11,12 @@ const transformOfferData = (data) => ({
 export const discountsApi = createDynamicApi({
     reducerPath: 'discountsApi',
     baseEndpoint: BASEURL + DISCOUNT,
+    active: true,
     transformData: transformOfferData
 });
 
 export const {
+    useGetCurrentKeyQuery: useGetCurrentDiscountKeyQuery,
     useGetAllQuery: useGetDiscountsQuery,
     useAddMutation: useAddDiscountMutation,
     useUpdateMutation: useUpdateDiscountMutation,

@@ -40,10 +40,11 @@ const EditOffer = () => {
             successMessage={AppStrings.offer_updated_successfully}
             fetchHook={useOfferManagement}
             icon={faStar}
+            isRefetch={true}
             title={t(AppStrings.edit_offer) + '  | ' + loaction.state.OfferId}
             path={routes.offer.list}
             Form={OfferForm}
-            editData={{ ...loaction.state, Branch: loaction.state.Branch.split(','), Product: loaction.state.ProductId, ...offerType }}
+            editData={{  ...loaction.state, Branch: loaction.state.Branch.split(','), Product: loaction.state.ProductId,ExtraProduct : "" , ...offerType }}
         />
     )
 }

@@ -8,12 +8,14 @@ import useDiscountManagement from '../../hook/useDiscountManagement';
 import useEntityOperations from '../../hooks/useEntityOperations';
 import { useTranslation } from 'react-i18next';
 import NavButton from '../../components/common/NavButton';
+import { useGetCurrentDiscountKeyQuery } from '../../features/discountSlice';
 
 
 
 const AddDiscount = () => {
     const { t } = useTranslation();
     const { addEntity, isAdding, refetch } = useDiscountManagement();
+    const { data: currentKey } = useGetCurrentDiscountKeyQuery();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
 
     const onSubmit = async (data) => {
@@ -31,7 +33,7 @@ const AddDiscount = () => {
                 <NavButton icon={'list'} title={AppStrings.list_discounts} path={routes.discountType.list} />
             </>
         }  >
-            <DiscountForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ IsActive: true }} />
+            <DiscountForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ Serial: currentKey, IsActive: true }} />
         </FormCard>
     )
 }
