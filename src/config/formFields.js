@@ -351,7 +351,7 @@ export const voucherRecievingFormFields = [
 
 export const voucherProvideFormFields = [
     { name: 'ReqNo', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
-    { name: 'ByUser', label: AppStrings.createdBy, required: false, type: 'text' },
+    { name: 'ByUser', label: AppStrings.createdBy,  required: false, options: [], type: 'select' },
     { name: 'ReqDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Notes', label: AppStrings.note, required: false, type: 'text' },
 
