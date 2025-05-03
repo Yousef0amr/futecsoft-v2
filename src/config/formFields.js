@@ -22,6 +22,7 @@ export const productImageField = {
 
 export const productFormFields = [
     { name: 'Id', label: AppStrings.productId, required: false, type: 'number', disabled: true },
+    { name: 'Barcode', label: AppStrings.barcode, required: false, type: 'text' },
     { name: 'NameAr', label: AppStrings.productNameAr, required: true, type: 'text' },
     { name: 'NameEn', label: AppStrings.productNameEn, required: true, type: 'text' },
 ];
@@ -92,19 +93,6 @@ export const unitsFormFields = [
     { name: 'Unit_AR', label: AppStrings.unitNameAr, required: true, type: 'text' },
     { name: 'Unit_EN', label: AppStrings.unitNameEn, required: true, type: 'text' },
     { name: 'Active', label: AppStrings.isActive, type: 'check' },
-]
-
-
-export const flavorsFormFields = [
-    { name: 'FlavorNo', label: AppStrings.flavorId, required: true, type: 'number', disabled: true },
-    { name: 'Price', label: AppStrings.price, required: true, type: 'text' },
-    { name: 'FlavorAR', label: AppStrings.flavorNameAr, required: true, type: 'text' },
-    { name: 'FlavorEN', label: AppStrings.flavorNameEn, required: true, type: 'text' },
-
-
-    { name: 'WareHouse', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },
-    { name: 'Category', label: AppStrings.category, required: true, multiple: true, options: [], type: 'select' },
-    { name: 'IsActive', label: AppStrings.isActive, type: 'check' },
 ]
 
 
@@ -291,6 +279,7 @@ export const voucherInputFormFields = [
     { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
+    { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
 ]
 
 export const voucherInputItemsFormFields = [
@@ -308,6 +297,7 @@ export const voucherOutputFormFields = [
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
     { name: 'OutputType', label: AppStrings.output_type, required: false, options: [], type: 'select' },
+    { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
 ]
 
 

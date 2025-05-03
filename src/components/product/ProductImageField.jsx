@@ -3,10 +3,17 @@ import { Col, Row } from 'react-bootstrap'
 import BrowserImage from '../common/BrowserImage'
 import { productImageField, productFormFields } from '../../config/formFields'
 import FormFieldsComponent from '../common/FormFieldsComponent'
+import { useEffect } from 'react'
 
 
 const ProductImageField = ({ errors, setValue, watch, register }) => {
-
+    
+      const id = watch('Id')
+        useEffect(() => {
+            if (id) {
+                setValue('Barcode', id)
+            }
+        }, [id, setValue]);
     return (
         <Col xs={12}  >
             <Row >

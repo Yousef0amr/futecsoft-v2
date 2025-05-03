@@ -24,9 +24,6 @@ const EditCategory = React.lazy(() => import('../pages/category/EditCategory'));
 const ListUnit = React.lazy(() => import('../pages/unit/ListUnit'));
 const AddUnit = React.lazy(() => import('../pages/unit/AddUnit'));
 const EditUnit = React.lazy(() => import('../pages/unit/EditUnit'));
-const ListFlavor = React.lazy(() => import('../pages/flavor/ListFlavor'));
-const AddFlavor = React.lazy(() => import('../pages/flavor/AddFlavor'));
-const EditFlavor = React.lazy(() => import('../pages/flavor/EditFlavor'));
 const ListOffer = React.lazy(() => import('../pages/offer/ListOffer'));
 const AddOffer = React.lazy(() => import('../pages/offer/AddOffer'));
 const EditOffer = React.lazy(() => import('../pages/offer/EditOffer'));
@@ -115,10 +112,6 @@ const pagesList = [
     { path: routes.unit.list, component: <ListUnit /> },
     { path: routes.unit.add, component: <AddUnit /> },
     { path: routes.unit.edit, component: <EditUnit /> },
-    // Flavors
-    { path: routes.flavor.list, component: <ListFlavor /> },
-    { path: routes.flavor.add, component: <AddFlavor /> },
-    { path: routes.flavor.edit, component: <EditFlavor /> },
     // Offers
     { path: routes.offer.list, component: <ListOffer /> },
     { path: routes.offer.add, component: <AddOffer /> },

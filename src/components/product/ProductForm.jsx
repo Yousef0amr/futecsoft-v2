@@ -31,6 +31,7 @@ const ProductForm = ({ isAdd, onSubmit, isLoading, customSubmit = false, onFirst
                         Taxable: watch('Taxable'),
                         Icon: watch('Icon'),
                         Id: watch('Id'),
+                        Barcode: watch('Barcode'),
                         NameAr: watch('NameAr'),
                         NameEn: watch('NameEn'),
                         Father: watch('Father'),

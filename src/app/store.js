@@ -6,7 +6,6 @@ import { productsApi } from "../features/productSlice";
 import { categoriesApi } from "../features/categorySlice";
 import { taxesApi } from "../features/taxSlice";
 import { unitsApi } from "../features/unitSlice";
-import { flavorsApi } from "../features/flavorsSlice";
 import { offersApi } from "../features/offerSlice";
 import { discountsApi } from "../features/discountSlice";
 import { currenciesApi } from "../features/currencySlice";
@@ -30,7 +29,7 @@ import { purchaseOrderApi, purchaseOrderDetailsApi } from "../features/purchaseO
 
 const apis = [
     authApi, branchesApi, productsApi, categoriesApi, taxesApi, unitsApi,
-    flavorsApi, offersApi, discountsApi, currenciesApi, deliveryCompaniesApi,
+    offersApi, discountsApi, currenciesApi, deliveryCompaniesApi,
     paymentTypesApi, suppliersApi, deliveryDiscountApi, userGroupsApi, usersApi,
     userPermissionsApi, invoicesApi, invoiceDetailsApi, voucherInputsApi,
     voucherInputDetailsApi, voucherOutputsApi, voucherOutputDetailsApi,
