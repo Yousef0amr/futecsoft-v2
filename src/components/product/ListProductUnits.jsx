@@ -43,6 +43,25 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
 
 
     const onSubmit = async (data) => {
+
+
+
+        const unitsProducts = data.reduce((acc, item,) => {
+            acc.push({
+                ItemID: item.ItemID,
+                UnitID: item.UnitId,
+                IsSmall: item.IsSmall,
+                Factor: item.Factor,
+                Barcode: item.DiscountPercentage,
+                Price1: item.Price1,
+                Price2: item.Price2,
+                Price3: item.Price3,
+                Price4: item.Price4
+            });
+            return acc;
+        }, []);
+
+
         if (isAddItem && data.length > 0) {
             const firstUnitData = {
                 ...product,
@@ -54,8 +73,9 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
                 UnitID: data[0].UnitId,
                 IsSmall: data[0].IsSmall,
                 Factor: data[0].Factor,
-                Warehouse: product.Warehouse || product.Tag,
+                Warehouse: product.Warehouse.join(',') || product.Tag,
                 Icon: product.Icon || 'لا يوجد صورة',
+                Items_Insert_Details: unitsProducts
             };
 
             const result = await onFirstSubmit(firstUnitData);
@@ -77,7 +97,7 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
                 UnitID: item.UnitId,
                 IsSmall: item.IsSmall,
                 Factor: item.Factor,
-                Warehouse: product.Warehouse || product.Tag,
+                Warehouse: product.Warehouse.join(',') || product.Tag,
                 Icon: product.Icon || 'لا يوجد صورة',
             };
 

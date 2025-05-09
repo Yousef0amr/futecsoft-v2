@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import AppStrings from '../../config/appStrings'
 import useEntityOperations from '../../hooks/useEntityOperations'
-import { useInvoiceItemsManagement } from '../../hook/useInvoiceManagement'
+import { usePurchaseOrderItemsManagement } from '../../hook/usePurchaseOrderManagement'
 import useUnitManagement from '../../hook/useUnitManagement'
 import { usePurcahseOrderColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
@@ -31,7 +31,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
         }
     );
     const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
-        = useInvoiceItemsManagement({
+        = usePurchaseOrderItemsManagement({
             id: invoice?.DocID
         });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
@@ -53,7 +53,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
                 LineID: index + 1,
                 ItemId: item.ItemID,
                 ReqQty: item.ReqQty,
-                Unit: item.UnitID,
+                Unit: item.Unit,
                 AvailableQty: item.AvailableQty,
                 UnitCost: item.UnitCost,
                 Warehouse: invoice.Warehouse
@@ -78,7 +78,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             data.map(async (item) => {
                 return await handleEntityOperation({
                     operation: "add",
-                    data: { ...invoice, LineId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LineId + 1 : 1, ItemID: item.ItemID, Unit: item.UnitID, ReqQty: item.ReqQty, AvailableQty: item.AvailableQty, UnitCost: item.UnitCost },
+                    data: { ...invoice, LineId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LineId + 1 : 1, ItemID: item.ItemID, Unit: item.Unit, ReqQty: item.ReqQty, AvailableQty: item.AvailableQty, UnitCost: item.UnitCost },
                     cacheUpdater: refetch,
                     successMessage: AppStrings.product_added_successfully,
                     errorMessage: AppStrings.something_went_wrong
@@ -90,7 +90,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
     const handleOnDeleteClick = async (data, handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
-            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID, LineID: data.LineId },
+            data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.Unit, LineID: data.LineId },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,

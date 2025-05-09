@@ -45,7 +45,7 @@ const ListProduct = () => {
 
 
     const handleOnDeleteClick = async () => {
-        handleEntityOperation({
+        const res = await handleEntityOperation({
             operation: "delete",
             data: { Id: active.data.Id },
             cacheUpdater: deleteEntityFromCache,
@@ -54,6 +54,8 @@ const ListProduct = () => {
             errorMessage: AppStrings.something_went_wrong,
             finalCallback: handleCancel
         })
+
+        console.log(res)
     };
 
     return (

@@ -10,7 +10,7 @@ const useProductManagement = () => {
         addMutationHook: useAddProductMutation,
         updateMutationHook: useUpdateProductMutation,
         deleteMutationHook: useDeleteProductMutation,
-        cacheKey: 'getProductByType',
+        cacheKey: 'getAllProducts',
         defaultQueryArgs: {
             pageNumber: 1,
             pageSize: 10,

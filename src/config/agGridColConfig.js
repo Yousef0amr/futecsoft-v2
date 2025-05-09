@@ -668,7 +668,7 @@ export const usePurcahseOrderColDefs = ({
             filter: true,
         },
         {
-            field: 'UnitID',
+            field: 'Unit',
             headerName: t(AppStrings.unit),
             flex: 1,
             headerClass: 'ag-header-center',
