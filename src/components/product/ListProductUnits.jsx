@@ -48,11 +48,11 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
 
         const unitsProducts = data.reduce((acc, item,) => {
             acc.push({
-                ItemID: item.ItemID,
+                ItemID: product.Id,
                 UnitID: item.UnitId,
-                IsSmall: item.IsSmall,
+                IsSmall: item.IsSmall || false,
                 Factor: item.Factor,
-                Barcode: item.DiscountPercentage,
+                Barcode: item.Barcode,
                 Price1: item.Price1,
                 Price2: item.Price2,
                 Price3: item.Price3,
@@ -65,11 +65,11 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
         if (isAddItem && data.length > 0) {
             const firstUnitData = {
                 ...product,
+                Barcode: product.Barcode,
                 Price: data[0].Price1,
                 Price2: data[0].Price2,
                 Price3: data[0].Price3,
                 Price4: data[0].Price4,
-                Barcode: data[0].Barcode,
                 UnitID: data[0].UnitId,
                 IsSmall: data[0].IsSmall,
                 Factor: data[0].Factor,
