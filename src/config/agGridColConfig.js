@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppStrings from './../config/appStrings';
-
 import ActiveEditor from '../components/common/ActiveEditor';
 
 
@@ -644,6 +643,8 @@ export const usePurcahseOrderColDefs = ({
     products = [],
     units = [],
     getSelectedVaule,
+    selectUnit,
+    refresh
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -671,20 +672,26 @@ export const usePurcahseOrderColDefs = ({
             field: 'Unit',
             headerName: t(AppStrings.unit),
             flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: units.map((u) => u.value),
+            editable: false,
+
+            cellRenderer: (params) => {
+
+                const selected = units.find((p) => p.value === Number(params.data.Unit));
+
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectUnit(params)}
+                        >
+                            {selected?.label ?? 'select unit'}
+                        </button>
+                    </div>
+                </div>
             },
-            valueParser: params => {
-                return Number(params.newValue);
-            },
-            valueFormatter: params => {
-                const selected = units.find(u => u.value === params.value);
-                return selected ? selected.label : '';
-            }
         },
+
         {
             field: 'ReqQty',
             headerName: t(AppStrings.quantity),
@@ -712,7 +719,7 @@ export const usePurcahseOrderColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, products, units, getSelectedVaule]);
+    ], [t, products, units, getSelectedVaule, selectUnit, refresh]);
 };
 
 
@@ -720,7 +727,8 @@ export const usePurcahseOrderColDefs = ({
 export const useVoucherReceivingItemsColDefs = ({
     products = [],
     getSelectedVaule,
-    units
+    units,
+    filterUnits
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -751,16 +759,23 @@ export const useVoucherReceivingItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: true,
             cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: units.map((u) => u.value),
+            cellEditorParams: (params) => {
+                const selectedItemId = params.data.ItemID;
+
+                const product = products.find(p => p.value === selectedItemId);
+
+                const filteredUnits = product
+                    ? units.filter(u => filterUnits.includes(u.value)).map(u => u.value)
+                    : units.map(u => u.value); // fallback: show all if no product selected
+
+                return { values: filteredUnits };
             },
-            valueParser: params => {
-                return Number(params.newValue);
-            },
-            valueFormatter: params => {
-                const selected = units.find(u => u.value === params.value);
+            valueParser: (params) => Number(params.newValue),
+            valueFormatter: (params) => {
+                const selected = units.find((u) => u.value === params.value);
                 return selected ? selected.label : '';
-            }
+            },
+            filter: false,
         },
         {
             field: 'SentQty',

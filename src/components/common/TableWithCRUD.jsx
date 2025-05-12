@@ -8,10 +8,9 @@ import { useTranslation } from "react-i18next";
 import { AG_GRID_LOCALE_EG, AG_GRID_LOCALE_EN } from '@ag-grid-community/locale';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd, faSave } from "@fortawesome/free-solid-svg-icons";
-import { Close, Delete, DeleteOutline } from "@mui/icons-material";
+import { Close, DeleteOutline } from "@mui/icons-material";
 import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
-import { Await } from "react-router-dom";
 
 
 const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting }) => {
@@ -102,7 +101,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
                 </div>
             ),
         },
-        ...columns.map(col => ({ ...col, editable: true })),
+        ...columns.map(col => ({ ...col })),
     ], [columns, t]);
 
     const handleCellValueChanged = (params) => {

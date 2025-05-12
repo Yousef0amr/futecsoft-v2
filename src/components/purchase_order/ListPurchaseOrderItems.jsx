@@ -7,8 +7,19 @@ import { usePurcahseOrderColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 
+import {
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+} from '@mui/material';
 const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
-    const { data: allUnits } = useUnitManagement();
+    const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
     const [selectedItem, setSelectedItem] = useState(null);
     const [isAddItem, setIAdd] = useState(isAdd);
@@ -24,7 +35,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
         }
     );
 
-    const { data: unitsData, isLoading: isLoadingUnits } = useGetProductUnitsByIdQuery(
+    const { data: unitsData, isLoading: isLoadingFilterUnits } = useGetProductUnitsByIdQuery(
         selectedItem ? selectedItem : null,
         {
             skip: !selectedItem
@@ -38,6 +49,11 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
 
     const units = !isLoadingUnits
         ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
+        : [];
+
+
+    const filteredUnits = !isLoadingFilterUnits
+        ? unitsData?.map((item) => ({ value: item.UnitId, label: item.UnitAr }))
         : [];
 
     const products = !isLoadingProducts
@@ -97,21 +113,94 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             finalCallback: handleCancel
         })
     };
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedRowParams, setSelectedRowParams] = useState(null);
+    const [selectedUnit, setSelectedUnit] = useState(null);
 
+    const handleOpenModal = (params) => {
+        setSelectedRowParams(params);
+        setSelectedUnit(params.data.Unit);
+        setModalOpen(true);
+    };
+
+    const handleSelectChange = (e) => {
+        setSelectedUnit(Number(e.target.value));
+    };
+
+    const handleSaveUnit = () => {
+        if (selectedRowParams && selectedUnit != null) {
+
+            selectedRowParams.setValue(selectedUnit.toString());
+
+
+
+            console.log(selectedRowParams);
+            // Refresh the cell so formatter reflects changes
+            selectedRowParams.api.refreshCells({
+                rowNodes: [selectedRowParams.node],
+                columns: ['Unit'],
+                force: true,
+            });
+
+            // Optional: update voucherProducts state too, if needed for persistence
+            // setVoucherProducts(prev =>
+            //   prev.map((item, index) =>
+            //     index === selectedRowParams.rowIndex
+            //       ? { ...item, Unit: selectedUnit }
+            //       : item
+            //   )
+            // );
+        }
+
+        setModalOpen(false);
+    };
 
     const columns = usePurcahseOrderColDefs({
         products: products ? products : [], units: units ? units : [], getSelectedVaule: (value) => {
             setSelectedItem(value);
-        }
+        }, selectUnit: (value) => {
+            handleOpenModal(value)
+        },
+        refresh: modalOpen,
+
     })
     return (
-        <TableWithCRUD
-            isLoading={isLoading}
-            isDeleting={isDeleting}
-            onDelete={handleOnDeleteClick}
-            onSave={onSubmit}
-            columns={columns}
-            initialData={voucherProducts} />
+        <>
+            <TableWithCRUD
+                isLoading={isLoading}
+                isDeleting={isDeleting}
+                onDelete={handleOnDeleteClick}
+                onSave={onSubmit}
+                columns={columns}
+                initialData={voucherProducts} />
+            <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
+                <DialogTitle>Select Unit</DialogTitle>
+                <DialogContent>
+                    <FormControl fullWidth>
+                        <InputLabel id="unit-select-label">Unit</InputLabel>
+                        <Select
+                            labelId="unit-select-label"
+                            value={selectedUnit ?? ''}
+                            onChange={handleSelectChange}
+                            label="Unit"
+                        >
+                            {(filteredUnits || units).map((unit) => (
+                                <MenuItem key={unit.value} value={unit.value}>
+                                    {unit.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+                    <Button variant="contained" onClick={handleSaveUnit}>
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     )
 }
 
