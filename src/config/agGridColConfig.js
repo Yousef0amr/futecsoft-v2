@@ -338,10 +338,8 @@ export const useInvoicesColDefs = () => {
 }
 
 export const useInvoicesItemsColDefs = ({
-    products = [],
-    units = [],
-    filterUnits = [],
-    getSelectedVaule,
+    selectProduct,
+    selectUnit,
 }) => {
     const { t } = useTranslation();
 
@@ -351,36 +349,40 @@ export const useInvoicesItemsColDefs = ({
             headerName: t(AppStrings.productId),
             flex: 1,
             headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: products.map((p) => p.value),
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectProduct(params)}
+                        >
+                            {params.data.ItemDescAr || 'select product'}
+                        </button>
+                    </div>
+                </div>
             },
-            valueFormatter: (params) => {
-                const selected = products.find((p) => p.value === params.value);
-                return selected ? selected.label : '';
-            },
-            onCellValueChanged: (params) => {
-                getSelectedVaule?.(params.newValue);
-            },
+            filter: true,
         },
         {
             field: 'UnitID',
             headerName: t(AppStrings.unit),
             flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: units.map((u) => u.value),
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectUnit(params)}
+                        >
+                            {params.data.UnitDescAr || 'select unit'}
+                        </button>
+                    </div>
+                </div>
             },
-            valueParser: params => {
-                return Number(params.newValue);
-            },
-            valueFormatter: params => {
-                const selected = units.find(u => u.value === params.value);
-                return selected ? selected.label : '';
-            }
         },
         {
             field: 'Qty',
@@ -414,7 +416,7 @@ export const useInvoicesItemsColDefs = ({
             editable: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, products, units, getSelectedVaule]);
+    ], [t, selectProduct, selectUnit]);
 };
 
 
@@ -507,9 +509,8 @@ export const useItemsUnitsColDefs = ({ units = [] }) => {
     ], [t, units]);
 };
 export const useVoucherInputItemsColDefs = ({
-    products = [],
-    units = [],
-    getSelectedVaule,
+    selectProduct,
+    selectUnit
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -519,17 +520,19 @@ export const useVoucherInputItemsColDefs = ({
             headerName: t(AppStrings.productId),
             flex: 1,
             headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: products.map((p) => p.value),
-            },
-            valueFormatter: (params) => {
-                const selected = products.find((p) => p.value === params.value);
-                return selected ? selected.label : '';
-            },
-            onCellValueChanged: (params) => {
-                getSelectedVaule?.(params.newValue);
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectProduct(params)}
+                        >
+                            {params.data.ItemDescAr || 'select product'}
+                        </button>
+                    </div>
+                </div>
             },
             filter: true,
         },
@@ -537,19 +540,20 @@ export const useVoucherInputItemsColDefs = ({
             field: 'UnitID',
             headerName: t(AppStrings.unit),
             flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: units.map((u) => u.value),
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectUnit(params)}
+                        >
+                            {params.data.UnitDescAr || 'select unit'}
+                        </button>
+                    </div>
+                </div>
             },
-            valueParser: params => {
-                return Number(params.newValue);
-            },
-            valueFormatter: params => {
-                const selected = units.find(u => u.value === params.value);
-                return selected ? selected.label : '';
-            }
         },
         {
             field: 'Qty',
@@ -569,13 +573,12 @@ export const useVoucherInputItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, products, units, getSelectedVaule]);
+    ], [t, selectProduct, selectUnit]);
 };
 
 export const useVoucherItemsColDefs = ({
-    products = [],
-    units = [],
-    getSelectedVaule,
+    selectProduct,
+    selectUnit
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -585,17 +588,19 @@ export const useVoucherItemsColDefs = ({
             headerName: t(AppStrings.productId),
             flex: 1,
             headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: products.map((p) => p.value),
-            },
-            valueFormatter: (params) => {
-                const selected = products.find((p) => p.value === params.value);
-                return selected ? selected.label : '';
-            },
-            onCellValueChanged: (params) => {
-                getSelectedVaule?.(params.newValue);
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectProduct(params)}
+                        >
+                            {params.data.ItemDescAr || 'select product'}
+                        </button>
+                    </div>
+                </div>
             },
             filter: true,
         },
@@ -603,19 +608,20 @@ export const useVoucherItemsColDefs = ({
             field: 'UnitID',
             headerName: t(AppStrings.unit),
             flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: units.map((u) => u.value),
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectUnit(params)}
+                        >
+                            {params.data.UnitDescAr || 'select unit'}
+                        </button>
+                    </div>
+                </div>
             },
-            valueParser: params => {
-                return Number(params.newValue);
-            },
-            valueFormatter: params => {
-                const selected = units.find(u => u.value === params.value);
-                return selected ? selected.label : '';
-            }
         },
         {
             field: 'Qty',
@@ -635,18 +641,15 @@ export const useVoucherItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, products, units, getSelectedVaule]);
+    ], [t, selectProduct, selectUnit]);
 };
 
 
 export const usePurcahseOrderColDefs = ({
-    products = [],
-    units = [],
-    getSelectedVaule,
     selectUnit,
-    refresh
+    selectProduct,
 }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return useMemo(() => [
         {
@@ -654,17 +657,19 @@ export const usePurcahseOrderColDefs = ({
             headerName: t(AppStrings.productId),
             flex: 1,
             headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: products.map((p) => p.value),
-            },
-            valueFormatter: (params) => {
-                const selected = products.find((p) => p.value === params.value);
-                return selected ? selected.label : '';
-            },
-            onCellValueChanged: (params) => {
-                getSelectedVaule?.(params.newValue);
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectProduct(params)}
+                        >
+                            {params.data.ItemDescAr || 'select product'}
+                        </button>
+                    </div>
+                </div>
             },
             filter: true,
         },
@@ -673,11 +678,7 @@ export const usePurcahseOrderColDefs = ({
             headerName: t(AppStrings.unit),
             flex: 1,
             editable: false,
-
             cellRenderer: (params) => {
-
-                const selected = units.find((p) => p.value === Number(params.data.Unit));
-
                 return <div className="d-flex gap-2">
                     <div >
                         <button
@@ -685,7 +686,7 @@ export const usePurcahseOrderColDefs = ({
                             className="button-danger bg-transparent border-0"
                             onClick={() => selectUnit(params)}
                         >
-                            {selected?.label ?? 'select unit'}
+                            {params.data.UnitDescAr || 'select unit'}
                         </button>
                     </div>
                 </div>
@@ -719,16 +720,14 @@ export const usePurcahseOrderColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, products, units, getSelectedVaule, selectUnit, refresh]);
+    ], [t, selectUnit, selectProduct]);
 };
 
 
 
 export const useVoucherReceivingItemsColDefs = ({
-    products = [],
-    getSelectedVaule,
-    units,
-    filterUnits
+    selectProduct,
+    selectUnit
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -738,17 +737,19 @@ export const useVoucherReceivingItemsColDefs = ({
             headerName: t(AppStrings.productId),
             flex: 1,
             headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: products.map((p) => p.value),
-            },
-            valueFormatter: (params) => {
-                const selected = products.find((p) => p.value === params.value);
-                return selected ? selected.label : '';
-            },
-            onCellValueChanged: (params) => {
-                getSelectedVaule?.(params.newValue);
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectProduct(params)}
+                        >
+                            {params.data.ItemDescAr || 'select product'}
+                        </button>
+                    </div>
+                </div>
             },
             filter: true,
         },
@@ -756,26 +757,20 @@ export const useVoucherReceivingItemsColDefs = ({
             field: 'Unit',
             headerName: t(AppStrings.unit),
             flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: (params) => {
-                const selectedItemId = params.data.ItemID;
-
-                const product = products.find(p => p.value === selectedItemId);
-
-                const filteredUnits = product
-                    ? units.filter(u => filterUnits.includes(u.value)).map(u => u.value)
-                    : units.map(u => u.value); // fallback: show all if no product selected
-
-                return { values: filteredUnits };
+            editable: false,
+            cellRenderer: (params) => {
+                return <div className="d-flex gap-2">
+                    <div >
+                        <button
+                            type='button'
+                            className="button-danger bg-transparent border-0"
+                            onClick={() => selectUnit(params)}
+                        >
+                            {params.data.UnitDescAr || 'select unit'}
+                        </button>
+                    </div>
+                </div>
             },
-            valueParser: (params) => Number(params.newValue),
-            valueFormatter: (params) => {
-                const selected = units.find((u) => u.value === params.value);
-                return selected ? selected.label : '';
-            },
-            filter: false,
         },
         {
             field: 'SentQty',
@@ -822,7 +817,7 @@ export const useVoucherReceivingItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
-    ], [t, products, units, getSelectedVaule]);
+    ], [t, selectProduct, selectUnit]);
 };
 
 

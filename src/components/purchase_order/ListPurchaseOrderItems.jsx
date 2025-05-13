@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import AppStrings from '../../config/appStrings'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import { usePurchaseOrderItemsManagement } from '../../hook/usePurchaseOrderManagement'
@@ -6,6 +6,7 @@ import useUnitManagement from '../../hook/useUnitManagement'
 import { usePurcahseOrderColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
+import LazySelect from '../common/LazySelect'
 
 import {
     Button,
@@ -13,32 +14,32 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next'
+import SearchModal from '../common/SearchModal'
 const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
-
-    const [selectedItem, setSelectedItem] = useState(null);
+    const { t } = useTranslation()
     const [isAddItem, setIAdd] = useState(isAdd);
+    const [modalOpen, setModalOpen] = useState({
+        open: false,
+        params: null,
+        type: null
+    });
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedUnit, setSelectedUnit] = useState(null);
 
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
-        invoice?.Warehouse ? {
-            Warehouse: invoice.Warehouse,
+        {
             pageNumber: 1,
             pageSize: 100
-        } : null,
-        {
-            skip: !invoice?.Warehouse
         }
     );
 
     const { data: unitsData, isLoading: isLoadingFilterUnits } = useGetProductUnitsByIdQuery(
-        selectedItem ? selectedItem : null,
+        selectedProduct ? selectedProduct.value : null,
         {
-            skip: !selectedItem
+            skip: !selectedProduct
         }
     );
     const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
@@ -48,12 +49,12 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
 
     const units = !isLoadingUnits
-        ? allUnits?.map((item) => ({ value: item.UnitID, label: item.Unit_AR }))
+        ? allUnits?.map((item) => ({ value: item.UnitID.toString(), label: item.Unit_AR }))
         : [];
 
 
     const filteredUnits = !isLoadingFilterUnits
-        ? unitsData?.map((item) => ({ value: item.UnitId, label: item.UnitAr }))
+        ? unitsData?.map((item) => ({ value: item.UnitId.toString(), label: item.UnitAr }))
         : [];
 
     const products = !isLoadingProducts
@@ -108,60 +109,82 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
             operation: "delete",
             data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.Unit, LineID: data.LineId },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
+            cacheData: data,
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
             finalCallback: handleCancel
         })
     };
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedRowParams, setSelectedRowParams] = useState(null);
-    const [selectedUnit, setSelectedUnit] = useState(null);
 
-    const handleOpenModal = (params) => {
-        setSelectedRowParams(params);
-        setSelectedUnit(params.data.Unit);
-        setModalOpen(true);
+
+    const handleOpenModal = ({
+        params,
+        type
+    }) => {
+        setModalOpen({
+            open: true,
+            params,
+            type
+        });
     };
 
     const handleSelectChange = (e) => {
-        setSelectedUnit(Number(e.target.value));
+        if (modalOpen.type === 'product') {
+            setSelectedProduct(e);
+        }
+        if (modalOpen.type === 'unit') {
+            setSelectedUnit(e);
+        }
     };
 
-    const handleSaveUnit = () => {
-        if (selectedRowParams && selectedUnit != null) {
+    const handleSaveOption = () => {
+        const selectedRowParams = modalOpen.params;
+        if (selectedRowParams) {
 
-            selectedRowParams.setValue(selectedUnit.toString());
+            if (modalOpen.type === 'product') {
+                setSelectedProduct(selectedProduct);
+                console.log(selectedProduct)
+                selectedRowParams.setValue(selectedProduct.value);
+                selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
+                selectedRowParams.api.refreshCells({
+                    rowNodes: [selectedRowParams.node],
+                    columns: ['ItemID'],
+                    force: true,
+                });
+            }
+            if (modalOpen.type === 'unit') {
+                console.log(selectedUnit)
+                selectedRowParams.setValue(selectedUnit.value);
+                selectedRowParams.node.data.UnitDescAr = selectedUnit.label;
+                selectedRowParams.node.data.Unit = selectedUnit.value;
+                selectedRowParams.api.refreshCells({
+                    rowNodes: [selectedRowParams.node],
+                    columns: ['Unit'],
+                    force: true,
+                });
+            }
 
-
-
-            console.log(selectedRowParams);
-            // Refresh the cell so formatter reflects changes
-            selectedRowParams.api.refreshCells({
-                rowNodes: [selectedRowParams.node],
-                columns: ['Unit'],
-                force: true,
-            });
-
-            // Optional: update voucherProducts state too, if needed for persistence
-            // setVoucherProducts(prev =>
-            //   prev.map((item, index) =>
-            //     index === selectedRowParams.rowIndex
-            //       ? { ...item, Unit: selectedUnit }
-            //       : item
-            //   )
-            // );
         }
 
-        setModalOpen(false);
+        setModalOpen({
+            open: false,
+            params: null,
+            type: null
+        });
     };
 
     const columns = usePurcahseOrderColDefs({
-        products: products ? products : [], units: units ? units : [], getSelectedVaule: (value) => {
-            setSelectedItem(value);
+        selectProduct: (value) => {
+            handleOpenModal({
+                params: value,
+                type: 'product'
+            })
         }, selectUnit: (value) => {
-            handleOpenModal(value)
+            handleOpenModal({
+                params: value,
+                type: 'unit'
+            })
         },
-        refresh: modalOpen,
 
     })
     return (
@@ -173,33 +196,8 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
                 onSave={onSubmit}
                 columns={columns}
                 initialData={voucherProducts} />
-            <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
-                <DialogTitle>Select Unit</DialogTitle>
-                <DialogContent>
-                    <FormControl fullWidth>
-                        <InputLabel id="unit-select-label">Unit</InputLabel>
-                        <Select
-                            labelId="unit-select-label"
-                            value={selectedUnit ?? ''}
-                            onChange={handleSelectChange}
-                            label="Unit"
-                        >
-                            {(filteredUnits || units).map((unit) => (
-                                <MenuItem key={unit.value} value={unit.value}>
-                                    {unit.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
+            <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
 
-                    </FormControl>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setModalOpen(false)}>Cancel</Button>
-                    <Button variant="contained" onClick={handleSaveUnit}>
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </>
     )
 }
