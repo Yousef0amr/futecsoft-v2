@@ -17,7 +17,7 @@ const usePurchaseOrderManagement = () => {
     });
 }
 
-export const usePurchaseOrderItemsManagement = ({ id }) => {
+export const usePurchaseOrderItemsManagement = ({ id, skip }) => {
     return useEntityManagement({
         apiSlice: purchaseOrderDetailsApi,
         queryHook: useGetAllPurchaseOrderDetailsQuery,
@@ -28,6 +28,7 @@ export const usePurchaseOrderItemsManagement = ({ id }) => {
         defaultQueryArgs: {
             id
         },
+        skip,
         identifier: 'ItemID'
     });
 }

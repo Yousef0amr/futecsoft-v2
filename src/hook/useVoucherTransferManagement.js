@@ -19,7 +19,7 @@ const useVoucherTransferManagement = () => {
 }
 
 
-export const useVoucherTransferItemsManagement = ({ id }) => {
+export const useVoucherTransferItemsManagement = ({ id, skip }) => {
     return useEntityManagement({
         apiSlice: voucherTransferDetailsApi,
         queryHook: useGetAllVoucherTransferDetailsQuery,
@@ -30,6 +30,7 @@ export const useVoucherTransferItemsManagement = ({ id }) => {
         defaultQueryArgs: {
             id
         },
+        skip,
         identifier: 'ItemID'
     });
 }

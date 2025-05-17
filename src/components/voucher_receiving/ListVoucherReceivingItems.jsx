@@ -12,7 +12,7 @@ import { useState } from 'react'
 
 
 const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherRecievingItemsManagement({ id: voucher.DocID });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherRecievingItemsManagement({ id: voucher.DocID, skip: isAdd });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const [isAddItem, setIsAddItem] = React.useState(isAdd);
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();

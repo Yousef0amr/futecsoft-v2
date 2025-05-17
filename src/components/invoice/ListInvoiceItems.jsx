@@ -7,6 +7,7 @@ import { useInvoicesItemsColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
+import calculateInvoiceDetail from '../../utils/calcInvoiceDetl'
 
 
 const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
@@ -35,10 +36,12 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
             skip: !selectedProduct
         }
     );
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
-        = useInvoiceItemsManagement({
-            id: invoice?.DocID
-        });
+
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntity, isDeleting, refetch }
+        = useInvoiceItemsManagement(
+            { id: invoice.DocID, skip: isAdd }
+        );
+
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
 
     const units = !isLoadingUnits
@@ -57,19 +60,36 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
 
         const products = data.reduce((acc, item,) => {
             acc.push({
+                PriceIncludeTax: invoice.PriceIncludeTax,
                 ItemId: item.ItemID,
                 Qty: item.Qty,
                 Unit: item.UnitID,
                 UnitPrice: item.UnitPrice,
-                ItemDiscountPercentage: item.DiscountPercentage,
-                ItemDiscount: item.Discount
+                ItemDiscountPercentage: item.DiscountPercentage !== 0 ? item.DiscountPercentage : +invoice.DiscountPercentage,
+                ItemDiscount: item.Discount !== 0 ? item.Discount : +invoice.Discount
             });
             return acc;
         }, []);
 
+
+        const { details, totals } = calculateInvoiceDetail(products,
+            {
+                ...invoice,
+                TaxPercentage: +invoice.TaxPercentage !== 0 ? +invoice.TaxPercentage : +invoice.Tax
+            }
+        )
+
         if (isAddItem) {
             const invoiceData = {
-                ...invoice, DocID: invoice.DocID,
+                DocID: invoice.DocID, ...totals,
+                Vtype: invoice.Vtype,
+                InvoiceNo: invoice.InvoiceNo,
+                DocDate: invoice.DocDate,
+                Supplier: invoice.Supplier,
+                PriceIncludeTax: invoice.PriceIncludeTax,
+                Note: invoice.Note,
+                Warehouse: invoice.Warehouse,
+                PayType: invoice.PayType,
                 purchase_Invoice_Insert_Details: products
             }
             const result = await onFirstSubmit(invoiceData)
@@ -85,11 +105,13 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
                 return await handleEntityOperation({
                     operation: "add",
                     data: {
-                        ...invoice, LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
+                        ...invoice,
+                        LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
                         UnitPrice: item.UnitPrice, Qty: item.Qty,
                         ItemID: item.ItemID, Unit: item.UnitID,
                         DiscountPercentage: item.DiscountPercentage,
-                        TaxPercentage: item.DiscountPercentage,
+                        ...totals,
+                        Tax: totals.tax,
                         Discount: item.Discount
                     },
                     cacheUpdater: refetch,

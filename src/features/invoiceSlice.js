@@ -33,10 +33,11 @@ export const invoiceDetailsApi = createApi({
     }),
     endpoints: (builder) => ({
         getAllInvoiceDetails: builder.query({
-            query: ({ id }) => ({
-                url: `/GetDatailsByDocID?DocID=${id}`,
-            }),
-            keepUnusedDataFor: longCacheTime,
+            query: ({ id }) => {
+                return {
+                    url: `/GetDatailsByDocID?DocID=${id}`,
+                };
+            },
             transformResponse: (response) => response.Response || response,
         }),
         updateInvoiceDetails: builder.mutation({

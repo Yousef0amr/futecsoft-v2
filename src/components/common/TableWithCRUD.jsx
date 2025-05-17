@@ -27,6 +27,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
     const defaultColDef = useMemo(() => ({ resizable: true, flex: 1, editable: true }), []);
     const initialized = useRef(false);
 
+
     useEffect(() => {
         if (!isLoading && !initialized.current) {
             const data = initialData.map((row, index) => ({ id: index, ...row }));

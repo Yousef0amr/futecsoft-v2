@@ -331,6 +331,7 @@ export const useInvoicesColDefs = () => {
         { field: "SupplierDesc", headerName: t(AppStrings.suppliers), filter: 'agTextColumnFilter' },
         { field: "SubTotal", headerName: t(AppStrings.subTotal), filter: 'agTextColumnFilter' },
         { field: "Tax", headerName: t(AppStrings.taxValue), filter: 'agTextColumnFilter' },
+        { field: "Discount", headerName: t(AppStrings.discountValue), filter: 'agTextColumnFilter' },
         { field: "GrandTotal", headerName: t(AppStrings.grandTotal), filter: 'agTextColumnFilter' },
         { field: "PaymentDescAr", headerName: t(AppStrings.paymentType), filter: 'agTextColumnFilter' },
         { field: "WarehouseName", headerName: t(AppStrings.branch), filter: 'agTextColumnFilter' },
@@ -410,7 +411,7 @@ export const useInvoicesItemsColDefs = ({
         },
         {
             field: 'Discount',
-            headerName: t(AppStrings.taxValue),
+            headerName: t(AppStrings.discountValue),
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,

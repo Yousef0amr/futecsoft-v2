@@ -11,7 +11,7 @@ import SearchModal from '../common/SearchModal'
 
 
 const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data: voucherPorducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherTransferItemsManagement({ id: voucher.DocNo });
+    const { data: voucherPorducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherTransferItemsManagement({ id: voucher.DocNo, skip: isAdd });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits, isLoadingUnits } = useUnitManagement();
     const [isAddItem, setIsAddItem] = useState(isAdd);

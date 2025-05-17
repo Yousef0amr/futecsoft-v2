@@ -4,6 +4,7 @@ import InvoiceInfoFormFields from './InvoiceInfoFormFields';
 import FormComponent from './../common/FormComponent';
 import ListInvoiceItems from './ListInvoiceItems';
 
+
 const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { invoiceSchema, invoiceUpdatedSchema } = useValidators();
 
@@ -21,6 +22,11 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
                         Supplier: watch('Supplier'),
                         PayType: watch('PayType'),
                         Note: watch('Note'),
+                        DiscountPercentage: watch('DiscountPercentage'),
+                        TaxPercentage: watch('TaxPercentage'),
+                        Tax: watch('Tax'),
+                        Discount: watch('Discount'),
+                        PriceIncludeTax: watch('PriceIncludeTax'),
                     }} />
                 </>
             }

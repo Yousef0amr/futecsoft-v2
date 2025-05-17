@@ -17,7 +17,7 @@ const useVoucherRecievingManagement = () => {
     });
 }
 
-export const useVoucherRecievingItemsManagement = ({ id }) => {
+export const useVoucherRecievingItemsManagement = ({ id, skip }) => {
     return useEntityManagement({
         apiSlice: voucherRecievingDetailsApi,
         queryHook: useGetAllVoucherRecievingDetailsQuery,
@@ -28,6 +28,7 @@ export const useVoucherRecievingItemsManagement = ({ id }) => {
         defaultQueryArgs: {
             id
         },
+        skip,
         identifier: 'ItemID'
     });
 }

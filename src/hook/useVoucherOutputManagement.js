@@ -19,7 +19,7 @@ const useVoucherOutputManagement = () => {
 }
 
 
-export const useVoucherOutputItemsManagement = ({ id }) => {
+export const useVoucherOutputItemsManagement = ({ id, skip }) => {
     return useEntityManagement({
         apiSlice: voucherOutputDetailsApi,
         queryHook: useGetAllVoucherOutputDetailsQuery,
@@ -30,6 +30,7 @@ export const useVoucherOutputItemsManagement = ({ id }) => {
         defaultQueryArgs: {
             id
         },
+        skip,
         identifier: 'ItemID'
     });
 }

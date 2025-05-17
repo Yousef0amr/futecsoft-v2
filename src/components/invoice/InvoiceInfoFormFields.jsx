@@ -4,6 +4,8 @@ import FormFieldsComponent from '../common/FormFieldsComponent'
 import useBranchManagement from '../../hook/useBranchManagement'
 import usePaymentTypeManagement from '../../hook/usePaymentTypeManagement'
 import useSupplierManagement from '../../hook/useSupplierManagement'
+import useTaxManagement from '../../hook/useTaxManagement'
+import useDiscountManagement from '../../hook/useDiscountManagement'
 
 const InvoiceInfoFormFields = ({ register, errors, setValue, watch }) => {
     const { data: branchesData, isLoading: isLoadingBranches } = useBranchManagement()
@@ -20,9 +22,19 @@ const InvoiceInfoFormFields = ({ register, errors, setValue, watch }) => {
     const payTypes = !isLoadingPayTypes
         ? payTypesData?.map((item) => ({ value: item.Ptype.toString(), label: item.PaymentArDesc }))
         : [];
+    const { data: taxesData, isLoading: isLoadingTaxes } = useTaxManagement();
+    const taxes = !isLoadingTaxes
+        ? taxesData?.map((item) => ({ value: item.TaxPercentage, label: item.TaxAr }))
+        : [];
+
+
+    const { data: discountsData, isLoading: isLoadingDiscounts } = useDiscountManagement()
+    const discounts = !isLoadingDiscounts
+        ? discountsData?.map((item) => ({ value: item.DiscountPercentage, label: item.DiscountTypeAr }))
+        : [];
 
     return (
-        <FormFieldsComponent fields={invoiceInfFormFields} options={{ Warehouse: branches ? branches : [], Supplier: suppliers ? suppliers : [], PayType: payTypes ? payTypes : [] }} setValue={setValue} errors={errors} register={register} watch={watch} />
+        <FormFieldsComponent fields={invoiceInfFormFields} options={{ DiscountPercentage: discounts ? discounts : [], TaxPercentage: taxes ? taxes : [], Warehouse: branches ? branches : [], Supplier: suppliers ? suppliers : [], PayType: payTypes ? payTypes : [] }} setValue={setValue} errors={errors} register={register} watch={watch} />
     )
 }
 

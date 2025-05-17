@@ -44,22 +44,30 @@ const SelectMenu = ({
         );
     }, [options, searchTerm]);
 
-    const menuItems = useMemo(() => (
-        filteredOptions.length > 0 ? (
-            filteredOptions.map(option => (
-                <MenuItem key={option.value} value={String(option.value)}>
-                    {multiple && (
-                        <Checkbox checked={selectedValue.includes(String(option.value))} />
-                    )}
-                    {option.label}
-                </MenuItem>
-            ))
-        ) : (
-            <MenuItem disabled>
-                {t(`${AppStrings.noDataAvailable}`)}
+    const menuItems = useMemo(() => {
+        const items = filteredOptions.map(option => (
+            <MenuItem key={option.value} value={String(option.value)}>
+                {multiple && (
+                    <Checkbox checked={selectedValue.includes(String(option.value))} />
+                )}
+                {option.label}
             </MenuItem>
-        )
-    ), [filteredOptions, selectedValue, multiple, t]);
+        ));
+
+        if (!multiple) {
+            items.unshift(
+                <MenuItem key="clear" value="">
+                    {t(AppStrings.clearSelection || 'Clear selection')}
+                </MenuItem>
+            );
+        }
+
+        return items.length > 0 ? items : (
+            <MenuItem disabled>
+                {t(AppStrings.noDataAvailable)}
+            </MenuItem>
+        );
+    }, [filteredOptions, selectedValue, multiple, t]);
 
     useEffect(() => {
         if (options.length > 0 && selectedValue !== undefined) {

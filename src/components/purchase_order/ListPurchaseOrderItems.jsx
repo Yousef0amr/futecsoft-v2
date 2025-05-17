@@ -44,7 +44,7 @@ const ListPurchaseOrderItems = ({ isAdd = false, onFirstSubmit, invoice }) => {
     );
     const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch }
         = usePurchaseOrderItemsManagement({
-            id: invoice?.DocID
+            id: invoice?.DocID, skip: isAdd
         });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
 

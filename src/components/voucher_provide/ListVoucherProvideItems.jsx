@@ -10,7 +10,7 @@ import SearchModal from '../common/SearchModal'
 
 
 const ListVoucherProvideItems = ({ voucher, isAdd, onFirstSubmit }) => {
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherProvideItemsManagement({ id: voucher.ReqNo });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherProvideItemsManagement({ id: voucher.ReqNo, skip: isAdd });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
 
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();

@@ -8,7 +8,7 @@ import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../featu
 import useUnitManagement from '../../hook/useUnitManagement'
 import SearchModal from '../common/SearchModal'
 const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ id: voucher.DocNo });
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ id: voucher.DocNo, skip: isAdd });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
     const [isAddItem, setIsAddItem] = useState(isAdd);

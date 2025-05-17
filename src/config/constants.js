@@ -244,10 +244,6 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.product.add,
                 href: routes.product.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.product.list, subHref: routes.product.edit },
-                //     { label: AppStrings.add, href: routes.product.add },
-                // ]
             },
             {
                 label: AppStrings.categories,
@@ -255,10 +251,6 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.category.add,
                 href: routes.category.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.category.list },
-                //     { label: AppStrings.add, href: routes.category.add },
-                // ]
             },
             {
                 label: AppStrings.prices_and_costs,
@@ -278,33 +270,20 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.supplier.list,
                 subHref: routes.supplier.add,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.supplier.list },
-                //     { label: AppStrings.add, href: routes.supplier.add },
-                // ]
             },
-            {
-                label: AppStrings.purchase_order,
-                icon: faTruck,
-                type: 'unExpanded',
-                href: routes.purchase_order.list,
-                subHref: routes.purchase_order.add,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
-                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
-                // ]
-            },
+            // {
+            //     label: AppStrings.purchase_order,
+            //     icon: faTruck,
+            //     type: 'unExpanded',
+            //     href: routes.purchase_order.list,
+            //     subHref: routes.purchase_order.add,
+            // },
             {
                 label: AppStrings.purchase_invoices,
                 icon: faFileInvoice,
                 type: 'unExpanded',
                 href: routes.invoice.list,
                 subHref: routes.invoice.add,
-
-                // subActions: [{ label: AppStrings.list, href: routes.invoice.list },
-                // { label: AppStrings.add, href: routes.invoice.add },
-
-                // ]
             },
             {
                 label: AppStrings.input_vouchers,
@@ -312,9 +291,6 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.input_voucher.list,
                 subHref: routes.input_voucher.add,
-                // subActions: [{ label: AppStrings.list, href: routes.input_voucher.list },
-                // { label: AppStrings.add, href: routes.input_voucher.add },
-                // ]
             },
             {
                 label: AppStrings.output_vouchers,
@@ -322,9 +298,6 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.output_voucher.list,
                 subHref: routes.output_voucher.add,
-                // subActions: [{ label: AppStrings.list, href: routes.output_voucher.list },
-                // { label: AppStrings.add, href: routes.output_voucher.add },
-                // ]
             },
             {
                 label: AppStrings.transfer_vouchers,
@@ -332,34 +305,22 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.transfer_voucher.list,
                 subHref: routes.transfer_voucher.add,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
-                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
-                // ]
             },
-          
-            {
-                label: AppStrings.provide_voucher,
-                icon: faTruck,
-                type: 'unExpanded',
-                href: routes.provide_voucher.list,
-                subHref: routes.provide_voucher.add,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
-                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
-                // ]
-            },
-            {
-                label: AppStrings.recieving_voucher,
-                icon: faTruck,
-                type: 'unExpanded',
-                href: routes.recieving_voucher.list,
-                subHref: routes.recieving_voucher.add,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.transfer_voucher.list },
-                //     { label: AppStrings.add, href: routes.transfer_voucher.add },
-                // ]
-            },
+
+            // {
+            //     label: AppStrings.provide_voucher,
+            //     icon: faTruck,
+            //     type: 'unExpanded',
+            //     href: routes.provide_voucher.list,
+            //     subHref: routes.provide_voucher.add,
+            // },
+            // {
+            //     label: AppStrings.recieving_voucher,
+            //     icon: faTruck,
+            //     type: 'unExpanded',
+            //     href: routes.recieving_voucher.list,
+            //     subHref: routes.recieving_voucher.add,
+            // },
         ]
     },
     {
@@ -516,13 +477,10 @@ export const defaultVoucherTypes = {
 }
 
 export const defaultInvoiceItem = {
-    Qty: 1,
-    Cost: 1,
-    UnitPrice: 1,
-    ItemDiscount: 0,
-    ItemDiscountPercentage: 0,
+    discount: 0,
+    discountPer: 0,
+    tax: 0,
     TaxPercentage: 0,
-    TaxExc: false,
     PriceIncludeTax: false,
     Note: ""
 }

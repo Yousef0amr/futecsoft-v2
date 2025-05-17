@@ -14,12 +14,13 @@ const useVoucherInputManagement = () => {
             pageNumber: 1,
             pageSize: 10,
         },
+
         identifier: 'DocID'
     });
 }
 
 
-export const useVoucherInputItemsManagement = ({ id }) => {
+export const useVoucherInputItemsManagement = ({ id, skip }) => {
     return useEntityManagement({
         apiSlice: voucherInputDetailsApi,
         queryHook: useGetAllVoucherInputDetailsQuery,
@@ -30,6 +31,7 @@ export const useVoucherInputItemsManagement = ({ id }) => {
         defaultQueryArgs: {
             id
         },
+        skip,
         identifier: 'ItemID'
     });
 }

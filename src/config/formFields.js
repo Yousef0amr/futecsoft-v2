@@ -261,7 +261,12 @@ export const invoiceInfFormFields = [
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
     { name: 'Supplier', label: AppStrings.suppliers, required: false, options: [], type: 'select' },
     { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
+    { name: 'Tax', label: AppStrings.taxValue, required: false, type: 'text' },
+    { name: 'TaxPercentage', label: AppStrings.taxPercentage, required: false, options: [], type: 'select' },
+    { name: 'Discount', label: AppStrings.discountValue, required: false, type: 'text' },
+    { name: 'DiscountPercentage', label: AppStrings.discount_percentage, required: false, options: [], type: 'select' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
+    { name: 'PriceIncludeTax', label: AppStrings.priceIncludeTax, required: false, type: 'check' },
 ]
 
 export const invoiceItemsFormFields = [
@@ -351,7 +356,7 @@ export const voucherRecievingFormFields = [
 
 export const voucherProvideFormFields = [
     { name: 'ReqNo', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
-    { name: 'ByUser', label: AppStrings.createdBy,  required: false, options: [], type: 'select' },
+    { name: 'ByUser', label: AppStrings.createdBy, required: false, options: [], type: 'select' },
     { name: 'ReqDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Notes', label: AppStrings.note, required: false, type: 'text' },
 
