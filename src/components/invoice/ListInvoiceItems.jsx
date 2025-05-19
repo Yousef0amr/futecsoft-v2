@@ -58,6 +58,8 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
 
     const onSubmit = async (data) => {
 
+        console.log(data, invoice)
+
         const products = data.reduce((acc, item,) => {
             acc.push({
                 PriceIncludeTax: invoice.PriceIncludeTax,
@@ -65,8 +67,10 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
                 Qty: item.Qty,
                 Unit: item.UnitID,
                 UnitPrice: item.UnitPrice,
-                ItemDiscountPercentage: item.DiscountPercentage !== 0 ? item.DiscountPercentage : +invoice.DiscountPercentage,
-                ItemDiscount: item.Discount !== 0 ? item.Discount : +invoice.Discount
+                TaxPercentage: item.TaxPercentage,
+                Tax: item.Tax,
+                ItemDiscountPercentage: item.DiscountPercentage,
+                ItemDiscount: item.Discount
             });
             return acc;
         }, []);
@@ -75,51 +79,54 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
         const { details, totals } = calculateInvoiceDetail(products,
             {
                 ...invoice,
-                TaxPercentage: +invoice.TaxPercentage !== 0 ? +invoice.TaxPercentage : +invoice.Tax
+                TaxPercentage: +invoice.Tax,
+
             }
         )
 
-        if (isAddItem) {
-            const invoiceData = {
-                DocID: invoice.DocID, ...totals,
-                Vtype: invoice.Vtype,
-                InvoiceNo: invoice.InvoiceNo,
-                DocDate: invoice.DocDate,
-                Supplier: invoice.Supplier,
-                PriceIncludeTax: invoice.PriceIncludeTax,
-                Note: invoice.Note,
-                Warehouse: invoice.Warehouse,
-                PayType: invoice.PayType,
-                purchase_Invoice_Insert_Details: products
-            }
-            const result = await onFirstSubmit(invoiceData)
+        console.log(totals)
 
-            if (result?.Success) {
-                setIAdd(false)
-            }
-            return result;
-        }
+        // if (isAddItem) {
+        //     const invoiceData = {
+        //         DocID: invoice.DocID, ...totals,
+        //         Vtype: invoice.Vtype,
+        //         InvoiceNo: invoice.InvoiceNo,
+        //         DocDate: invoice.DocDate,
+        //         Supplier: invoice.Supplier,
+        //         PriceIncludeTax: invoice.PriceIncludeTax,
+        //         Note: invoice.Note,
+        //         Warehouse: invoice.Warehouse,
+        //         PayType: invoice.PayType,
+        //         purchase_Invoice_Insert_Details: products
+        //     }
+        //     const result = await onFirstSubmit(invoiceData)
 
-        Promise.all(
-            data.map(async (item) => {
-                return await handleEntityOperation({
-                    operation: "add",
-                    data: {
-                        ...invoice,
-                        LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
-                        UnitPrice: item.UnitPrice, Qty: item.Qty,
-                        ItemID: item.ItemID, Unit: item.UnitID,
-                        DiscountPercentage: item.DiscountPercentage,
-                        ...totals,
-                        Tax: totals.tax,
-                        Discount: item.Discount
-                    },
-                    cacheUpdater: refetch,
-                    successMessage: AppStrings.product_added_successfully,
-                    errorMessage: AppStrings.something_went_wrong
-                });
-            })
-        )
+        //     if (result?.Success) {
+        //         setIAdd(false)
+        //     }
+        //     return result;
+        // }
+
+        // Promise.all(
+        //     data.map(async (item) => {
+        //         return await handleEntityOperation({
+        //             operation: "add",
+        //             data: {
+        //                 ...invoice,
+        //                 LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
+        //                 UnitPrice: item.UnitPrice, Qty: item.Qty,
+        //                 ItemID: item.ItemID, Unit: item.UnitID,
+        //                 DiscountPercentage: item.DiscountPercentage,
+        //                 ...totals,
+        //                 Tax: totals.tax,
+        //                 Discount: item.Discount
+        //             },
+        //             cacheUpdater: refetch,
+        //             successMessage: AppStrings.product_added_successfully,
+        //             errorMessage: AppStrings.something_went_wrong
+        //         });
+        //     })
+        // )
     };
 
 
@@ -207,7 +214,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
     })
 
     return (
-        <> <TableWithCRUD
+        <div> <TableWithCRUD
             isLoading={isLoading}
             isDeleting={isDeleting}
             onDelete={handleOnDeleteClick}
@@ -215,7 +222,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
             columns={columns}
             initialData={voucherProducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
-        </>
+        </div>
 
     )
 }

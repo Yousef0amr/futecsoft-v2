@@ -261,12 +261,16 @@ export const invoiceInfFormFields = [
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
     { name: 'Supplier', label: AppStrings.suppliers, required: false, options: [], type: 'select' },
     { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
-    { name: 'Tax', label: AppStrings.taxValue, required: false, type: 'text' },
-    { name: 'TaxPercentage', label: AppStrings.taxPercentage, required: false, options: [], type: 'select' },
-    { name: 'Discount', label: AppStrings.discountValue, required: false, type: 'text' },
     { name: 'DiscountPercentage', label: AppStrings.discount_percentage, required: false, options: [], type: 'select' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'PriceIncludeTax', label: AppStrings.priceIncludeTax, required: false, type: 'check' },
+]
+
+export const invoiceInfoDetlFormFields = [
+    { name: 'Tax', label: AppStrings.taxValue, show: false, type: 'text' },
+    { name: 'Discount', label: AppStrings.discountValue, show: false, type: 'text' },
+    { name: 'SubTotal', label: AppStrings.subTotal, show: false, type: 'text', disabled: true },
+    { name: 'GrandTotal', label: AppStrings.grandTotal, show: false, type: 'text', disabled: true },
 ]
 
 export const invoiceItemsFormFields = [

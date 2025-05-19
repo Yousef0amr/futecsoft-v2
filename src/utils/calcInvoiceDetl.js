@@ -1,4 +1,6 @@
 function calculateInvoiceDetail(items, invoice) {
+
+    console.log(items, invoice)
     let summary = {
         TotalSubTotal: 0,
         TotalDiscount: 0,
@@ -18,7 +20,6 @@ function calculateInvoiceDetail(items, invoice) {
         // Get tax percentage
         let taxPercentage = parseFloat(+invoice.TaxPercentage ?? 0);
 
-
         if (isNaN(taxPercentage)) taxPercentage = 0;
         if (taxPercentage >= 1) taxPercentage = taxPercentage / 100;
 
@@ -36,20 +37,35 @@ function calculateInvoiceDetail(items, invoice) {
             discount = item.UnitPrice * discountPercentage * item.Qty;
         }
 
-        // Determine unit price and applicable tax
+        if (item.PriceIncludeTax) {
+            if (invoice.PriceIncludeTax) {
+                unitPrice = item.UnitPrice / (1 + item.TaxPercentage);
+                taxPer = invoice.TaxPercentage;
+            }
+            else {
+                unitPrice = item.UnitPrice;
+                taxPer = 0;
+            }
+        }
+        else {
+            unitPrice = item.UnitPrice;
+            if (invoice.PriceIncludeTax)
+                taxPer = invoice.TaxPercentage;
+        }
 
         if (invoice.PriceIncludeTax) {
-            unitPrice = item.UnitPrice / (1 + taxPercentage);
             taxPer = taxPercentage;
         } else {
-            unitPrice = item.UnitPrice;
             taxPer = 0;
         }
 
 
         subTotal = unitPrice * item.Qty;
         tax = (subTotal - discount) * taxPer;
-        netTotal = subTotal - discount + tax;
+        netTotal = (subTotal - discount) + tax;
+
+        console.log(subTotal, discount, tax, netTotal)
+
         discountPer = subTotal !== 0 ? discount / subTotal : 0;
 
         summary.TotalSubTotal += subTotal;
@@ -89,6 +105,7 @@ function calculateInvoiceDetail(items, invoice) {
 }
 
 export default calculateInvoiceDetail;
+
 
 
 

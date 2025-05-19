@@ -391,6 +391,7 @@ export const useInvoicesItemsColDefs = ({
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
+            valueGetter: (params) => params.data?.Qty ?? 1,
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -399,6 +400,7 @@ export const useInvoicesItemsColDefs = ({
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
+            valueGetter: (params) => params.data?.UnitPrice ?? 0,
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -407,6 +409,7 @@ export const useInvoicesItemsColDefs = ({
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
+            valueGetter: (params) => params.data?.DiscountPercentage ?? 0,
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -415,6 +418,33 @@ export const useInvoicesItemsColDefs = ({
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
+            valueGetter: (params) => params.data?.Discount ?? 0,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'TaxPercentage',
+            headerName: t(AppStrings.taxPercentage),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            valueGetter: (params) => params.data?.TaxPercentage ?? 0,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'Tax',
+            headerName: t(AppStrings.taxValue),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            valueGetter: (params) => params.data?.Tax ?? 0,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'Total',
+            headerName: t(AppStrings.grandTotal),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: false,
             valueParser: (params) => Number(params.newValue),
         },
     ], [t, selectProduct, selectUnit]);

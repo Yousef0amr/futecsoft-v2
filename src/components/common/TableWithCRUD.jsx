@@ -39,7 +39,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
     const handleAddRow = () => {
         const newRow = {
             id: rowData.length + 1,
-            ...Object.fromEntries(columns.map(col => [col.field, ""]))
+            ...Object.fromEntries(columns.map(col => [col.field, null]))
         };
         setRowData(prev => [...prev, newRow]);
         setDirtyRows(prev => new Set(prev).add(newRow.id));
