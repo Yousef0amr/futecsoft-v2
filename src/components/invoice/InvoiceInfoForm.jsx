@@ -15,7 +15,7 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
             {({ register, errors, setValue, watch }) =>
                 <Stack gap={8}>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
-                    <ListInvoiceItems isAdd={isAdd} onFirstSubmit={onFirstSubmit} invoice={{
+                    <ListInvoiceItems setValue={setValue} isAdd={isAdd} onFirstSubmit={onFirstSubmit} invoice={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
                         InvoiceNo: watch('InvoiceNo'),

@@ -1,110 +1,87 @@
-function calculateInvoiceDetail(items, invoice) {
 
-    console.log(items, invoice)
-    let summary = {
-        TotalSubTotal: 0,
-        TotalDiscount: 0,
-        TotalTax: 0,
-        TotalGrand: 0,
-    };
+export function calculateItemDetails(items) {
+    return items.map((item) => {
+        let subTotal = 0;
+        let taxAmount = 0;
 
-    const details = items.map((item) => {
-        let unitPrice = 0,
-            subTotal = 0,
-            netTotal = 0,
-            tax = 0,
-            taxPer = 0,
-            discount = 0,
-            discountPer = 0;
+        const taxPercentage = item.TaxPercentage > 1
+            ? item.TaxPercentage / 100
+            : item.TaxPercentage || 0;
 
-        // Get tax percentage
-        let taxPercentage = parseFloat(+invoice.TaxPercentage ?? 0);
+        const discountPercentage = item.ItemDiscountPercentage > 1
+            ? item.ItemDiscountPercentage / 100
+            : item.ItemDiscountPercentage || 0;
 
-        if (isNaN(taxPercentage)) taxPercentage = 0;
-        if (taxPercentage >= 1) taxPercentage = taxPercentage / 100;
-
-        // Normalize discount percentage
-        let discountPercentage =
-            item.ItemDiscountPercentage > 1
-                ? item.ItemDiscountPercentage / 100
-                : item.ItemDiscountPercentage || 0;
-
-        // Calculate discount
+        let discount = 0;
         if (item.ItemDiscount > 0) {
             discount = item.ItemDiscount;
-        }
-        if (discountPercentage > 0) {
+        } else if (discountPercentage > 0) {
             discount = item.UnitPrice * discountPercentage * item.Qty;
         }
 
-        if (item.PriceIncludeTax) {
-            if (invoice.PriceIncludeTax) {
-                unitPrice = item.UnitPrice / (1 + item.TaxPercentage);
-                taxPer = invoice.TaxPercentage;
-            }
-            else {
-                unitPrice = item.UnitPrice;
-                taxPer = 0;
-            }
-        }
-        else {
-            unitPrice = item.UnitPrice;
-            if (invoice.PriceIncludeTax)
-                taxPer = invoice.TaxPercentage;
+        // Normalize unit price if price includes tax
+        let unitPrice = item.UnitPrice;
+        if (item.PriceIncludeTax && taxPercentage > 0) {
+            unitPrice = item.UnitPrice / (1 + taxPercentage);
         }
 
-        if (invoice.PriceIncludeTax) {
-            taxPer = taxPercentage;
-        } else {
-            taxPer = 0;
-        }
-
-
-        subTotal = unitPrice * item.Qty;
-        tax = (subTotal - discount) * taxPer;
-        netTotal = (subTotal - discount) + tax;
-
-        console.log(subTotal, discount, tax, netTotal)
-
-        discountPer = subTotal !== 0 ? discount / subTotal : 0;
-
-        summary.TotalSubTotal += subTotal;
-        summary.TotalDiscount += discount;
-        summary.TotalTax += tax;
-        summary.TotalGrand += netTotal;
+        subTotal = (unitPrice * item.Qty) - discount;
+        taxAmount = subTotal * taxPercentage;
+        const netTotal = subTotal + taxAmount;
 
         return {
+            DocID: item.DocID,
             ItemId: item.ItemId,
             Unit: item.Unit,
             UnitPrice: item.UnitPrice,
             Qty: item.Qty,
             SubTotal: Number(subTotal.toFixed(3)),
-            DiscountPercentage: Number((discountPer * 100).toFixed(2)),
+            DiscountPercentage: Number(((discount / (item.UnitPrice * item.Qty)) || 0).toFixed(2)),
             Discount: Number(discount.toFixed(3)),
-            TaxPercentage: Number(taxPer.toFixed(3)),
-            Tax: Number(tax.toFixed(3)),
+            TaxPercentage: Number(taxPercentage.toFixed(3)),
+            Tax: Number(taxAmount.toFixed(3)),
             GrandTotal: Number(netTotal.toFixed(3)),
         };
     });
-
-    const TotalDiscountPercentage =
-        summary.TotalSubTotal > 0
-            ? Number(((summary.TotalDiscount / summary.TotalSubTotal) * 100).toFixed(2))
-            : 0;
-
-    const totals = {
-        subTotal: Number(summary.TotalSubTotal.toFixed(3)),
-        discount: Number(summary.TotalDiscount.toFixed(3)),
-        discountPer: Number(TotalDiscountPercentage),
-        tax: Number(summary.TotalTax.toFixed(3)),
-        netTotal: Number(summary.TotalGrand.toFixed(3)),
-        TaxPercentage: Number(invoice.TaxPercentage),
-    };
-
-    return { details, totals };
 }
 
-export default calculateInvoiceDetail;
+
+
+export function calculateInvoiceTotals(itemDetails) {
+    const summary = itemDetails.reduce(
+        (acc, item) => {
+            acc.SubTotal += item.SubTotal;
+            acc.Discount += item.Discount;
+            acc.Tax += item.Tax;
+            acc.GrandTotal += item.GrandTotal;
+            return acc;
+        },
+        {
+            SubTotal: 0,
+            Discount: 0,
+            Tax: 0,
+            GrandTotal: 0,
+        }
+    );
+
+    const discountPer = summary.SubTotal > 0
+        ? (summary.Discount / summary.SubTotal) * 100
+        : 0;
+
+    const taxPer = summary.SubTotal > 0
+        ? (summary.Tax / summary.SubTotal) * 100
+        : 0;
+
+    return {
+        subTotal: Number(summary.SubTotal.toFixed(3)),
+        discount: Number(summary.Discount.toFixed(3)),
+        discountPer: Number(discountPer.toFixed(2)),
+        tax: Number(summary.Tax.toFixed(3)),
+        taxPer: Number(taxPer.toFixed(2)),
+        netTotal: Number(summary.GrandTotal.toFixed(3)),
+    };
+}
+
 
 
 

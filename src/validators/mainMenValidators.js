@@ -235,6 +235,8 @@ const MainMenuValidators = () => {
         Tax: yup.number().optional().default(0),
         Vtype: yup.number().required().nullable(),
         PriceIncludeTax: yup.boolean().optional(),
+        GrandTotal: yup.number().optional().default(0),
+        SubTotal: yup.number().optional().default(0),
     }
 
     const invoiceUpdatedSchemaValidator = {

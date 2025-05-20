@@ -7,10 +7,10 @@ import { useInvoicesItemsColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
-import calculateInvoiceDetail from '../../utils/calcInvoiceDetl'
+import { calculateItemDetails, calculateInvoiceTotals } from '../../utils/calcInvoiceDetl'
 
 
-const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
+const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
 
@@ -53,80 +53,85 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
         : [];
 
     const products = !isLoadingProducts
-        ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr }))
+        ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr, taxPer: item.TaxPercentage, discountable: item.Discountable, taxable: item.Taxable }))
         : [];
 
     const onSubmit = async (data) => {
 
-        console.log(data, invoice)
+        console.log(data)
 
         const products = data.reduce((acc, item,) => {
             acc.push({
+                DocID: invoice.DocID,
                 PriceIncludeTax: invoice.PriceIncludeTax,
                 ItemId: item.ItemID,
                 Qty: item.Qty,
                 Unit: item.UnitID,
                 UnitPrice: item.UnitPrice,
+                Discountable: item.Discountable,
+                Taxable: item.Taxable,
                 TaxPercentage: item.TaxPercentage,
-                Tax: item.Tax,
-                ItemDiscountPercentage: item.DiscountPercentage,
-                ItemDiscount: item.Discount
+                Tax: invoice.Tax,
+                ItemDiscountPercentage: invoice.DiscountPercentage > 0 ? invoice.DiscountPercentage : item.DiscountPercentage,
+                ItemDiscount: invoice.Discount > 0 ? invoice.Discount : item.Discount
             });
             return acc;
         }, []);
 
-
-        const { details, totals } = calculateInvoiceDetail(products,
-            {
-                ...invoice,
-                TaxPercentage: +invoice.Tax,
-
-            }
-        )
+        const val = calculateItemDetails(products)
+        const totals = calculateInvoiceTotals(val)
 
         console.log(totals)
 
-        // if (isAddItem) {
-        //     const invoiceData = {
-        //         DocID: invoice.DocID, ...totals,
-        //         Vtype: invoice.Vtype,
-        //         InvoiceNo: invoice.InvoiceNo,
-        //         DocDate: invoice.DocDate,
-        //         Supplier: invoice.Supplier,
-        //         PriceIncludeTax: invoice.PriceIncludeTax,
-        //         Note: invoice.Note,
-        //         Warehouse: invoice.Warehouse,
-        //         PayType: invoice.PayType,
-        //         purchase_Invoice_Insert_Details: products
-        //     }
-        //     const result = await onFirstSubmit(invoiceData)
 
-        //     if (result?.Success) {
-        //         setIAdd(false)
-        //     }
-        //     return result;
-        // }
+        setValue("GrandTotal", totals.netTotal)
+        setValue("SubTotal", totals.subTotal)
 
-        // Promise.all(
-        //     data.map(async (item) => {
-        //         return await handleEntityOperation({
-        //             operation: "add",
-        //             data: {
-        //                 ...invoice,
-        //                 LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
-        //                 UnitPrice: item.UnitPrice, Qty: item.Qty,
-        //                 ItemID: item.ItemID, Unit: item.UnitID,
-        //                 DiscountPercentage: item.DiscountPercentage,
-        //                 ...totals,
-        //                 Tax: totals.tax,
-        //                 Discount: item.Discount
-        //             },
-        //             cacheUpdater: refetch,
-        //             successMessage: AppStrings.product_added_successfully,
-        //             errorMessage: AppStrings.something_went_wrong
-        //         });
-        //     })
-        // )
+
+        if (isAddItem) {
+            const invoiceData = {
+                DocID: invoice.DocID, ...totals,
+                Vtype: invoice.Vtype,
+                InvoiceNo: invoice.InvoiceNo,
+                DocDate: invoice.DocDate,
+                Supplier: invoice.Supplier,
+                PriceIncludeTax: invoice.PriceIncludeTax,
+                Note: invoice.Note,
+                Warehouse: invoice.Warehouse,
+                PayType: invoice.PayType,
+                purchase_Invoice_Insert_Details: val
+            }
+
+            const result = await onFirstSubmit(invoiceData)
+
+            if (result?.Success) {
+                setIAdd(false)
+                setValue("GrandTotal", 0)
+                setValue("SubTotal", 0)
+            }
+            return result;
+        }
+
+        Promise.all(
+            data.map(async (item) => {
+                return await handleEntityOperation({
+                    operation: "add",
+                    data: {
+                        ...invoice,
+                        LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
+                        UnitPrice: item.UnitPrice, Qty: item.Qty,
+                        ItemID: item.ItemID, Unit: item.UnitID,
+                        DiscountPercentage: item.DiscountPercentage,
+                        ...totals,
+                        Tax: totals.tax,
+                        Discount: item.Discount
+                    },
+                    cacheUpdater: refetch,
+                    successMessage: AppStrings.product_added_successfully,
+                    errorMessage: AppStrings.something_went_wrong
+                });
+            })
+        )
     };
 
 
@@ -168,9 +173,12 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false }) => {
 
             if (modalOpen.type === 'product') {
                 setSelectedProduct(selectedProduct);
-                console.log(selectedProduct)
+
                 selectedRowParams.setValue(selectedProduct.value);
                 selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
+                selectedRowParams.node.data.TaxPercentage = selectedProduct.taxPer;
+                selectedRowParams.node.data.Discountable = selectedProduct.discountable;
+                selectedRowParams.node.data.Taxable = selectedProduct.taxable;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['ItemID'],
