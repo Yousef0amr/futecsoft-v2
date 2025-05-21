@@ -79,41 +79,37 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
     const resetTotals = () => {
         setValue("GrandTotal", 0)
         setValue("SubTotal", 0)
+        setValue("Tax", 0)
+        setValue("Discount", 0)
     }
 
     const onSubmit = async (data) => {
-
-        console.log(data)
 
         const products = restructureData({ data, invoice })
 
         const val = calculateItemDetails(products)
         const totals = calculateInvoiceTotals(val)
 
-        console.log(totals)
-
         setValue("Tax", totals.tax)
         setValue("Discount", totals.discount)
         setValue("GrandTotal", totals.netTotal)
         setValue("SubTotal", totals.subTotal)
 
+        const invoiceData = {
+            DocID: invoice.DocID, ...totals,
+            Vtype: invoice.Vtype,
+            InvoiceNo: invoice.InvoiceNo,
+            DocDate: invoice.DocDate,
+            Supplier: invoice.Supplier,
+            PriceIncludeTax: invoice.PriceIncludeTax,
+            Note: invoice.Note,
+            Warehouse: invoice.Warehouse,
+            PayType: invoice.PayType,
+            purchase_Invoice_Insert_Details: val
+        }
 
         if (isAddItem) {
-            const invoiceData = {
-                DocID: invoice.DocID, ...totals,
-                Vtype: invoice.Vtype,
-                InvoiceNo: invoice.InvoiceNo,
-                DocDate: invoice.DocDate,
-                Supplier: invoice.Supplier,
-                PriceIncludeTax: invoice.PriceIncludeTax,
-                Note: invoice.Note,
-                Warehouse: invoice.Warehouse,
-                PayType: invoice.PayType,
-                purchase_Invoice_Insert_Details: val
-            }
-
             const result = await onFirstSubmit(invoiceData)
-
             if (result?.Success) {
                 setIAdd(false)
                 resetTotals()
@@ -121,27 +117,14 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
             return result;
         }
 
-        Promise.all(
-            data.map(async (item) => {
-                return await handleEntityOperation({
-                    operation: "add",
-                    data: {
-                        ...invoice,
-                        LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1].LindId + 1 : 1,
-                        UnitPrice: item.UnitPrice, Qty: item.Qty,
-                        ItemID: item.ItemID, Unit: item.UnitID,
-                        DiscountPercentage: item.DiscountPercentage,
-                        ...totals,
-                        Tax: item.tax
-                        , TaxPercentage: item.TaxPercentage,
-                        Discount: item.Discount
-                    },
-                    cacheUpdater: refetch,
-                    successMessage: AppStrings.product_added_successfully,
-                    errorMessage: AppStrings.something_went_wrong
-                });
-            })
-        )
+        return await handleEntityOperation({
+            operation: "add",
+            data: invoiceData,
+            cacheUpdater: refetch,
+            successMessage: AppStrings.product_added_successfully,
+            errorMessage: AppStrings.something_went_wrong
+        });
+
     };
 
 

@@ -19,7 +19,8 @@ export const invoicesApi = createDynamicApi({
     baseEndpoint: BASEURL + INVOICES,
     transformData: (data) => transformData(data),
     isJson: true,
-    active: false
+    active: false,
+    updateString: 'UpdateHeader',
 });
 
 export const invoiceDetailsApi = createApi({
@@ -42,9 +43,9 @@ export const invoiceDetailsApi = createApi({
         }),
         updateInvoiceDetails: builder.mutation({
             query: (data) => ({
-                url: '/UpdateWithDetails',
+                url: '/Update',
                 method: 'POST',
-                body: convertToFormData(data),
+                body: data,
             }),
         }),
         deleteInvoiceDetails: builder.mutation({
