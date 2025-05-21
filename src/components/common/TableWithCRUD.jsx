@@ -13,7 +13,7 @@ import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
 
 
-const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting }) => {
+const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting, onAddNewRow, resetTotals }) => {
     const gridRef = useRef(null);
     const { t, i18n } = useTranslation();
     const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);
@@ -38,11 +38,14 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
 
     const handleAddRow = () => {
         const newRow = {
-            id: rowData.length + 1,
+            id: (rowData.length + 1).toString(),
             ...Object.fromEntries(columns.map(col => [col.field, null]))
         };
         setRowData(prev => [...prev, newRow]);
         setDirtyRows(prev => new Set(prev).add(newRow.id));
+
+        if (rowData.length !== 0)
+            onAddNewRow && onAddNewRow(rowData, gridRef.current.api)
     };
 
     const handleOpen = (data) => {
@@ -65,13 +68,24 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
 
 
     const handleRemoveRow = (data) => {
-        setRowData(prev => prev.filter(row => row.id !== data.id));
+        const newRowData = rowData.filter(row => row.id !== data.id);
+
+        setRowData(newRowData);
+
         setDirtyRows(prev => {
             const newSet = new Set(prev);
             newSet.delete(data.id);
             return newSet;
         });
+
+        if (newRowData.length !== 0 && onAddNewRow)
+            onAddNewRow(newRowData, gridRef.current.api)
+
+        if (newRowData.length === 0 && resetTotals) {
+            resetTotals();
+        }
     };
+
 
     const colDefs = useMemo(() => [
         {
@@ -159,6 +173,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
                 domLayout='normal'
                 enableRtl={isRtl}
                 localeText={localeText}
+                getRowId={params => params.data.id}
                 onCellValueChanged={handleCellValueChanged}
             />
 

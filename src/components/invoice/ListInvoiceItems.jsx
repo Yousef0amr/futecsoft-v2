@@ -10,6 +10,26 @@ import SearchModal from '../common/SearchModal'
 import { calculateItemDetails, calculateInvoiceTotals } from '../../utils/calcInvoiceDetl'
 
 
+const restructureData = ({ data, invoice }) => {
+    return data.reduce((acc, item,) => {
+        acc.push({
+            DocID: invoice.DocID,
+            PriceIncludeTax: invoice.PriceIncludeTax,
+            ItemId: item.ItemID,
+            Qty: item.Qty,
+            Unit: item.UnitID,
+            UnitPrice: item.UnitPrice,
+            Discountable: item.Discountable,
+            Taxable: item.Taxable,
+            TaxPercentage: item.TaxPercentage,
+            Tax: (item.TaxPercentage / 100) * ((item.Qty * item.UnitPrice) - item.Discount),
+            ItemDiscountPercentage: invoice.DiscountPercentage > 0 ? invoice.DiscountPercentage : item.DiscountPercentage,
+            ItemDiscount: invoice.Discount > 0 ? invoice.Discount : item.Discount
+        });
+        return acc;
+    }, []);
+}
+
 const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
@@ -56,34 +76,24 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr, taxPer: item.TaxPercentage, discountable: item.Discountable, taxable: item.Taxable }))
         : [];
 
+    const resetTotals = () => {
+        setValue("GrandTotal", 0)
+        setValue("SubTotal", 0)
+    }
+
     const onSubmit = async (data) => {
 
         console.log(data)
 
-        const products = data.reduce((acc, item,) => {
-            acc.push({
-                DocID: invoice.DocID,
-                PriceIncludeTax: invoice.PriceIncludeTax,
-                ItemId: item.ItemID,
-                Qty: item.Qty,
-                Unit: item.UnitID,
-                UnitPrice: item.UnitPrice,
-                Discountable: item.Discountable,
-                Taxable: item.Taxable,
-                TaxPercentage: item.TaxPercentage,
-                Tax: invoice.Tax,
-                ItemDiscountPercentage: invoice.DiscountPercentage > 0 ? invoice.DiscountPercentage : item.DiscountPercentage,
-                ItemDiscount: invoice.Discount > 0 ? invoice.Discount : item.Discount
-            });
-            return acc;
-        }, []);
+        const products = restructureData({ data, invoice })
 
         const val = calculateItemDetails(products)
         const totals = calculateInvoiceTotals(val)
 
         console.log(totals)
 
-
+        setValue("Tax", totals.tax)
+        setValue("Discount", totals.discount)
         setValue("GrandTotal", totals.netTotal)
         setValue("SubTotal", totals.subTotal)
 
@@ -106,8 +116,7 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
 
             if (result?.Success) {
                 setIAdd(false)
-                setValue("GrandTotal", 0)
-                setValue("SubTotal", 0)
+                resetTotals()
             }
             return result;
         }
@@ -123,7 +132,8 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
                         ItemID: item.ItemID, Unit: item.UnitID,
                         DiscountPercentage: item.DiscountPercentage,
                         ...totals,
-                        Tax: totals.tax,
+                        Tax: item.tax
+                        , TaxPercentage: item.TaxPercentage,
                         Discount: item.Discount
                     },
                     cacheUpdater: refetch,
@@ -221,12 +231,41 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
 
     })
 
+    const onAddNewRow = (data, grid) => {
+
+        if (!data) return
+
+        const products = restructureData({ data, invoice })
+        const val = calculateItemDetails(products)
+        const totals = calculateInvoiceTotals(val)
+
+        data.forEach((p, index) => {
+            let rowNode = grid.getRowNode(p.id);
+            rowNode.data.GrandTotal = val[index].GrandTotal
+            console.log(rowNode)
+            grid.refreshCells({
+                rowNodes: [rowNode],
+                columns: ['GrandTotal'],
+                force: true,
+            });
+        })
+
+        setValue("Tax", totals.tax)
+        setValue("Discount", totals.discount)
+        setValue("GrandTotal", totals.netTotal)
+        setValue("SubTotal", totals.subTotal)
+    }
+
+
+
     return (
         <div> <TableWithCRUD
             isLoading={isLoading}
             isDeleting={isDeleting}
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
+            onAddNewRow={onAddNewRow}
+            resetTotals={resetTotals}
             columns={columns}
             initialData={voucherProducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />

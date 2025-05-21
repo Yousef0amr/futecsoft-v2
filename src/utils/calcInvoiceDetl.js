@@ -3,8 +3,9 @@ export function calculateItemDetails(items) {
     return items.map((item) => {
         let subTotal = 0;
         let taxAmount = 0;
+        let taxPercentage = 0;
 
-        const taxPercentage = item.TaxPercentage > 1
+         taxPercentage = item.TaxPercentage > 1
             ? item.TaxPercentage / 100
             : item.TaxPercentage || 0;
 
@@ -25,9 +26,10 @@ export function calculateItemDetails(items) {
             unitPrice = item.UnitPrice / (1 + taxPercentage);
         }
 
-        subTotal = (unitPrice * item.Qty) - discount;
+        subTotal = (unitPrice * item.Qty) ;
         taxAmount = subTotal * taxPercentage;
-        const netTotal = subTotal + taxAmount;
+        const netTotal = subTotal + taxAmount - discount;
+        console.log(item);
 
         return {
             DocID: item.DocID,
@@ -39,7 +41,7 @@ export function calculateItemDetails(items) {
             DiscountPercentage: Number(((discount / (item.UnitPrice * item.Qty)) || 0).toFixed(2)),
             Discount: Number(discount.toFixed(3)),
             TaxPercentage: Number(taxPercentage.toFixed(3)),
-            Tax: Number(taxAmount.toFixed(3)),
+            Tax: Number((taxPercentage * subTotal).toFixed(3)),
             GrandTotal: Number(netTotal.toFixed(3)),
         };
     });
@@ -63,6 +65,7 @@ export function calculateInvoiceTotals(itemDetails) {
             GrandTotal: 0,
         }
     );
+    console.log(summary);
 
     const discountPer = summary.SubTotal > 0
         ? (summary.Discount / summary.SubTotal) * 100

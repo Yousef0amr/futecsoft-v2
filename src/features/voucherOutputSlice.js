@@ -31,6 +31,13 @@ export const voucherOutputDetailsApi = createApi({
         }
     }),
     endpoints: (builder) => ({
+        getVoucherOutputTypes: builder.query({
+            query: () => ({
+                url: '/GetAllOutputVoucherType',
+            }),
+            keepUnusedDataFor: longCacheTime,
+            transformResponse: (response) => response.Response || response,
+        }),
         getAllVoucherOutputDetails: builder.query({
             query: ({ id }) => ({
                 url: `/GetDatailsByDocID?DocID=${id}`,
@@ -62,11 +69,13 @@ export const {
     useAddMutation: useAddVoucherOutputMutation,
     useUpdateMutation: useUpdateVoucherOutputMutation,
     useDeleteMutation: useDeleteVoucherOutputMutation,
+
 } = voucherOutputsApi;
 
 
 export const {
     useGetAllVoucherOutputDetailsQuery,
     useUpdateVoucherOutputDetailsMutation,
-    useDeleteVoucherOutputDetailsMutation
+    useDeleteVoucherOutputDetailsMutation,
+    useGetVoucherOutputTypesQuery
 } = voucherOutputDetailsApi;

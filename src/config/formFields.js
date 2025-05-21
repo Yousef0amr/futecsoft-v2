@@ -310,7 +310,6 @@ export const voucherOutputFormFields = [
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
     { name: 'OutputType', label: AppStrings.output_type, required: false, options: [], type: 'select' },
-    { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
 ]
 
 

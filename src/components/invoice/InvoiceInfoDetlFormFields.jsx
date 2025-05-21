@@ -22,13 +22,13 @@ const InvoiceInfoDetlFormFields = ({ register, errors, setValue, watch, isAdd })
             }
 
             {
-                !isAdd && invoiceInfoSum2FormFields.map((field) => {
+                invoiceInfoSum2FormFields.map((field) => {
                     return <Col key={field.name} xs={12} sm={6} md={4} lg={2} >
                         <Stack className='text-center mt-2' style={{ borderRadius: '5px', color: 'white', backgroundColor: 'var( --border-color-1)', border: '1px solid var(--border-color-1)', padding: '2px', }} >
                             <span >
                                 {t(field.label)}
                             </span>
-                            <input {...register(field.name)} type={field.type} className='border-0 outline-0 bg-transparent text-white text-center p-2' disabled={field.disabled} />
+                            <input {...register(field.name)} type={field.type} className='border-0 outline-0 bg-transparent text-white text-center p-2'  /> 
                         </Stack>
                     </Col>
                 })

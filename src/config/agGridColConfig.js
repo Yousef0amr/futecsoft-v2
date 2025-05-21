@@ -596,6 +596,16 @@ export const useVoucherInputItemsColDefs = ({
             filter: true,
             valueParser: (params) => Number(params.newValue),
         },
+        {
+            field: 'GrandTotal',
+            headerName: t(AppStrings.grandTotal),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: false,
+            filter: true,
+            valueGetter: (params) => +params.data.Qty * +params.data.UnitPrice,
+            valueParser: (params) => Number(params.newValue),
+        },
     ], [t, selectProduct, selectUnit]);
 };
 
@@ -662,6 +672,16 @@ export const useVoucherItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: true,
             filter: true,
+            valueParser: (params) => Number(params.newValue),
+        },
+        {
+            field: 'GrandTotal',
+            headerName: t(AppStrings.grandTotal),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: false,
+            filter: true,
+            valueGetter: (params) => +params.data.Qty * +params.data.Cost,
             valueParser: (params) => Number(params.newValue),
         },
     ], [t, selectProduct, selectUnit]);
@@ -906,7 +926,6 @@ export const useVoucherOutputColDefs = () => {
         { field: "DocNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
         { field: "DocDate", headerName: t(AppStrings.date), filter: 'agTextColumnFilter' },
         { field: "Note", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },
-        { field: "PaymentDescAr", headerName: t(AppStrings.paymentType), filter: 'agTextColumnFilter' },
         { field: "WarehouseName", headerName: t(AppStrings.branch), filter: 'agTextColumnFilter' },
     ], [t]);
 }
