@@ -15,8 +15,6 @@ const FormCard = ({ icon, title, optionComponent, navButton, open = false, model
                 justifyContent: 'center',
                 gap: '20px',
                 width: '100%',
-                overflow: 'auto',
-                minHeight: 'fit-content',
                 color: 'var(--text-color)',
             }}>
                 <CardTitle icon={icon} title={title} navButton={navButton}  >

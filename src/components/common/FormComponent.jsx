@@ -47,7 +47,7 @@ const FormComponent = ({
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {typeof children === 'function' ? children({ register, errors, setValue, watch, defaultValues }) : children}
-            <Stack direction="horizontal" gap={3} className="mt-4">
+            <Stack direction="horizontal" gap={3} className=" flex justify-content-center">
                 {
                     customSubmit ? null :
                         <Button
@@ -64,20 +64,6 @@ const FormComponent = ({
                             {isLoading ? <SpinnerLoader /> : t(AppStrings.save)}
                         </Button>
                 }
-
-                <Button
-                    onClick={() => reset()}
-                    sx={{
-                        fontSize: '16px',
-                        marginTop: '30px',
-                        width: '50%',
-                        color: 'white',
-                        padding: '3px',
-                        backgroundColor: 'var(--secondary-color)',
-                    }}
-                >
-                    {t(AppStrings.reset)}
-                </Button>
             </Stack>
         </Form>
     );

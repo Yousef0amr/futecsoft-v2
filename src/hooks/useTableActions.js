@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 
-const useTableActions = ({ path, tab }) => {
+const useTableActions = ({ path, tab, editContent = null }) => {
     const navigate = useNavigate();
     const [active, setActive] = useState({ isOpen: false, editable: false, data: null });
 
@@ -24,8 +24,9 @@ const useTableActions = ({ path, tab }) => {
             handleDeleteClick: (data) => {
                 setActive({ isOpen: true, editable: false, data });
             },
+            editContent,
         }),
-        [navigate, path, tab]
+        [navigate, path, tab, editContent]
     );
 
     return {

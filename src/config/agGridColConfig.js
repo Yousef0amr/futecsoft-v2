@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppStrings from './../config/appStrings';
 import ActiveEditor from '../components/common/ActiveEditor';
-
+import SelectDataButton from '../components/common/SelectDataButton';
 
 export const useBranchColDefs = () => {
     const { t } = useTranslation();
@@ -352,17 +352,7 @@ export const useInvoicesItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectProduct(params)}
-                        >
-                            {params.data.ItemDescAr || 'select product'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectProduct} name={t(AppStrings.selectProduct)} selectedData={params.data.ItemDescAr} />
             },
             filter: true,
         },
@@ -372,17 +362,7 @@ export const useInvoicesItemsColDefs = ({
             flex: 1,
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectUnit(params)}
-                        >
-                            {params.data.UnitDescAr || 'select unit'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectUnit} name={t(AppStrings.selectUnit)} selectedData={params.data.UnitDescAr} />
             },
         },
         {
@@ -545,17 +525,7 @@ export const useVoucherInputItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectProduct(params)}
-                        >
-                            {params.data.ItemDescAr || 'select product'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectProduct} name={t(AppStrings.selectProduct)} selectedData={params.data.ItemDescAr} />
             },
             filter: true,
         },
@@ -565,17 +535,7 @@ export const useVoucherInputItemsColDefs = ({
             flex: 1,
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectUnit(params)}
-                        >
-                            {params.data.UnitDescAr || 'select unit'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectUnit} name={t(AppStrings.selectUnit)} selectedData={params.data.UnitDescAr} />
             },
         },
         {
@@ -589,7 +549,7 @@ export const useVoucherInputItemsColDefs = ({
         },
         {
             field: 'UnitPrice',
-            headerName: t(AppStrings.price),
+            headerName: t(AppStrings.cost),
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
@@ -623,17 +583,7 @@ export const useVoucherItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectProduct(params)}
-                        >
-                            {params.data.ItemDescAr || 'select product'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectProduct} name={t(AppStrings.selectProduct)} selectedData={params.data.ItemDescAr} />
             },
             filter: true,
         },
@@ -643,17 +593,7 @@ export const useVoucherItemsColDefs = ({
             flex: 1,
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectUnit(params)}
-                        >
-                            {params.data.UnitDescAr || 'select unit'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectUnit} name={t(AppStrings.selectUnit)} selectedData={params.data.UnitDescAr} />
             },
         },
         {
@@ -667,7 +607,7 @@ export const useVoucherItemsColDefs = ({
         },
         {
             field: 'Cost',
-            headerName: t(AppStrings.price),
+            headerName: t(AppStrings.cost),
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
@@ -702,17 +642,7 @@ export const usePurcahseOrderColDefs = ({
             headerClass: 'ag-header-center',
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectProduct(params)}
-                        >
-                            {params.data.ItemDescAr || 'select product'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectProduct} name={t(AppStrings.selectProduct)} selectedData={params.data.ItemDescAr} />
             },
             filter: true,
         },
@@ -722,17 +652,7 @@ export const usePurcahseOrderColDefs = ({
             flex: 1,
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectUnit(params)}
-                        >
-                            {params.data.UnitDescAr || 'select unit'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectUnit} name={t(AppStrings.selectUnit)} selectedData={params.data.UnitDescAr} />
             },
         },
 
@@ -782,17 +702,7 @@ export const useVoucherReceivingItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectProduct(params)}
-                        >
-                            {params.data.ItemDescAr || 'select product'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectProduct} name={t(AppStrings.selectProduct)} selectedData={params.data.ItemDescAr} />
             },
             filter: true,
         },
@@ -802,17 +712,7 @@ export const useVoucherReceivingItemsColDefs = ({
             flex: 1,
             editable: false,
             cellRenderer: (params) => {
-                return <div className="d-flex gap-2">
-                    <div >
-                        <button
-                            type='button'
-                            className="button-danger bg-transparent border-0"
-                            onClick={() => selectUnit(params)}
-                        >
-                            {params.data.UnitDescAr || 'select unit'}
-                        </button>
-                    </div>
-                </div>
+                return <SelectDataButton params={params} selectData={selectUnit} name={t(AppStrings.selectUnit)} selectedData={params.data.UnitDescAr} />
             },
         },
         {

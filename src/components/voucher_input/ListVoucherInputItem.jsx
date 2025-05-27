@@ -172,7 +172,7 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
 
 
     return (
-        <>
+        <div>
             <TableWithCRUD
                 isLoading={isLoading}
                 isDeleting={isDeleting}
@@ -183,7 +183,7 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
             />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
 
-        </>
+        </div>
 
     )
 }

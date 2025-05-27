@@ -28,7 +28,7 @@ const InvoiceInfoDetlFormFields = ({ register, errors, setValue, watch, isAdd })
                             <span >
                                 {t(field.label)}
                             </span>
-                            <input {...register(field.name)} type={field.type} className='border-0 outline-0 bg-transparent text-white text-center p-2'  /> 
+                            <input {...register(field.name)} type={field.type} className='border-0 outline-0 bg-transparent text-white text-center p-2' />
                         </Stack>
                     </Col>
                 })

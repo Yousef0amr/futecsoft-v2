@@ -10,6 +10,7 @@ import NavButton from "./NavButton";
 
 const ListComponent = ({
     entityName,
+    editIcon = null,
     entityKey,
     fetchHook,
     columnDefsHook,
@@ -25,7 +26,7 @@ const ListComponent = ({
     const [quickFilterText, setQuickFilterText] = useState();
     const { data, isLoading, deleteEntity, isDeleting, deleteEntityFromCache } = fetchHook();
     const columnDefs = columnDefsHook();
-    const { active, handleCancel, defaultActions } = useTableActions({ path: routes.edit });
+    const { active, handleCancel, defaultActions } = useTableActions({ path: routes.edit, editContent: editIcon });
     const { handleEntityOperation } = useEntityOperations({ deleteEntity });
 
 

@@ -5,10 +5,11 @@ import { useVoucherOutputColDefs } from '../../config/agGridColConfig'
 import { routes } from '../../config/constants'
 import { faTruckFront } from '@fortawesome/free-solid-svg-icons'
 import AppStrings from '../../config/appStrings'
-
+import { Visibility } from '@mui/icons-material'
 const ListOutputVoucher = () => {
     return (
         <ListComponent
+            editIcon={<Visibility style={{ color: "#c3c3c3" }} />}
             entityName="voucher_output"
             entityKey="DocNo"
             fetchHook={useVoucherOutputManagement}

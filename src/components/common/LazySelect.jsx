@@ -38,6 +38,7 @@ const LazySelect = ({ options, selectedOption, setSelectedOption }) => (
             defaultValue={selectedOption}
             components={{ MenuList }}
             options={options}
+
             placeholder="اختر"
         />
     </div>

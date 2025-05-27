@@ -10,7 +10,7 @@ const VoucherInputForm = ({ customSubmit, onFirstSubmit, onSubmit, isLoading, de
     return (
         <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={voucherInputUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
-                <>
+                <div>
                     <VoucherInputFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
                     <ListVoucherInputItem isAdd={isAdd} onFirstSubmit={onFirstSubmit} voucher={
                         {
@@ -20,7 +20,7 @@ const VoucherInputForm = ({ customSubmit, onFirstSubmit, onSubmit, isLoading, de
                         }
                     } />
 
-                </>
+                </div>
             }
         </FormComponent>
     )

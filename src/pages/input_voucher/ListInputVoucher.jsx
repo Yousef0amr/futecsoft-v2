@@ -5,10 +5,12 @@ import { routes } from '../../config/constants'
 import { faTruckArrowRight } from '@fortawesome/free-solid-svg-icons'
 import useVoucherInputManagement from '../../hook/useVoucherInputManagement'
 import { useVoucherInputColDefs } from '../../config/agGridColConfig'
+import { Visibility } from '@mui/icons-material'
 
 const ListInputVoucher = () => {
     return (
         <ListComponent
+            editIcon={<Visibility style={{ color: "#c3c3c3" }} />}
             entityName="voucher_input"
             entityKey="DocID"
             fetchHook={useVoucherInputManagement}

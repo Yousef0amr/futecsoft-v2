@@ -157,10 +157,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.branch.add,
                 href: routes.branch.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.branch.list },
-                //     { label: AppStrings.add, href: routes.branch.add }
-                // ]
+
             },
 
             {
@@ -169,11 +166,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.unit.add,
                 href: routes.unit.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.unit.list },
-                //     { label: AppStrings.add, href: routes.unit.add },
 
-                // ]
             },
 
             {
@@ -182,10 +175,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.offer.add,
                 href: routes.offer.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.offer.list },
-                //     { label: AppStrings.add, href: routes.offer.add },
-                // ]
+
             },
             {
                 label: AppStrings.discount_types,
@@ -193,10 +183,6 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.discountType.add,
                 href: routes.discountType.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.discountType.list },
-                //     { label: AppStrings.add, href: routes.discountType.add },
-                // ]
             },
             {
                 label: AppStrings.taxes,
@@ -204,10 +190,6 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.tax.add,
                 href: routes.tax.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.tax.list },
-                //     { label: AppStrings.add, href: routes.tax.add },
-                // ]
             },
             {
                 label: AppStrings.currencies,
@@ -215,10 +197,6 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.currency.add,
                 href: routes.currency.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.currency.list },
-                //     { label: AppStrings.add, href: routes.currency.add },
-                // ]
             },
             {
                 label: AppStrings.payment_methods,
@@ -226,10 +204,6 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.paymentMethod.add,
                 href: routes.paymentMethod.list,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.paymentMethod.list },
-                //     { label: AppStrings.add, href: routes.paymentMethod.add },
-                // ]
             },
 
         ]
@@ -252,12 +226,12 @@ export const menuList = [
                 subHref: routes.category.add,
                 href: routes.category.list,
             },
-            {
-                label: AppStrings.prices_and_costs,
-                icon: faMoneyBill1Wave,
-                type: 'unExpanded',
-                href: routes.product.pricesAndCosts
-            }
+            // {
+            //     label: AppStrings.prices_and_costs,
+            //     icon: faMoneyBill1Wave,
+            //     type: 'unExpanded',
+            //     href: routes.product.pricesAndCosts
+            // }
         ]
     },
     {
@@ -323,33 +297,33 @@ export const menuList = [
             // },
         ]
     },
-    {
-        label: AppStrings.delivery_companies,
-        icon: faCar,
-        subActions: [
-            {
-                label: AppStrings.define_companies,
-                icon: faCar,
-                type: 'unExpanded',
-                href: routes.delivery_company.list,
-                subHref: routes.delivery_company.add,
-                // subActions: [{ label: AppStrings.list, href: routes.delivery_company.list },
-                // { label: AppStrings.add, href: routes.delivery_company.add },
-                // ]
-            },
-            {
-                label: AppStrings.delivery_discounts,
-                icon: faCar,
-                type: 'unExpanded',
-                href: routes.delivery_discount.list,
-                subHref: routes.delivery_discount.add,
-                // subActions: [
-                //     { label: AppStrings.list, href: routes.delivery_discount.list },
-                //     { label: AppStrings.add, href: routes.delivery_discount.add },
-                // ]
-            }
-        ]
-    },
+    // {
+    //     label: AppStrings.delivery_companies,
+    //     icon: faCar,
+    //     subActions: [
+    //         {
+    //             label: AppStrings.define_companies,
+    //             icon: faCar,
+    //             type: 'unExpanded',
+    //             href: routes.delivery_company.list,
+    //             subHref: routes.delivery_company.add,
+    //             // subActions: [{ label: AppStrings.list, href: routes.delivery_company.list },
+    //             // { label: AppStrings.add, href: routes.delivery_company.add },
+    //             // ]
+    //         },
+    //         {
+    //             label: AppStrings.delivery_discounts,
+    //             icon: faCar,
+    //             type: 'unExpanded',
+    //             href: routes.delivery_discount.list,
+    //             subHref: routes.delivery_discount.add,
+    //             // subActions: [
+    //             //     { label: AppStrings.list, href: routes.delivery_discount.list },
+    //             //     { label: AppStrings.add, href: routes.delivery_discount.add },
+    //             // ]
+    //         }
+    //     ]
+    // },
     {
         label: AppStrings.user_management,
         icon: faUser,

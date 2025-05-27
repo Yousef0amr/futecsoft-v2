@@ -23,7 +23,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
     const [dirtyRows, setDirtyRows] = useState(new Set());
     const [open, setOpen] = useState({ data: null, isOpen: false });
 
-    const containerStyle = useMemo(() => ({ width: "100%", height: "60vh" }), []);
+    const containerStyle = useMemo(() => ({ width: "100%", height: "35vh" }), []);
     const defaultColDef = useMemo(() => ({ resizable: true, flex: 1, editable: true }), []);
     const initialized = useRef(false);
 
@@ -68,7 +68,8 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
 
 
     const handleRemoveRow = (data) => {
-        const newRowData = rowData.filter(row => row.id !== data.id);
+        console.log(data)
+        const newRowData = rowData.filter(row => +row.id !== +data.id);
 
         setRowData(newRowData);
 
@@ -94,7 +95,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
             editable: false,
             cellRenderer: (params) => (
                 <div className="d-flex gap-2">
-                    <div >
+                    {<div >
                         <button
                             type='button'
                             className="button-danger bg-transparent border-0"
@@ -102,17 +103,17 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
                         >
                             <Close color="error" />
                         </button>
-                    </div>
-
-                    <div className="buttonCell px-0 py-1">
-                        <button
-                            type='button'
-                            className="button-secondary removeButton "
-                            onClick={() => handleOpen(params.data)}
-                        >
-                            <DeleteOutline />
-                        </button>
-                    </div>
+                    </div>}
+                    {
+                        <div className="buttonCell px-0 py-1">
+                            <button
+                                type='button'
+                                className="button-secondary removeButton "
+                                onClick={() => handleOpen(params.data)}
+                            >
+                                <DeleteOutline />
+                            </button>
+                        </div>}
                 </div>
             ),
         },
@@ -128,8 +129,11 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
     };
 
     return (
-        <div style={containerStyle} className="ag-theme-alpine w-100 p-1 mt-4">
+        <div className="mt-4">
             <div className="mb-3 d-flex gap-2">
+
+
+
                 <Button
                     onClick={handleAddRow}
                     className='d-flex align-items-center gap-2'
@@ -145,37 +149,57 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
                     <FontAwesomeIcon icon={faAdd} />
                     {t(AppStrings.add_new_unit)}
                 </Button>
-
                 <Button
                     onClick={handleSaveAll}
                     disabled={dirtyRows.size === 0}
                     className='d-flex align-items-center gap-2'
                     variant='contained'
                     sx={{
-                        textTransform: "capitalize",
+                        fontSize: '16px',
+                        color: 'white',
+                        padding: '3px',
                         backgroundColor: 'var(--primary-color)',
-                        fontSize: '14px',
-                        color: '#fff'
                     }}
                 >
                     <FontAwesomeIcon icon={faSave} />
-                    {t(AppStrings.save_all)}
+                    {t(AppStrings.save)}
                 </Button>
             </div>
-
-            <AgGridReact
-                ref={gridRef}
-                rowData={rowData}
-                columnDefs={colDefs}
-                defaultColDef={defaultColDef}
-                editType="fullRow"
-                stopEditingWhenCellsLoseFocus={true}
-                domLayout='normal'
-                enableRtl={isRtl}
-                localeText={localeText}
-                getRowId={params => params.data.id}
-                onCellValueChanged={handleCellValueChanged}
-            />
+            <div style={containerStyle} className="ag-theme-alpine w-100 p-1">
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={colDefs}
+                    defaultColDef={defaultColDef}
+                    editType="fullRow"
+                    stopEditingWhenCellsLoseFocus={true}
+                    domLayout='normal'
+                    loading={isLoading}
+                    enableRtl={isRtl}
+                    localeText={localeText}
+                    getRowId={params => params.data.id}
+                    onCellValueChanged={handleCellValueChanged}
+                />
+            </div>
+            {/* <div className="d-flex justify-content-center">
+                <Button
+                    onClick={handleSaveAll}
+                    disabled={dirtyRows.size === 0}
+                    className='d-flex align-items-center gap-2 mt-3'
+                    variant='contained'
+                    sx={{
+                        fontSize: '16px',
+                        width: '50%',
+                        marginTop: '30px',
+                        color: 'white',
+                        padding: '3px',
+                        backgroundColor: 'var(--primary-color)',
+                    }}
+                >
+                    <FontAwesomeIcon icon={faSave} />
+                    {t(AppStrings.save)}
+                </Button>
+            </div> */}
 
             <DialogModel open={open.isOpen}>
                 <DeleteComponent

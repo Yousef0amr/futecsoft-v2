@@ -13,8 +13,9 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
     return (
         <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
-                <Stack gap={8}>
+                <Stack gap={2}>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
+
                     <ListInvoiceItems setValue={setValue} isAdd={isAdd} onFirstSubmit={onFirstSubmit} invoice={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
