@@ -367,7 +367,8 @@ export const menuList = [
                 label: AppStrings.user_permissions,
                 icon: faUserLock,
                 type: 'unExpanded',
-                href: routes.permission.list
+                href: routes.permission.list,
+                subHrefEdit: routes.permission.edit,
             }
         ]
     },
