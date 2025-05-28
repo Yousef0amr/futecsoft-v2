@@ -5,7 +5,7 @@ export function calculateItemDetails(items) {
         let taxAmount = 0;
         let taxPercentage = 0;
 
-         taxPercentage = item.TaxPercentage > 1
+        taxPercentage = item.TaxPercentage > 1
             ? item.TaxPercentage / 100
             : item.TaxPercentage || 0;
 
@@ -26,10 +26,10 @@ export function calculateItemDetails(items) {
             unitPrice = item.UnitPrice / (1 + taxPercentage);
         }
 
-        subTotal = (unitPrice * item.Qty) ;
+        subTotal = (unitPrice * item.Qty);
         taxAmount = subTotal * taxPercentage;
         const netTotal = subTotal + taxAmount - discount;
-        console.log(item);
+
 
         return {
             DocID: item.DocID,

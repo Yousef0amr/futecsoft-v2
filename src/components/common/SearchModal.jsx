@@ -23,7 +23,7 @@ const SearchModal = ({
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>{t(AppStrings.cancel)}</Button>
-                <Button variant="contained" onClick={() => handleSaveOption()}>
+                <Button variant="contained" className='bg-[var(--primary-color)]' onClick={() => handleSaveOption()}>
                     {t(AppStrings.save)}
                 </Button>
             </DialogActions>

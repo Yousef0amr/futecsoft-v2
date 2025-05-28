@@ -2,10 +2,16 @@ import React from 'react'
 import { Row, Col, Stack } from 'react-bootstrap'
 import { invoiceInfoSum1FormFields, invoiceInfoSum2FormFields } from './../../config/formFields'
 import { useTranslation } from 'react-i18next'
+import { Checkbox } from '@mui/material'
+
 
 
 const InvoiceInfoDetlFormFields = ({ register, errors, setValue, watch, isAdd }) => {
     const { t } = useTranslation()
+    const [enableDiscount, setEnableDiscount] = React.useState(false)
+    const handleDiscount = (value) => {
+        setEnableDiscount(value.target.checked)
+    }
     return (
         <Row >
             {
@@ -28,7 +34,32 @@ const InvoiceInfoDetlFormFields = ({ register, errors, setValue, watch, isAdd })
                             <span >
                                 {t(field.label)}
                             </span>
-                            <input {...register(field.name)} type={field.type} className='border-0 outline-0 bg-transparent text-white text-center p-2' />
+                            <div className='d-flex justify-content-center align-items-center gap-3' style={{
+                                width: "100%",
+                            }}>
+                                <input {...register(field.name)} onBlur={(e) => {
+                                    if (enableDiscount) {
+                                        console.log(+e.target.value)
+                                        setValue(field.name, (e.target.value / 100))
+                                    } else {
+                                        setValue(field.name, e.target.value)
+                                    }
+                                }} type={field.type} className='border-0 outline-0 bg-transparent text-white text-center p-2 w-100' />
+                                {field.showCheck && <div>
+                                    <Checkbox
+                                        sx={{
+                                            '& .MuiSvgIcon-root': { fontSize: 20 },
+                                            color: "white",
+                                            '&.Mui-checked': {
+                                                color: "white",
+                                            },
+                                        }}
+                                        checked={enableDiscount}
+                                        onChange={handleDiscount}
+                                    />
+                                </div>}
+                            </div>
+
                         </Stack>
                     </Col>
                 })

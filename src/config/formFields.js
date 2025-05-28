@@ -104,7 +104,7 @@ export const offersFormFields = [
     { name: 'FromDate', label: AppStrings.from_date, required: true, type: 'date' },
     { name: 'ToDate', label: AppStrings.to_date, required: true, type: 'date' },
 
-    { name: 'Product', label: AppStrings.product, required: true, options: [], type: 'select' },
+    { name: 'Product', label: AppStrings.product, required: true, type: 'custom' },
     { name: 'IsActive', label: AppStrings.isActive, type: 'check' },
 ]
 
@@ -113,13 +113,13 @@ export const priceOfferFormFields = [
 ]
 
 export const qtyOfferFormFields = [
-    ...priceOfferFormFields,
     { name: 'Qty', label: AppStrings.quantity, required: false, type: 'number' },
+    ...priceOfferFormFields,
 ]
 
 export const extraOfferFormFields = [
     { name: 'Qty', label: AppStrings.quantity, required: false, type: 'number' },
-    { name: 'ExtraProduct', label: AppStrings.free_product, required: false, options: [], type: 'select' },
+    { name: 'ExtraProduct', label: AppStrings.free_product, required: false, type: 'custom' },
 ]
 
 export const offerTypeFormFields = [
@@ -261,20 +261,20 @@ export const invoiceInfFormFields = [
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
     { name: 'Supplier', label: AppStrings.suppliers, required: false, options: [], type: 'select' },
     { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
-    { name: 'DiscountPercentage', label: AppStrings.discount_percentage, required: false, options: [], type: 'select' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'PriceIncludeTax', label: AppStrings.priceIncludeTax, required: false, type: 'check' },
 ]
 
 export const invoiceInfoSum1FormFields = [
 
-    { name: 'SubTotal', label: AppStrings.subTotal, show: false, type: 'text', disabled: true },
-    { name: 'GrandTotal', label: AppStrings.grandTotal, show: false, type: 'text', disabled: true },
+    { name: 'SubTotal', label: AppStrings.subTotal, type: 'text', disabled: true },
+    { name: 'GrandTotal', label: AppStrings.grandTotal, type: 'text', disabled: true },
 ]
 
 export const invoiceInfoSum2FormFields = [
-    { name: 'Tax', label: AppStrings.taxValue, show: false, type: 'text' },
-    { name: 'Discount', label: AppStrings.discountValue, show: false, type: 'text' },
+    { name: 'Tax', label: AppStrings.taxValue, type: 'text' },
+    { name: 'Discount', label: AppStrings.discountValue, showCheck: true, type: 'text' },
+
 ]
 
 export const invoiceItemsFormFields = [

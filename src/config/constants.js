@@ -157,7 +157,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.branch.add,
                 href: routes.branch.list,
-
+                subHrefEdit: routes.branch.edit
             },
 
             {
@@ -166,7 +166,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.unit.add,
                 href: routes.unit.list,
-
+                subHrefEdit: routes.unit.edit
             },
 
             {
@@ -175,7 +175,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.offer.add,
                 href: routes.offer.list,
-
+                subHrefEdit: routes.offer.edit
             },
             {
                 label: AppStrings.discount_types,
@@ -183,6 +183,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.discountType.add,
                 href: routes.discountType.list,
+                subHrefEdit: routes.discountType.edit
             },
             {
                 label: AppStrings.taxes,
@@ -190,6 +191,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.tax.add,
                 href: routes.tax.list,
+                subHrefEdit: routes.tax.edit
             },
             {
                 label: AppStrings.currencies,
@@ -197,6 +199,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.currency.add,
                 href: routes.currency.list,
+                subHrefEdit: routes.currency.edit
             },
             {
                 label: AppStrings.payment_methods,
@@ -204,6 +207,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.paymentMethod.add,
                 href: routes.paymentMethod.list,
+                subHrefEdit: routes.paymentMethod.edit
             },
 
         ]
@@ -218,6 +222,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.product.add,
                 href: routes.product.list,
+                subHrefEdit: routes.product.edit
             },
             {
                 label: AppStrings.categories,
@@ -225,6 +230,7 @@ export const menuList = [
                 type: 'unExpanded',
                 subHref: routes.category.add,
                 href: routes.category.list,
+                subHrefEdit: routes.category.edit
             },
             // {
             //     label: AppStrings.prices_and_costs,
@@ -244,6 +250,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.supplier.list,
                 subHref: routes.supplier.add,
+                subHrefEdit: routes.supplier.edit
             },
             // {
             //     label: AppStrings.purchase_order,
@@ -258,6 +265,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.invoice.list,
                 subHref: routes.invoice.add,
+                subHrefEdit: routes.invoice.edit
             },
             {
                 label: AppStrings.input_vouchers,
@@ -265,6 +273,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.input_voucher.list,
                 subHref: routes.input_voucher.add,
+                subHrefEdit: routes.input_voucher.edit
             },
             {
                 label: AppStrings.output_vouchers,
@@ -272,6 +281,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.output_voucher.list,
                 subHref: routes.output_voucher.add,
+                subHrefEdit: routes.output_voucher.edit
             },
             {
                 label: AppStrings.transfer_vouchers,
@@ -279,6 +289,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.transfer_voucher.list,
                 subHref: routes.transfer_voucher.add,
+                subHrefEdit: routes.transfer_voucher.edit,
             },
 
             // {
@@ -334,6 +345,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.user_group.list,
                 subHref: routes.user_group.add,
+                subHrefEdit: routes.user_group.edit,
                 // subActions: [
                 //     { label: AppStrings.list, href: routes.user_group.list },
                 //     { label: AppStrings.add, href: routes.user_group.add },
@@ -345,6 +357,7 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.user.list,
                 subHref: routes.user.add,
+                subHrefEdit: routes.user.edit,
                 // subActions: [
                 //     { label: AppStrings.list, href: routes.user.list },
                 //     { label: AppStrings.add, href: routes.user.add },

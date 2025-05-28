@@ -10,7 +10,7 @@ const CheckBox = ({
     const { t } = useTranslation();
 
     return (
-        <div className={`d-flex align-items-center justify-content-start  gap-3 mt-4`}>
+        <div className={`d-flex align-items-center justify-content-start  gap-3`}>
             <div className="cntr">
                 <input
                     type="checkbox"

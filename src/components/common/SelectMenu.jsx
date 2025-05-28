@@ -27,7 +27,7 @@ const SelectMenu = ({
 
     const handleOpen = () => setOpen(true);
 
-    const availableOptionValues = options.map(opt => String(opt.value));
+    const availableOptionValues = options && options?.map(opt => String(opt.value));
     const rawValue = watch(name);
 
     const selectedValue = multiple
@@ -44,8 +44,11 @@ const SelectMenu = ({
         );
     }, [options, searchTerm]);
 
+    const allOptionValues = options.map(opt => String(opt.value));
+    const allSelected = multiple && selectedValue.length === allOptionValues.length;
+
     const menuItems = useMemo(() => {
-        const items = filteredOptions.map(option => (
+        let items = filteredOptions.map(option => (
             <MenuItem key={option.value} value={String(option.value)}>
                 {multiple && (
                     <Checkbox checked={selectedValue.includes(String(option.value))} />
@@ -54,7 +57,14 @@ const SelectMenu = ({
             </MenuItem>
         ));
 
-        if (!multiple) {
+        if (multiple) {
+            items.unshift(
+                <MenuItem key="all" value="__all__">
+                    <Checkbox checked={allSelected} indeterminate={selectedValue.length > 0 && !allSelected} />
+                    {t(AppStrings.selectAll || 'Select All')}
+                </MenuItem>
+            );
+        } else {
             items.unshift(
                 <MenuItem key="clear" value="">
                     {t(AppStrings.clearSelection || 'Clear selection')}
@@ -67,7 +77,7 @@ const SelectMenu = ({
                 {t(AppStrings.noDataAvailable)}
             </MenuItem>
         );
-    }, [filteredOptions, selectedValue, multiple, t]);
+    }, [filteredOptions, selectedValue, multiple, t, allSelected]);
 
     useEffect(() => {
         if (options.length > 0 && selectedValue !== undefined) {
@@ -105,16 +115,37 @@ const SelectMenu = ({
                     e.preventDefault();
                 }}
                 onChange={(event) => {
-                    const value = multiple
-                        ? event.target.value.map(String)
-                        : String(event.target.value);
-                    setValue(name, value);
-                    onChange?.({
-                        target: {
-                            name,
-                            value,
-                        },
-                    });
+                    let value = event.target.value;
+
+                    if (multiple) {
+                        if (value.includes('__all__')) {
+                            const allValues = options.map(opt => String(opt.value));
+                            setValue(name, allValues);
+                            onChange?.({
+                                target: {
+                                    name,
+                                    value: allValues,
+                                },
+                            });
+                        } else {
+                            setValue(name, value);
+                            onChange?.({
+                                target: {
+                                    name,
+                                    value,
+                                },
+                            });
+                        }
+                    } else {
+                        value = String(value);
+                        setValue(name, value);
+                        onChange?.({
+                            target: {
+                                name,
+                                value,
+                            },
+                        });
+                    }
                 }}
                 displayEmpty
                 style={{
@@ -123,7 +154,7 @@ const SelectMenu = ({
                     height: '35px',
                     padding: '0px 12px',
                     fontSize: '14px',
-                    width: '100%',
+
                     transition: 'box-shadow 0.3s ease',
                     color: 'var(--text-color)',
                     border: '1px solid var(--border-color-2)',

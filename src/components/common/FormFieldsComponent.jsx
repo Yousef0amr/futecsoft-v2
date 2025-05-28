@@ -3,9 +3,10 @@ import { Col, Row } from 'react-bootstrap'
 import InputField from './InputFiled'
 import SelectMenu from './SelectMenu'
 import CheckBox from './CheckBox'
+import CustomInput from './CustomInput'
 
 
-const FormFieldsComponent = ({ isLoading, fields, options, triggerEvent = () => { }, register, errors, watch, setValue }) => {
+const FormFieldsComponent = ({ handleModalClick, isLoading, fields, options, triggerEvent = () => { }, register, errors, watch, setValue }) => {
     return (
         <Row style={{ marginTop: '10px' }}>
             {fields.map((field) => {
@@ -43,12 +44,18 @@ const FormFieldsComponent = ({ isLoading, fields, options, triggerEvent = () => 
                     }
                     {
                         field.type === 'check' &&
-                        <CheckBox
-                            label={field.label}
-                            isChecked={watch(field.name)}
-                            onChange={(value) => setValue(field.name, value)}
-                            required={field.required}
-                        />
+                        <div className='mt-4'>
+                            <CheckBox
+                                label={field.label}
+                                isChecked={watch(field.name)}
+                                onChange={(value) => setValue(field.name, value)}
+                                required={field.required}
+                            />
+                        </div>
+
+                    }
+                    {
+                        field.type === 'custom' && <CustomInput name={field.name} handleModalClick={handleModalClick} label={field.label} required={field.required} />
                     }
                 </Col>
             })}

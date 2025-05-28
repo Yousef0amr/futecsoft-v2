@@ -55,8 +55,8 @@ const BrowserImage = ({ errors, setValue, field, watch }) => {
     };
 
     return (
-        <Row xs={1} lg={1} className="p-0 gap-3"  >
-            <Col className={`file-upload-form ${isDragging ? 'dragging' : 'file-preview'}`}
+        <Row xs={1} className="p-0 gap-2"  >
+            <Col xs={12} md={6} className={`file-upload-form ${isDragging ? 'dragging' : 'file-preview'}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop} style={{ flex: 1 }} >

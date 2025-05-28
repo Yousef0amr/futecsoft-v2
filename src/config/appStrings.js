@@ -12,6 +12,7 @@ const AppStrings = {
     add_new_component: 'add_new_component',
     units_can_used: 'units_can_used',
     selectUnit: 'selectUnit',
+    selectAll: 'selectAll',
     selectProduct: 'selectProduct',
     cost: 'cost',
     materials_list: 'materials_list',

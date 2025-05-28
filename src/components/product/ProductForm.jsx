@@ -20,6 +20,7 @@ const ProductForm = ({ isAdd, onSubmit, isLoading, customSubmit = false, onFirst
                     <Row style={{ marginTop: '15px' }} lg={1}>
                         <ProductImageField register={register} errors={errors} setValue={setValue} watch={watch} />
                         <ProductFormFields2 register={register} errors={errors} watch={watch} setValue={setValue} />
+
                     </Row>
                     <ListProductUnits isAdd={isAdd} onFirstSubmit={onFirstSubmit} product={{
                         ...defaultValuesEdit,

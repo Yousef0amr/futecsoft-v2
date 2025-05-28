@@ -23,8 +23,8 @@ const restructureData = ({ data, invoice }) => {
             Taxable: item.Taxable,
             TaxPercentage: item.TaxPercentage,
             Tax: (item.TaxPercentage / 100) * ((item.Qty * item.UnitPrice) - item.Discount),
-            ItemDiscountPercentage: invoice.DiscountPercentage > 0 ? invoice.DiscountPercentage : item.DiscountPercentage,
-            ItemDiscount: invoice.Discount > 0 ? invoice.Discount : item.Discount
+            ItemDiscountPercentage: item.ItemDiscountPercentage,
+            ItemDiscount: item.ItemDiscount,
         });
         return acc;
     }, []);
@@ -55,7 +55,10 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
         {
             skip: !selectedProduct
         }
-    );
+    )
+
+
+    console.log(invoice.Discount);
 
     const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntity, isDeleting, refetch }
         = useInvoiceItemsManagement(

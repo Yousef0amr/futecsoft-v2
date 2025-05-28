@@ -3,9 +3,37 @@ import FormFieldsComponent from '../common/FormFieldsComponent'
 import { extraOfferFormFields, offersFormFields, priceOfferFormFields, qtyOfferFormFields } from '../../config/formFields'
 import useBranchManagement from '../../hook/useBranchManagement'
 import { useGetAllProductsQuery } from '../../features/productSlice'
+import SearchModal from '../common/SearchModal'
 
 
 const OfferFormFields = ({ register, errors, setValue, watch }) => {
+    const [open, setModalOpen] = React.useState({ open: false, name: '' });
+    const [selectedOption, setSelectedOption] = React.useState({});
+
+    const handleModalClick = (name) => () => {
+        setModalOpen({ open: true, name });
+    }
+
+    const handleSelectChange = (selectedOption) => {
+        setSelectedOption(selectedOption);
+    }
+    const handleSaveOption = () => {
+
+        setValue(open.name, selectedOption.value);
+        setModalOpen({
+            open: false,
+            name: '',
+        });
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen({
+            open: false,
+            name: '',
+        });
+    };
+
+
     const { data: branchesData, isLoading: isLoadingBranches } = useBranchManagement()
     const branches = !isLoadingBranches
         ? branchesData?.map((item) => ({ value: item.BranchId.toString(), label: item.BranchNameAr }))
@@ -19,12 +47,17 @@ const OfferFormFields = ({ register, errors, setValue, watch }) => {
 
     return (
         <>
-            <FormFieldsComponent isLoading={isLoadingProducts} errors={errors} register={register} setValue={setValue} options={{ Branch: branches, Product: products }} watch={watch} fields={offersFormFields} />
-            <FormFieldsComponent errors={errors} register={register} setValue={setValue} options={{ ExtraProduct: products }} watch={watch} fields={
+
+            <FormFieldsComponent handleModalClick={handleModalClick} isLoading={isLoadingProducts} errors={errors} register={register} setValue={setValue} options={{ Branch: branches }} watch={watch} fields={offersFormFields} />
+
+            <FormFieldsComponent handleModalClick={handleModalClick} errors={errors} register={register} setValue={setValue} watch={watch} fields={
                 (watch('PriceOffer') && priceOfferFormFields) ||
                 (watch('QtyOffer') && qtyOfferFormFields) ||
                 (watch('ExtraOffer') && extraOfferFormFields)
             } />
+
+            <SearchModal open={open.open} handleSelectChange={handleSelectChange} options={products} handleSaveOption={handleSaveOption} selectedOption={selectedOption} handleClose={handleCloseModal} />
+
         </>
     )
 }

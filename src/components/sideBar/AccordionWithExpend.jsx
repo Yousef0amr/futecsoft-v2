@@ -68,7 +68,7 @@ const AccordionWithExpend = ({
                 <ListItemIcon sx={{ minWidth: open ? '34px' : 'auto', color: 'inherit' }}>
                     {subItem.icon ? <FontAwesomeIcon icon={subItem.icon} /> : <InboxIcon />}
                 </ListItemIcon>
-                <Typography
+                {/* <Typography
                     sx={{
                         display: open ? 'block' : 'none',
                         fontSize: { xs: '12px', sm: '14px' },
@@ -76,53 +76,8 @@ const AccordionWithExpend = ({
                     }}
                 >
                     {t(subItem.label)}
-                </Typography>
+                </Typography> */}
             </AccordionSummary>
-
-            <AccordionDetails sx={{ py: 1, color: 'white' }}>
-                <Stack sx={{ width: '100%', px: 2 }} spacing={1}>
-                    {subItem.subActions.map((action, actionIndex) => (
-                        <Link
-                            key={`action-${index}-${subIndex}-${actionIndex}`}
-                            to={action.href}
-                            onClick={handleClick}
-                            style={{ textDecoration: 'none' }}
-                        >
-                            <Typography
-                                component="div"
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    px: 1,
-                                    py: 0.5,
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    bgcolor: selected === action.href || selected === action.subHref
-                                        ? 'var(--primary-color)'
-                                        : 'transparent',
-                                    '&:hover': {
-                                        bgcolor: 'var(--primary-color)',
-                                        color: 'white'
-                                    },
-                                    fontSize: { xs: '12px', sm: '13px' }
-                                }}
-                            >
-                                {selected === action.href || selected === action.subHref
-                                    ? <RadioButtonChecked fontSize="small" />
-                                    : <RadioButtonUnchecked fontSize="small" />
-                                }
-                                <Typography
-                                    component="span"
-                                    sx={{ fontSize: { xs: '12px', sm: '13px' }, lineHeight: 1.5 }}
-                                >
-                                    {t(action.label)}
-                                </Typography>
-                            </Typography>
-                        </Link>
-                    ))}
-                </Stack>
-            </AccordionDetails>
         </Accordion>
     )
 }

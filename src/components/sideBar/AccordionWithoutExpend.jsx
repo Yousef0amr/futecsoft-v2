@@ -26,12 +26,13 @@ const AccordionWithoutExpend = ({ open, location, subItem, handleDrawerOpen, dir
                 <AccordionSummary
                     aria-controls="panel1-content"
                     id="panel1-header"
-                    sx={{ '.css-cokf1l-MuiListItemIcon-root': { minWidth: open ? '34px' : '50px' }, '&:hover': { backgroundColor: 'var(--primary-color)', color: 'white' }, backgroundColor: location === subItem.href || location === subItem.subHref ? 'var(--primary-color)' : 'transparent', color: location === subItem.href || location === subItem.subHref ? 'white' : 'white' }}
+                    style={{ margin: 0, justifyContent: open ? 'start' : 'center' }}
+                    sx={{ '&:hover': { backgroundColor: 'var(--primary-color)', color: 'white' }, backgroundColor: location === subItem.href || location === subItem.subHrefEdit || location === subItem.subHref ? 'var(--primary-color)' : 'transparent', color: location === subItem.href || location === subItem.subHref ? 'white' : 'white' }}
                 >
-                    <ListItemIcon style={directionVal === 'rtl' ? { marginRight: open ? '' : '32px' } : { marginLeft: open ? '' : '32px' }}>
+                    <ListItemIcon style={{ margin: 0, minWidth: open ? '34px' : '', display: "flex", justifyContent: "center" }}>
                         {<FontAwesomeIcon color='rgba(255, 255, 255, 0.38)' icon={subItem.icon} /> || <InboxIcon />}
                     </ListItemIcon>
-                    <Typography color='white' style={{ display: open ? 'block' : 'none', fontSize: '14px' }}>{t(subItem.label)}</Typography>
+                    {open && <Typography color='white' >{t(subItem.label)}</Typography>}
                 </AccordionSummary>
             </Accordion>    </Link>
     )
