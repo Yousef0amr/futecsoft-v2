@@ -5,16 +5,14 @@ import EditComponent from '../../components/common/EditComponent';
 import { faTruck } from '@fortawesome/free-solid-svg-icons';
 import { routes } from '../../config/constants';
 import VoucherTransferForm from '../../components/voucher_transfer/VoucherTransferForm';
-import { Button, Stack } from 'react-bootstrap';
-import ListVoucherTransferItem from '../../components/voucher_transfer/ListVoucherTransferItem';
+import { Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const EditTransferVoucher = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
-    const [addNew, setAddNew] = useState(false)
+
     return (
         <Stack gap={2}>
             <EditComponent

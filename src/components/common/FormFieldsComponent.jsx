@@ -6,7 +6,7 @@ import CheckBox from './CheckBox'
 import CustomInput from './CustomInput'
 
 
-const FormFieldsComponent = ({ handleModalClick, isLoading, fields, options, triggerEvent = () => { }, register, errors, watch, setValue }) => {
+const FormFieldsComponent = ({ handleModalClick, isLoading, selectedValue = [], fields, options, triggerEvent = () => { }, register, errors, watch, setValue }) => {
     return (
         <Row style={{ marginTop: '10px' }}>
             {fields.map((field) => {
@@ -55,7 +55,7 @@ const FormFieldsComponent = ({ handleModalClick, isLoading, fields, options, tri
 
                     }
                     {
-                        field.type === 'custom' && <CustomInput name={field.name} handleModalClick={handleModalClick} label={field.label} required={field.required} />
+                        field.type === 'custom' && <CustomInput value={selectedValue?.find((item) => item.value === watch(field.name))?.label} name={field.name} handleModalClick={handleModalClick} label={field.label} required={field.required} />
                     }
                 </Col>
             })}

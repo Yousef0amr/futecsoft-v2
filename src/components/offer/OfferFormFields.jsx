@@ -18,12 +18,12 @@ const OfferFormFields = ({ register, errors, setValue, watch }) => {
         setSelectedOption(selectedOption);
     }
     const handleSaveOption = () => {
-
         setValue(open.name, selectedOption.value);
         setModalOpen({
             open: false,
             name: '',
         });
+        setSelectedOption({});
     };
 
     const handleCloseModal = () => {
@@ -48,9 +48,9 @@ const OfferFormFields = ({ register, errors, setValue, watch }) => {
     return (
         <>
 
-            <FormFieldsComponent handleModalClick={handleModalClick} isLoading={isLoadingProducts} errors={errors} register={register} setValue={setValue} options={{ Branch: branches }} watch={watch} fields={offersFormFields} />
+            <FormFieldsComponent selectedValue={products} handleModalClick={handleModalClick} isLoading={isLoadingProducts} errors={errors} register={register} setValue={setValue} options={{ Branch: branches }} watch={watch} fields={offersFormFields} />
 
-            <FormFieldsComponent handleModalClick={handleModalClick} errors={errors} register={register} setValue={setValue} watch={watch} fields={
+            <FormFieldsComponent selectedValue={products} handleModalClick={handleModalClick} errors={errors} register={register} setValue={setValue} watch={watch} fields={
                 (watch('PriceOffer') && priceOfferFormFields) ||
                 (watch('QtyOffer') && qtyOfferFormFields) ||
                 (watch('ExtraOffer') && extraOfferFormFields)

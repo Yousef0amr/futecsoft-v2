@@ -523,7 +523,7 @@ export const useVoucherInputItemsColDefs = ({
     selectProduct,
     selectUnit
 }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return useMemo(() => [
         {
@@ -583,7 +583,7 @@ export const useVoucherItemsColDefs = ({
     selectProduct,
     selectUnit
 }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return useMemo(() => [
         {
@@ -707,7 +707,7 @@ export const useVoucherReceivingItemsColDefs = ({
     selectProduct,
     selectUnit
 }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return useMemo(() => [
         {

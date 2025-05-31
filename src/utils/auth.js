@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import Loader from '../components/common/Loader';
 import { useNavigate } from 'react-router-dom';
 import Relogin from '../components/auth/Relogin';
-import { useDispatch } from "react-redux";
+
 
 const AuthContext = createContext();
 
@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
     const [cookies, setCookie, removeCookie] = useCookies();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+
     const getDecodedToken = useCallback((token) => {
         try {
             return jwtDecode(token);
@@ -26,10 +26,10 @@ const AuthProvider = ({ children }) => {
     const getAccessToken = useCallback(() => cookies.accessToken, [cookies.accessToken]);
 
 
-    const logoutLocal = () => {
+    const logoutLocal = useCallback(() => {
         removeCookie('accessToken');
         setIsAuthenticated(false);
-    };
+    }, [removeCookie]);
 
     const checkAuth = useCallback(() => {
         const token = getAccessToken();

@@ -57,9 +57,6 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
         }
     )
 
-
-    console.log(invoice.Discount);
-
     const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntity, isDeleting, refetch }
         = useInvoiceItemsManagement(
             { id: invoice.DocID, skip: isAdd }
