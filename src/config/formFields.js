@@ -269,10 +269,11 @@ export const invoiceInfoSum1FormFields = [
 
     { name: 'SubTotal', label: AppStrings.subTotal, type: 'text', disabled: true },
     { name: 'GrandTotal', label: AppStrings.grandTotal, type: 'text', disabled: true },
+    { name: 'Tax', label: AppStrings.taxValue, type: 'text', disabled: true },
 ]
 
 export const invoiceInfoSum2FormFields = [
-    { name: 'Tax', label: AppStrings.taxValue, type: 'text' },
+
     { name: 'Discount', label: AppStrings.discountValue, showCheck: true, type: 'number' },
 
 ]
