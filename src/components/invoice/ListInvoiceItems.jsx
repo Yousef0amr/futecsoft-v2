@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import AppStrings from '../../config/appStrings'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import { useInvoiceItemsManagement } from '../../hook/useInvoiceManagement'
@@ -225,12 +225,10 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
         const products = restructureData({ data, invoice })
         const val = calculateItemDetails(products, invoice)
         const totals = calculateInvoiceTotals(val)
-        console.log(totals)
-        console.log(val)
+
         data.forEach((p, index) => {
             let rowNode = grid.current.api.getRowNode(p.id);
             rowNode.data.GrandTotal = val[index].GrandTotal
-            console.log(rowNode)
             grid.current.api.refreshCells({
                 rowNodes: [rowNode],
                 columns: ['GrandTotal'],

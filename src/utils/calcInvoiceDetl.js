@@ -1,6 +1,5 @@
 
 export function calculateItemDetails(items, invoice, discountRef) {
-    console.log(discountRef)
     return items.map((item) => {
         let subTotal = 0;
         let taxAmount = 0;
@@ -12,7 +11,9 @@ export function calculateItemDetails(items, invoice, discountRef) {
 
         const discountPercentage = (item.ItemDiscountPercentage > 1
             ? item.ItemDiscountPercentage / 100
-            : item.ItemDiscountPercentage || 0) + (Number(invoice.Discount)) ?? 0;
+            : item.ItemDiscountPercentage || 0) + (Number(invoice.Discount) > 1
+                ? Number(invoice.Discount) / 100
+                : Number(invoice.Discount) || 0)
 
         const discountAmount = item.ItemDiscount + (Number(invoice.Discount) ?? 0)
 
