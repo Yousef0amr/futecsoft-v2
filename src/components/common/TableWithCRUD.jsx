@@ -13,7 +13,7 @@ import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
 
 
-const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting, onAddNewRow, resetTotals }) => {
+const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting, handleClickEnter, resetTotals }) => {
     const gridRef = useRef(null);
     const { t, i18n } = useTranslation();
     const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);
@@ -43,10 +43,21 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
         };
         setRowData(prev => [...prev, newRow]);
         setDirtyRows(prev => new Set(prev).add(newRow.id));
-
-        if (rowData.length !== 0)
-            onAddNewRow && onAddNewRow(rowData, gridRef.current.api)
     };
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter') {
+                handleClickEnter(gridRef)
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleClickEnter]);
 
     const handleOpen = (data) => {
         setOpen({ data, isOpen: true });
@@ -68,7 +79,6 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
 
 
     const handleRemoveRow = (data) => {
-        console.log(data)
         const newRowData = rowData.filter(row => +row.id !== +data.id);
 
         setRowData(newRowData);
@@ -79,10 +89,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
             return newSet;
         });
 
-        if (newRowData.length !== 0 && onAddNewRow)
-            onAddNewRow(newRowData, gridRef.current.api)
-
-        if (newRowData.length === 0 && resetTotals) {
+        if (newRowData.length <= 0 && resetTotals) {
             resetTotals();
         }
     };

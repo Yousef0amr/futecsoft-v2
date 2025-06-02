@@ -1,5 +1,6 @@
 
-export function calculateItemDetails(items) {
+export function calculateItemDetails(items, invoice, discountRef) {
+    console.log(discountRef)
     return items.map((item) => {
         let subTotal = 0;
         let taxAmount = 0;
@@ -9,14 +10,16 @@ export function calculateItemDetails(items) {
             ? item.TaxPercentage / 100
             : item.TaxPercentage || 0;
 
-        const discountPercentage = item.ItemDiscountPercentage > 1
+        const discountPercentage = (item.ItemDiscountPercentage > 1
             ? item.ItemDiscountPercentage / 100
-            : item.ItemDiscountPercentage || 0;
+            : item.ItemDiscountPercentage || 0) + (Number(invoice.Discount)) ?? 0;
+
+        const discountAmount = item.ItemDiscount + (Number(invoice.Discount) ?? 0)
 
         let discount = 0;
-        if (item.ItemDiscount > 0) {
-            discount = item.ItemDiscount;
-        } else if (discountPercentage > 0) {
+        if (discountAmount > 0 && !invoice.enableDiscountPre) {
+            discount = discountAmount;
+        } else if (discountPercentage > 0 && invoice.enableDiscountPre) {
             discount = item.UnitPrice * discountPercentage * item.Qty;
         }
 
@@ -30,7 +33,6 @@ export function calculateItemDetails(items) {
         taxAmount = subTotal * taxPercentage;
         const netTotal = subTotal + taxAmount - discount;
 
-
         return {
             DocID: item.DocID,
             ItemId: item.ItemId,
@@ -39,7 +41,7 @@ export function calculateItemDetails(items) {
             Qty: item.Qty,
             SubTotal: Number(subTotal.toFixed(3)),
             DiscountPercentage: Number(((discount / (item.UnitPrice * item.Qty)) || 0).toFixed(2)),
-            Discount: Number(discount.toFixed(3)),
+            Discount: discount > 0 ? Number(discount.toFixed(3)) : 0,
             TaxPercentage: Number(taxPercentage.toFixed(3)),
             Tax: Number((taxPercentage * subTotal).toFixed(3)),
             GrandTotal: Number(netTotal.toFixed(3)),
@@ -65,7 +67,6 @@ export function calculateInvoiceTotals(itemDetails) {
             GrandTotal: 0,
         }
     );
-    console.log(summary);
 
     const discountPer = summary.SubTotal > 0
         ? (summary.Discount / summary.SubTotal) * 100

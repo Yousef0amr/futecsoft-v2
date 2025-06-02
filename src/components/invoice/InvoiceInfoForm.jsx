@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import useValidators from '../../hooks/useValidators';
 import InvoiceInfoFormFields from './InvoiceInfoFormFields';
 import FormComponent from './../common/FormComponent';
@@ -8,6 +8,12 @@ import { Stack } from '@mui/material';
 
 const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { invoiceSchema, invoiceUpdatedSchema } = useValidators();
+    const [enableDiscountPre, setEnableDiscounPret] = React.useState(false)
+
+
+    const handleDiscount = (value) => {
+        setEnableDiscounPret(value.target.checked)
+    }
 
 
     return (
@@ -28,8 +34,9 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
                         Tax: watch('Tax'),
                         Discount: watch('Discount'),
                         PriceIncludeTax: watch('PriceIncludeTax'),
+                        enableDiscountPre
                     }} />
-                    <InvoiceInfoDetlFormFields register={register} errors={errors} setValue={setValue} watch={watch} isAdd={isAdd} />
+                    <InvoiceInfoDetlFormFields enableDiscount={enableDiscountPre} handleDiscount={handleDiscount} register={register} errors={errors} setValue={setValue} watch={watch} isAdd={isAdd} />
                 </Stack>
             }
         </FormComponent >

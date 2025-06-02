@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import AppStrings from '../../config/appStrings'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import { useInvoiceItemsManagement } from '../../hook/useInvoiceManagement'
@@ -23,8 +23,8 @@ const restructureData = ({ data, invoice }) => {
             Taxable: item.Taxable,
             TaxPercentage: item.TaxPercentage,
             Tax: (item.TaxPercentage / 100) * ((item.Qty * item.UnitPrice) - item.Discount),
-            ItemDiscountPercentage: item.ItemDiscountPercentage,
-            ItemDiscount: item.ItemDiscount,
+            ItemDiscountPercentage: item.DiscountPercentage ?? 0,
+            ItemDiscount: item.Discount ?? 0
         });
         return acc;
     }, []);
@@ -87,8 +87,10 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
 
         const products = restructureData({ data, invoice })
 
-        const val = calculateItemDetails(products)
+        const val = calculateItemDetails(products, invoice)
         const totals = calculateInvoiceTotals(val)
+
+
 
         setValue("Tax", totals.tax)
         setValue("Discount", totals.discount)
@@ -214,19 +216,22 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
 
     })
 
-    const onAddNewRow = (data, grid) => {
+    const handleClickEnter = (grid) => {
+
+        const data = grid.current.props.rowData
 
         if (!data) return
 
         const products = restructureData({ data, invoice })
-        const val = calculateItemDetails(products)
+        const val = calculateItemDetails(products, invoice)
         const totals = calculateInvoiceTotals(val)
-
+        console.log(totals)
+        console.log(val)
         data.forEach((p, index) => {
-            let rowNode = grid.getRowNode(p.id);
+            let rowNode = grid.current.api.getRowNode(p.id);
             rowNode.data.GrandTotal = val[index].GrandTotal
             console.log(rowNode)
-            grid.refreshCells({
+            grid.current.api.refreshCells({
                 rowNodes: [rowNode],
                 columns: ['GrandTotal'],
                 force: true,
@@ -241,13 +246,17 @@ const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue
 
 
 
+
+
+
     return (
         <div> <TableWithCRUD
+
             isLoading={isLoading}
             isDeleting={isDeleting}
             onDelete={handleOnDeleteClick}
             onSave={onSubmit}
-            onAddNewRow={onAddNewRow}
+            handleClickEnter={handleClickEnter}
             resetTotals={resetTotals}
             columns={columns}
             initialData={voucherProducts} />

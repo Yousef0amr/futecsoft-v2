@@ -6,12 +6,10 @@ import { Checkbox } from '@mui/material'
 
 
 
-const InvoiceInfoDetlFormFields = ({ register, errors, setValue, watch, isAdd }) => {
+const InvoiceInfoDetlFormFields = ({ handleDiscount, enableDiscount, register, errors, setValue, watch, isAdd }) => {
     const { t } = useTranslation()
-    const [enableDiscount, setEnableDiscount] = React.useState(false)
-    const handleDiscount = (value) => {
-        setEnableDiscount(value.target.checked)
-    }
+
+
     return (
         <Row >
             {
@@ -38,12 +36,7 @@ const InvoiceInfoDetlFormFields = ({ register, errors, setValue, watch, isAdd })
                                 width: "100%",
                             }}>
                                 <input min={0} {...register(field.name)} onBlur={(e) => {
-                                    if (enableDiscount) {
-                                        console.log(+e.target.value)
-                                        setValue(field.name, (e.target.value / 100))
-                                    } else {
-                                        setValue(field.name, e.target.value)
-                                    }
+                                    setValue(field.name, e.target.value)
                                 }} type={field.type} className='border-0 outline-0  bg-transparent text-white text-center p-2 w-100' />
                                 {field.showCheck && <div className='d-flex justify-content-center align-items-center'>
                                     %
