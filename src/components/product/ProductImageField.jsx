@@ -1,10 +1,9 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import BrowserImage from '../common/BrowserImage'
-import { productImageField, productFormFields } from '../../config/formFields'
-import FormFieldsComponent from '../common/FormFieldsComponent'
+import { productImageField } from '../../config/formFields'
 import { useEffect } from 'react'
-
+import ProductFormFields1 from './ProductFormFields1';
 
 const ProductImageField = ({ errors, setValue, watch, register }) => {
 
@@ -24,7 +23,8 @@ const ProductImageField = ({ errors, setValue, watch, register }) => {
                 </Col>
 
                 <Col xs={12} md={6} >
-                    <FormFieldsComponent errors={errors} register={register} setValue={setValue} watch={watch} fields={productFormFields} />
+                    <ProductFormFields1 register={register} errors={errors} watch={watch} setValue={setValue} />
+
                 </Col>
                 <Col xs={12} md={1} >
                 </Col>

@@ -22,7 +22,6 @@ export const productImageField = {
 
 export const productFormFields = [
     { name: 'Id', label: AppStrings.productId, required: false, type: 'number', disabled: true },
-    { name: 'Barcode', label: AppStrings.barcode, required: false, type: 'text' },
     { name: 'NameAr', label: AppStrings.productNameAr, required: true, type: 'text' },
     { name: 'NameEn', label: AppStrings.productNameEn, required: true, type: 'text' },
 ];
@@ -266,16 +265,14 @@ export const invoiceInfFormFields = [
 ]
 
 export const invoiceInfoSum1FormFields = [
-
-    { name: 'SubTotal', label: AppStrings.subTotal, type: 'text', disabled: true },
-    { name: 'GrandTotal', label: AppStrings.grandTotal, type: 'text', disabled: true },
-    { name: 'Tax', label: AppStrings.taxValue, type: 'text', disabled: true },
+    { name: 'SubTotal', label: AppStrings.totalSubTotal, type: 'text', disabled: true },
+    { name: 'GrandTotal', label: AppStrings.totalGrandTotal, type: 'text', disabled: true },
+    { name: 'Discount', label: AppStrings.totalDiscount, type: 'number' },
+    { name: 'Tax', label: AppStrings.totalTaxTotal, type: 'text', disabled: true },
 ]
 
 export const invoiceInfoSum2FormFields = [
-
-    { name: 'Discount', label: AppStrings.discountValue, showCheck: true, type: 'number' },
-
+    { name: 'DiscountValue', label: AppStrings.discountValue, showCheck: true, type: 'number' },
 ]
 
 export const invoiceItemsFormFields = [
@@ -293,7 +290,6 @@ export const voucherInputFormFields = [
     { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
-    { name: 'PayType', label: AppStrings.paymentType, required: false, options: [], type: 'select' },
 ]
 
 export const voucherInputItemsFormFields = [

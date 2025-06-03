@@ -8,7 +8,7 @@ import AppStrings from '../../config/appStrings'
 
 
 
-const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
+const ListProductUnits = ({ errors, isAdd = false, onFirstSubmit, product = [] }) => {
     const { data, isLoading, refetch } = useGetProductUnitsQuery(
         product?.Id ? product?.Id : 0,
         {
@@ -116,6 +116,7 @@ const ListProductUnits = ({ isAdd = false, onFirstSubmit, product = [] }) => {
     const columns = useItemsUnitsColDefs(
         {
             units: unitsData ? unitsData : [],
+            defaultBarcode: product.Barcode
         }
     )
 

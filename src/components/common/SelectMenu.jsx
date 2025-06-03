@@ -3,6 +3,10 @@ import { FormControl, MenuItem, Select, Checkbox } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AppStrings from '../../config/appStrings';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import LoopSharpIcon from '@mui/icons-material/LoopSharp';
+import SpinnerLoader from './Spinner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const SelectMenu = ({
     options,
@@ -160,7 +164,8 @@ const SelectMenu = ({
                     border: '1px solid var(--border-color-2)',
                 }}
                 IconComponent={(props) => (
-                    <ArrowDropDownIcon {...props} style={{ color: 'var(--border-color-2)' }} />
+                    isLoading ? <FontAwesomeIcon icon={faSpinner} spin={true} /> :
+                        <ArrowDropDownIcon {...props} style={{ color: 'var(--border-color-2)' }} />
                 )}
                 MenuProps={{
                     disableScrollLock: true,

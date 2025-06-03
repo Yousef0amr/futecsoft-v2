@@ -427,7 +427,7 @@ export const useInvoicesItemsColDefs = ({
 };
 
 
-export const useItemsUnitsColDefs = ({ units = [] }) => {
+export const useItemsUnitsColDefs = ({ units = [], defaultBarcode }) => {
     const { t } = useTranslation();
 
     return useMemo(() => [
@@ -456,6 +456,7 @@ export const useItemsUnitsColDefs = ({ units = [] }) => {
             headerClass: 'ag-header-center',
             editable: true,
             valueParser: params => Number(params.newValue),
+            valueGetter: params => params.data?.Barcode ?? defaultBarcode,
         },
         {
             field: 'Factor',
@@ -517,7 +518,7 @@ export const useItemsUnitsColDefs = ({ units = [] }) => {
             editable: true,
             valueParser: params => Number(params.newValue),
         },
-    ], [t, units]);
+    ], [t, units, defaultBarcode]);
 };
 export const useVoucherInputItemsColDefs = ({
     selectProduct,

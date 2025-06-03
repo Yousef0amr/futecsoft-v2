@@ -24,11 +24,11 @@ const MainMenuValidators = () => {
 
 
     const productSchemaValidator = {
-        Id: yup.string().required(t(AppStrings.branchId_required)).nullable(),
+        Id: yup.string().optional(),
         NameAr: yup.string().required(t(AppStrings.productNameAr_required)).nullable(),
         NameEn: yup.string().required(t(AppStrings.productNameEn_required)).nullable(),
         Father: yup.string().required(t(AppStrings.category_required)).nullable(),
-        Warehouse: yup.array().min(1).required(t(AppStrings.branch_required)).nullable(),
+        Warehouse: yup.array().min(1, t(AppStrings.branch_required)).required(t(AppStrings.branch_required)).nullable(),
         TaxPercentage: yup.string().optional(),
         Discountable: yup.boolean().optional(),
         IsService: yup.boolean().optional(),
@@ -237,6 +237,7 @@ const MainMenuValidators = () => {
         PriceIncludeTax: yup.boolean().optional(),
         GrandTotal: yup.number().optional().default(0),
         SubTotal: yup.number().optional().default(0),
+        DiscountValue: yup.number().optional().default(0),
     }
 
     const invoiceUpdatedSchemaValidator = {
@@ -252,6 +253,7 @@ const MainMenuValidators = () => {
         DiscountPercentage: yup.number().optional().default(0),
         Tax: yup.number().optional().default(0),
         PriceIncludeTax: yup.boolean().optional(),
+        DiscountValue: yup.number().optional().default(0),
     }
 
 

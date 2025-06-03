@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import React, { useMemo, useState, useRef, useEffect, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -59,9 +59,9 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
         };
     }, [handleClickEnter]);
 
-    const handleOpen = (data) => {
+    const handleOpen = useCallback((data) => {
         setOpen({ data, isOpen: true });
-    };
+    }, [setOpen]);
 
     const handleCancel = () => {
         setOpen({ data: null, isOpen: false });
@@ -78,9 +78,12 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
     };
 
 
-    const handleRemoveRow = (data) => {
-        const newRowData = rowData.filter(row => +row.id !== +data.id);
-
+    const handleRemoveRow = useCallback((data) => {
+        const newRowData = rowData.filter(
+            (row) => {
+                return row.id !== data.id
+            }
+        );
         setRowData(newRowData);
 
         setDirtyRows(prev => {
@@ -92,7 +95,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
         if (newRowData.length <= 0 && resetTotals) {
             resetTotals();
         }
-    };
+    }, [rowData, resetTotals]);
 
 
     const colDefs = useMemo(() => [
@@ -125,7 +128,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
             ),
         },
         ...columns.map(col => ({ ...col })),
-    ], [columns, t]);
+    ], [columns, t, handleOpen, handleRemoveRow]);
 
     const handleCellValueChanged = (params) => {
         setDirtyRows(prev => {
@@ -157,6 +160,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
                     {t(AppStrings.add_new_unit)}
                 </Button>
                 <Button
+                    type='submit'
                     onClick={handleSaveAll}
                     disabled={dirtyRows.size === 0}
                     className='d-flex align-items-center gap-2'
@@ -175,6 +179,7 @@ const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading,
             <div style={containerStyle} className="ag-theme-alpine w-100 p-1">
                 <AgGridReact
                     ref={gridRef}
+                    singleClickEdit={true}
                     rowData={rowData}
                     columnDefs={colDefs}
                     defaultColDef={defaultColDef}

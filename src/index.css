@@ -144,6 +144,12 @@ html,
 }
 
 
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
 .custom-input::placeholder {
   color: var(--text-color) !important;
   opacity: 0.5 !important;

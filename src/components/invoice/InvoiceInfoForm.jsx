@@ -22,7 +22,7 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
                 <Stack gap={2}>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
 
-                    <ListInvoiceItems setValue={setValue} isAdd={isAdd} onFirstSubmit={onFirstSubmit} invoice={{
+                    <ListInvoiceItems customSubmit={customSubmit} setValue={setValue} isAdd={isAdd} onFirstSubmit={onFirstSubmit} invoice={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
                         InvoiceNo: watch('InvoiceNo'),
@@ -33,6 +33,7 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
                         DiscountPercentage: watch('DiscountPercentage'),
                         Tax: watch('Tax'),
                         Discount: watch('Discount'),
+                        DiscountValue: watch('DiscountValue'),
                         PriceIncludeTax: watch('PriceIncludeTax'),
                         enableDiscountPre
                     }} />

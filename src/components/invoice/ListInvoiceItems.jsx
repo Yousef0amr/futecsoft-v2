@@ -30,7 +30,7 @@ const restructureData = ({ data, invoice }) => {
     }, []);
 }
 
-const ListInvoiceItems = ({ onFirstSubmit, invoice = [], isAdd = false, setValue }) => {
+const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = false, setValue }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
 

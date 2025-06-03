@@ -1,26 +1,26 @@
 
-export function calculateItemDetails(items, invoice, discountRef) {
+export function calculateItemDetails(items, invoice) {
     return items.map((item) => {
         let subTotal = 0;
         let taxAmount = 0;
         let taxPercentage = 0;
 
-        taxPercentage = item.TaxPercentage > 1
+        taxPercentage = item.TaxPercentage >= 1
             ? item.TaxPercentage / 100
             : item.TaxPercentage || 0;
 
         const discountPercentage = (item.ItemDiscountPercentage > 1
             ? item.ItemDiscountPercentage / 100
-            : item.ItemDiscountPercentage || 0) + (Number(invoice.Discount) > 1
-                ? Number(invoice.Discount) / 100
-                : Number(invoice.Discount) || 0)
+            : item.ItemDiscountPercentage || 0) + (Number(invoice.DiscountValue) > 1
+                ? Number(invoice.DiscountValue) / 100
+                : Number(invoice.DiscountValue) || 0)
 
-        const discountAmount = item.ItemDiscount + (Number(invoice.Discount) ?? 0)
+        const discountAmount = item.ItemDiscount + (Number(invoice.DiscountValue) ?? 0)
 
         let discount = 0;
         if (discountAmount > 0 && !invoice.enableDiscountPre) {
             discount = discountAmount;
-        } else if (discountPercentage > 0 && invoice.enableDiscountPre) {
+        } else if (discountPercentage > 0) {
             discount = item.UnitPrice * discountPercentage * item.Qty;
         }
 

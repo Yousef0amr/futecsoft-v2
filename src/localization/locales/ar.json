@@ -115,6 +115,7 @@
     "productNameAr_required": "اسم المادة بالعربي مطلوب",
     "productNameEn_required": "اسم المادة بالانجليزي مطلوب",
     "taxPercentage_required": "نسبة الضريبة مطلوبة",
+    "productId_required": "رقم المادة مطلوب",
     "taxable_required": "خاضع للضريبة مطلوب",
     "saleable_required": "قابل للبيع مطلوب",
     "discountable_required": "قابل للخصم مطلوب",

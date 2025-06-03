@@ -35,13 +35,10 @@ const InvoiceInfoDetlFormFields = ({ handleDiscount, enableDiscount, register, e
                             <div className='d-flex justify-content-center align-items-center gap-1' style={{
                                 width: "100%",
                             }}>
-                                <input min={0} {...register(field.name)} onBlur={(e) => {
-                                    setValue(field.name, e.target.value)
-                                }} type={field.type} className='border-0 outline-0  bg-transparent text-white text-center p-2 w-100' />
+                                <input {...register(field.name)} type={field.type} className='border-0 outline-0  bg-transparent text-white text-center p-2 w-100' />
                                 {field.showCheck && <div className='d-flex justify-content-center align-items-center'>
                                     %
                                     <Checkbox
-
                                         sx={{
                                             '& .MuiSvgIcon-root': { fontSize: 20 },
                                             color: "white",

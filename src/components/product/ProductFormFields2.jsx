@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { productCheckFormFields } from '../../config/formFields'
+import { productCheckFormFields, productFormFields } from '../../config/formFields'
 import FormFieldsComponent from '../common/FormFieldsComponent'
-import ProductFormFields1 from './ProductFormFields1';
+
 
 const ProductFormFields2 = ({ register, errors, watch, setValue }) => {
 
@@ -21,7 +21,7 @@ const ProductFormFields2 = ({ register, errors, watch, setValue }) => {
                     <FormFieldsComponent fields={productCheckFormFields} setValue={setValue} errors={errors} register={register} watch={watch} />
                 </Col>
                 <Col xs={12} md={6}>
-                    <ProductFormFields1 register={register} errors={errors} watch={watch} setValue={setValue} />
+                    <FormFieldsComponent errors={errors} register={register} setValue={setValue} watch={watch} fields={productFormFields} />
                 </Col>
                 <Col xs={12} md={1} >
                 </Col>
