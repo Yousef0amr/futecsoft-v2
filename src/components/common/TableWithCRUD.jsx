@@ -13,7 +13,7 @@ import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
 
 
-const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting, handleClickEnter, resetTotals }) => {
+const TableWithCRUD = ({ columns, initialData = [], onSave, onDelete, isLoading, isDeleting, handleClickEnter = () => { }, resetTotals }) => {
     const gridRef = useRef(null);
     const { t, i18n } = useTranslation();
     const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);

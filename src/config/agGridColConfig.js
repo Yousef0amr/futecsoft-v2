@@ -377,7 +377,7 @@ export const useInvoicesItemsColDefs = ({
         },
         {
             field: 'UnitPrice',
-            headerName: t(AppStrings.price),
+            headerName: t(AppStrings.cost),
             flex: 1,
             headerClass: 'ag-header-center',
             editable: true,
@@ -441,9 +441,7 @@ export const useItemsUnitsColDefs = ({ units = [], defaultBarcode }) => {
             cellEditorParams: {
                 values: units.map(u => Number(u.value)),
             },
-            valueParser: params => {
-                return Number(params.newValue);
-            },
+            valueParser: params => Number(params.newValue),
             valueFormatter: params => {
                 const selected = units.find(u => u.value === params.value);
                 return selected ? selected.label : '';
@@ -476,50 +474,101 @@ export const useItemsUnitsColDefs = ({ units = [], defaultBarcode }) => {
             cellEditorParams: {
                 values: [true, false]
             },
-            valueFormatter: (params) => params.value ? t(AppStrings.yes) : t(AppStrings.no),
-            valueGetter: (params) => {
-
-                return params.data.IsSmall ?? false
-            }
+            valueFormatter: params => params.value ? t(AppStrings.yes) : t(AppStrings.no),
+            valueGetter: params => params.data?.IsSmall ?? false,
         },
         {
             field: 'Price1',
             headerName: t(AppStrings.price1),
             flex: 1,
             headerClass: 'ag-header-center',
-            cellDataType: 'number',
             editable: true,
-            valueParser: params => Number(params.newValue),
+            cellDataType: 'number',
+            valueParser: params => {
+                const parsed = Number(params.newValue);
+                return isNaN(parsed) ? null : parsed;
+            },
+            onCellValueChanged: (params) => {
+                if (params.colDef.field === 'Price1') {
+                    const newValue = Number(params.newValue);
+                    if (!isNaN(newValue)) {
+                        const data = params.data;
+
+                        // Update other prices if they were not manually changed
+                        if (!data.__manualPrice2) data.Price2 = newValue;
+                        if (!data.__manualPrice3) data.Price3 = newValue;
+                        if (!data.__manualPrice4) data.Price4 = newValue;
+
+                        // Tell the grid the data changed so it refreshes cells
+                        params.api.refreshCells({
+                            rowNodes: [params.node],
+                            columns: ['Price2', 'Price3', 'Price4'],
+                        });
+                    }
+                }
+            }
         },
         {
             field: 'Price2',
             headerName: t(AppStrings.price2),
             flex: 1,
             headerClass: 'ag-header-center',
-            cellDataType: 'number',
             editable: true,
-            valueParser: params => Number(params.newValue),
+            cellDataType: 'number',
+            valueParser: params => {
+                const parsed = Number(params.newValue);
+                return isNaN(parsed) ? null : parsed;
+            },
+            valueSetter: params => {
+                const newValue = Number(params.newValue);
+                if (isNaN(newValue)) return false;
+                params.data.Price2 = newValue;
+                params.data.__manualPrice2 = true;
+                return true;
+            }
         },
         {
             field: 'Price3',
             headerName: t(AppStrings.price3),
             flex: 1,
             headerClass: 'ag-header-center',
-            cellDataType: 'number',
             editable: true,
-            valueParser: params => Number(params.newValue),
+            cellDataType: 'number',
+            valueParser: params => {
+                const parsed = Number(params.newValue);
+                return isNaN(parsed) ? null : parsed;
+            },
+            valueSetter: params => {
+                const newValue = Number(params.newValue);
+                if (isNaN(newValue)) return false;
+                params.data.Price3 = newValue;
+                params.data.__manualPrice3 = true;
+                return true;
+            }
         },
         {
             field: 'Price4',
             headerName: t(AppStrings.price4),
             flex: 1,
-            cellDataType: 'number',
             headerClass: 'ag-header-center',
             editable: true,
-            valueParser: params => Number(params.newValue),
-        },
+            cellDataType: 'number',
+            valueParser: params => {
+                const parsed = Number(params.newValue);
+                return isNaN(parsed) ? null : parsed;
+            },
+            valueSetter: params => {
+                const newValue = Number(params.newValue);
+                if (isNaN(newValue)) return false;
+                params.data.Price4 = newValue;
+                params.data.__manualPrice4 = true;
+                return true;
+            }
+        }
     ], [t, units, defaultBarcode]);
 };
+
+
 export const useVoucherInputItemsColDefs = ({
     selectProduct,
     selectUnit

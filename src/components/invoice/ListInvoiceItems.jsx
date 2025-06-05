@@ -8,6 +8,8 @@ import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
 import { calculateItemDetails, calculateInvoiceTotals } from '../../utils/calcInvoiceDetl'
+import { useNavigate } from 'react-router-dom'
+import { routes } from '../../config/constants'
 
 
 const restructureData = ({ data, invoice }) => {
@@ -42,6 +44,7 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
     });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedUnit, setSelectedUnit] = useState(null);
+    const navigate = useNavigate()
 
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         {
@@ -115,6 +118,7 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
             if (result?.Success) {
                 setIAdd(false)
                 resetTotals()
+                navigate(routes.invoice.list, { replace: true })
             }
             return result;
         }

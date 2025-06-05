@@ -5,6 +5,8 @@ import { useItemsUnitsColDefs } from '../../config/agGridColConfig'
 import useUnitManagement from '../../hook/useUnitManagement'
 import useEntityOperations from '../../hooks/useEntityOperations'
 import AppStrings from '../../config/appStrings'
+import { useNavigate } from 'react-router-dom'
+import { routes } from '../../config/constants'
 
 
 
@@ -18,6 +20,7 @@ const ListProductUnits = ({ errors, isAdd = false, onFirstSubmit, product = [] }
     const [isAddItem, setIAdd] = React.useState(isAdd);
     const [updateProductUnits, { isLoading: isUpdating }] = useUpdateProductUnitsMutation()
     const [deleteComponent, { isLoading: isDeleting }] = useDeleteComponentMutation()
+    const navigate = useNavigate()
 
     const { handleEntityOperation } = useEntityOperations({
         updateEntity: updateProductUnits,
@@ -81,6 +84,7 @@ const ListProductUnits = ({ errors, isAdd = false, onFirstSubmit, product = [] }
             const result = await onFirstSubmit(firstUnitData);
 
             if (result?.Success) {
+                navigate(routes.product.list, { replace: true });
                 setIAdd(false);
             }
             return result;
