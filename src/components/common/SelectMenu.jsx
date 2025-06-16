@@ -118,39 +118,44 @@ const SelectMenu = ({
                     e.stopPropagation();
                     e.preventDefault();
                 }}
-                onChange={(event) => {
-                    let value = event.target.value;
+             onChange={(event) => {
+  let value = event.target.value;
 
-                    if (multiple) {
-                        if (value.includes('__all__')) {
-                            const allValues = options.map(opt => String(opt.value));
-                            setValue(name, allValues);
-                            onChange?.({
-                                target: {
-                                    name,
-                                    value: allValues,
-                                },
-                            });
-                        } else {
-                            setValue(name, value);
-                            onChange?.({
-                                target: {
-                                    name,
-                                    value,
-                                },
-                            });
-                        }
-                    } else {
-                        value = String(value);
-                        setValue(name, value);
-                        onChange?.({
-                            target: {
-                                name,
-                                value,
-                            },
-                        });
-                    }
-                }}
+  if (multiple) {
+    // If "Select All" clicked
+    if (value.includes('__all__')) {
+      const allValues = options.map(opt => String(opt.value));
+      const isAllSelected = selectedValue.length === allValues.length;
+
+      const newValue = isAllSelected ? [] : allValues;
+
+      setValue(name, newValue);
+      onChange?.({
+        target: {
+          name,
+          value: newValue,
+        },
+      });
+    } else {
+      setValue(name, value);
+      onChange?.({
+        target: {
+          name,
+          value,
+        },
+      });
+    }
+  } else {
+    value = String(value);
+    setValue(name, value);
+    onChange?.({
+      target: {
+        name,
+        value,
+      },
+    });
+  }
+}}
                 displayEmpty
                 style={{
                     backgroundColor: 'var(--background-color)',

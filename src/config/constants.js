@@ -1,4 +1,4 @@
-import { faChartLine, faChartPie, faList, faReceipt, faWarehouse, faAddressBook, faBalanceScale, faBarChart, faBarcode, faCar, faCreditCard, faFileInvoice, faHeart, faMoneyBill, faMoneyBill1Wave, faPercent, faShuffle, faStar, faTruck, faUsd, faUser, faUserLock, faVcard, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartPie, faList, faReceipt, faWarehouse, faAddressBook, faBalanceScale, faBarChart, faBarcode, faCar, faCreditCard, faFileInvoice, faHeart, faMoneyBill, faMoneyBill1Wave, faPercent, faShuffle, faStar, faTruck, faUsd, faUser, faUserLock, faVcard, faWindowRestore, faDashboard } from '@fortawesome/free-solid-svg-icons';
 import AppStrings from './../config/appStrings';
 import { useTranslation } from 'react-i18next';
 
@@ -80,7 +80,8 @@ export const routes = {
     },
     permission: {
         list: '/user-management/permissions/list',
-        edit: '/user-management/permissions/edit'
+        edit: '/user-management/permissions/edit',
+        dashboard: '/user-management/permissions/dashboard'
     },
     invoice: {
         list: '/purchases/invoices/list',
@@ -369,6 +370,12 @@ export const menuList = [
                 type: 'unExpanded',
                 href: routes.permission.list,
                 subHrefEdit: routes.permission.edit,
+            },
+               {
+                label: AppStrings.dashboard_permissions,
+                icon: faDashboard,
+                type: 'unExpanded',
+                href: routes.permission.dashboard,
             }
         ]
     },

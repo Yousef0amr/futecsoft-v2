@@ -174,6 +174,7 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     return (
         <div>
             <TableWithCRUD
+                add_title={AppStrings.add_new_product}
                 isLoading={isLoading}
                 isDeleting={isDeleting}
                 onDelete={handleOnDeleteClick}

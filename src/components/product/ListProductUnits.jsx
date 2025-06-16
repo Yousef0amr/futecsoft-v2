@@ -127,6 +127,7 @@ const ListProductUnits = ({ errors, isAdd = false, onFirstSubmit, product = [] }
     return (
 
         <TableWithCRUD
+            add_title={AppStrings.add_new_unit}
             isLoading={isLoading}
             isDeleting={isDeleting}
             onDelete={handleOnDeleteClick}

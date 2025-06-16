@@ -1100,6 +1100,67 @@ export const useReturnByItemColDefs = () => {
 }
 
 
+export const useDashboardPermissionColDefs = ({ handleActiveChange = () => { }}) => {
+    const { t } = useTranslation();
+
+    return useMemo(() => [
+      {
+            field: "page",
+            headerName: "",
+            filter: 'agTextColumnFilter',
+   flex: 1,
+            cellRenderer: (params) => {
+                return <span className="">{params.value}</span>;
+            }
+        },
+      {
+            field: "view",
+            headerName: t(AppStrings.view),
+            filter: 'agTextColumnFilter',
+            cellRenderer: ActiveEditor,
+               flex: 1,
+            cellRendererParams: {
+                handleActiveChange: handleActiveChange,
+                field: "view"
+            }
+        },
+      {
+            field: "edit",
+            headerName: t(AppStrings.edit),
+            filter: 'agTextColumnFilter',
+               flex: 1,
+            cellRenderer: ActiveEditor,
+            cellRendererParams: {
+                handleActiveChange: handleActiveChange,
+                field: "edit"
+            }
+        },
+      {
+            field: "create",
+            headerName: t(AppStrings.create),
+            filter: 'agTextColumnFilter',
+            cellRenderer: ActiveEditor,
+               flex: 1,
+            cellRendererParams: {
+                handleActiveChange: handleActiveChange,
+                field: "create"
+            }
+        },
+      {
+            field: "delete",
+            headerName: t(AppStrings.delete),
+            filter: 'agTextColumnFilter',
+            cellRenderer: ActiveEditor,
+               flex: 1,
+            cellRendererParams: {
+                handleActiveChange: handleActiveChange,
+                field: "delete"
+            }
+        },
+    ], [handleActiveChange, t]);
+}
+
+
 
 
 

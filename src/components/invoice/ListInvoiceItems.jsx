@@ -253,7 +253,7 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
 
     return (
         <div> <TableWithCRUD
-
+            add_title={AppStrings.add_new_product}
             isLoading={isLoading}
             isDeleting={isDeleting}
             onDelete={handleOnDeleteClick}

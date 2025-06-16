@@ -171,6 +171,7 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     return (
         <>
             <TableWithCRUD
+                add_title={AppStrings.add_new_product}
                 isLoading={isLoading}
                 isDeleting={isDeleting}
                 onDelete={handleOnDeleteClick}

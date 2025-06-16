@@ -90,6 +90,7 @@ const EditVoucherProvide = React.lazy(() => import('../pages/voucher_provide/Edi
 const ListVoucherRecieving = React.lazy(() => import('../pages/voucher_recieving/ListVoucherRecieving'));
 const AddVoucherRecieving = React.lazy(() => import('../pages/voucher_recieving/AddVoucherRecieving'));
 const EditVoucherRecieving = React.lazy(() => import('../pages/voucher_recieving/EditVoucherRecieving'));
+const ListDashboardPermission = React.lazy(() => import('../pages/user_permission/ListDashboardPermission'));
 
 
 
@@ -155,6 +156,7 @@ const pagesList = [
     //User Permissions
     { path: routes.permission.edit, component: <EditUserPermission /> },
     { path: routes.permission.list, component: <ListUserPermission /> },
+    { path: routes.permission.dashboard, component: <ListDashboardPermission /> },
     //Invoices
     { path: routes.invoice.list, component: <ListInvoice /> },
     { path: routes.invoice.add, component: <AddInvoice /> },
