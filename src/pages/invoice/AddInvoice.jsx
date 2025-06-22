@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import useInvoiceManagement from '../../hook/useInvoiceManagement';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,7 @@ import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import useEntityOperations from '../../hooks/useEntityOperations';
 import { useGetCurrentInvoiceKeyQuery } from '../../features/invoiceSlice';
 import useNotification from '../../hooks/useNotification';
-
+import { calculateItemDetails, calculateInvoiceTotals,restructureData } from '../../utils/calcInvoiceDetl'
 const AddInvoice = () => {
     const { t } = useTranslation();
     const { addEntity, isAdding, refetch } = useInvoiceManagement();
@@ -19,6 +19,8 @@ const AddInvoice = () => {
     const [fetchKey, setFetchKey] = useState(true);
     const [triggerGetCurrentInvoiceKey, { data: currentKey }] = useGetCurrentInvoiceKeyQuery();
     const { success } = useNotification();
+    const tableRef = useRef()
+    
     const fetchData = async () => {
         await triggerGetCurrentInvoiceKey()
     }
@@ -28,10 +30,37 @@ const AddInvoice = () => {
         setFetchKey(false)
     }
 
-    const onFirstSubmit = async (data) => {
-        const result = await handleEntityOperation({
+    const [defaultCalData,setDefaultCalData] = useState()
+
+        const onSubmit = async (invoice) => {
+            const data = tableRef.current?.getData();
+            const products = restructureData({ data, invoice })
+    
+            const val = calculateItemDetails(products, invoice)
+            const totals = calculateInvoiceTotals(val)
+    
+            setDefaultCalData({
+                Tax: totals.tax,
+                Discount: totals.discount,
+                GrandTotal: totals.netTotal,
+                SubTotal: totals.subTotal
+            })
+   
+            const invoiceData = {
+                DocID: invoice.DocID, ...totals,
+                Vtype: invoice.Vtype,
+                InvoiceNo: invoice.InvoiceNo,
+                DocDate: invoice.DocDate,
+                Supplier: invoice.Supplier,
+                PriceIncludeTax: invoice.PriceIncludeTax,
+                Note: invoice.Note,
+                Warehouse: invoice.Warehouse,
+                PayType: invoice.PayType,
+                purchase_Invoice_Insert_Details: val
+            }
+                const result = await handleEntityOperation({
             operation: 'add',
-            data,
+            data: invoiceData,
             cacheUpdater: refetch,
             successMessage: AppStrings.invoice_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -41,8 +70,9 @@ const AddInvoice = () => {
             setFetchKey(true)
         }
 
-        return result
-    }
+                return result;
+        };
+    
 
     return (
         <FormCard icon={faFileInvoice} title={t(AppStrings.add_new_invoice)} optionComponent={
@@ -50,7 +80,7 @@ const AddInvoice = () => {
                 <NavButton icon={'list'} title={AppStrings.list_invoices} path={routes.invoice.list} />
             </>
         }  >
-            <InvoiceInfoForm customSubmit={true} isAdd={true} isLoading={isAdding} onFirstSubmit={onFirstSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice }} />
+            <InvoiceInfoForm  tableRef={tableRef} isAdd={true} isLoading={isAdding} onSubmit={onSubmit}  defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice , ...defaultCalData,DiscountValue: 0 }} />
         </FormCard>
     )
 }

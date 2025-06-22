@@ -1,12 +1,12 @@
 import createDynamicApi from './../utils/generateApiSlice.js';
 import { BASEURL, VOUCHER_OUTPUT } from './../api/endpoints.js';
-import { longCacheTime } from '../config/constants.js';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import getCookie from '../utils/getCookie.js';
 import convertToFormData from '../utils/convertToFormData.js';
 
 const transformData = (data) => ({
     ...data,
+   OutputType: data.OutputTypes,
     DocDate: data.DocDate
         ? new Date(data.DocDate).toISOString().split('T')[0]
         : null,
@@ -18,6 +18,7 @@ export const voucherOutputsApi = createDynamicApi({
     baseEndpoint: BASEURL + VOUCHER_OUTPUT,
     active: true,
     isJson: true,
+    updateJson: true,
     transformData
 });
 
@@ -35,15 +36,15 @@ export const voucherOutputDetailsApi = createApi({
             query: () => ({
                 url: '/GetAllOutputVoucherType',
             }),
-            keepUnusedDataFor: longCacheTime,
             transformResponse: (response) => response.Response || response,
+    
         }),
         getAllVoucherOutputDetails: builder.query({
             query: ({ id }) => ({
                 url: `/GetDatailsByDocID?DocID=${id}`,
             }),
-            keepUnusedDataFor: longCacheTime,
             transformResponse: (response) => response.Response || response,
+                   providesTags: ["voucher"]
         }),
         updateVoucherOutputDetails: builder.mutation({
             query: (data) => ({
@@ -57,6 +58,7 @@ export const voucherOutputDetailsApi = createApi({
                 url: '/DeleteVoucherDtl',
                 method: 'POST',
                 body: convertToFormData(data),
+                         invalidatesTags: ["voucher"]
             }),
         }),
     }),

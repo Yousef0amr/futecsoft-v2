@@ -115,24 +115,17 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
         });
     };
 
-    const handleSelectChange = (e) => {
-        if (modalOpen.type === 'product') {
-            setSelectedProduct(e);
-        }
-        if (modalOpen.type === 'unit') {
-            setSelectedUnit(e);
-        }
-    };
-
-    const handleSaveOption = () => {
+         const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
+
         if (selectedRowParams) {
 
             if (modalOpen.type === 'product') {
-                setSelectedProduct(selectedProduct);
-
-                selectedRowParams.setValue(selectedProduct.value);
-                selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.ItemDescAr = item?.label;
+                selectedRowParams.node.data.TaxPercentage = item?.taxPer;
+                selectedRowParams.node.data.Discountable = item?.discountable;
+                selectedRowParams.node.data.Taxable = item?.taxable;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['ItemID'],
@@ -141,12 +134,12 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
             }
             if (modalOpen.type === 'unit') {
 
-                selectedRowParams.setValue(selectedUnit.value);
-                selectedRowParams.node.data.UnitDescAr = selectedUnit.label;
-                selectedRowParams.node.data.Unit = selectedUnit.value;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.UnitDescAr = item?.label;
+                selectedRowParams.node.data.UnitID = item?.value;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
-                    columns: ['Unit'],
+                    columns: ['UnitID'],
                     force: true,
                 });
             }
@@ -158,6 +151,16 @@ const ListVoucherReceivingItems = ({ voucher, onFirstSubmit, isAdd }) => {
             params: null,
             type: null
         });
+    };
+
+    const handleSelectChange = (e) => {
+        if (modalOpen.type === 'product') {
+            handleSaveOption(e);
+            setSelectedProduct(e);
+        }
+        if (modalOpen.type === 'unit') {
+            handleSaveOption(e);
+        }
     };
 
     const columns = useVoucherReceivingItemsColDefs({

@@ -7,36 +7,11 @@ import { useInvoicesItemsColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
-import { calculateItemDetails, calculateInvoiceTotals } from '../../utils/calcInvoiceDetl'
-import { useNavigate } from 'react-router-dom'
-import { routes } from '../../config/constants'
+import { calculateItemDetails, calculateInvoiceTotals,restructureData } from '../../utils/calcInvoiceDetl'
 
-
-const restructureData = ({ data, invoice }) => {
-    return data.reduce((acc, item,) => {
-        acc.push({
-            DocID: invoice.DocID,
-            PriceIncludeTax: invoice.PriceIncludeTax,
-            ItemId: item.ItemID,
-            Qty: item.Qty,
-            Unit: item.UnitID,
-            UnitPrice: item.UnitPrice,
-            Discountable: item.Discountable,
-            Taxable: item.Taxable,
-            TaxPercentage: item.TaxPercentage,
-            Tax: (item.TaxPercentage / 100) * ((item.Qty * item.UnitPrice) - item.Discount),
-            ItemDiscountPercentage: item.DiscountPercentage ?? 0,
-            ItemDiscount: item.Discount ?? 0
-        });
-        return acc;
-    }, []);
-}
-
-const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = false, setValue }) => {
+const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
-
-    const [isAddItem, setIAdd] = useState(isAdd);
     const [modalOpen, setModalOpen] = useState({
         open: false,
         params: null,
@@ -44,7 +19,7 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
     });
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedUnit, setSelectedUnit] = useState(null);
-    const navigate = useNavigate()
+
 
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         {
@@ -62,7 +37,7 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
 
     const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntity, isDeleting, refetch }
         = useInvoiceItemsManagement(
-            { id: invoice.DocID, skip: isAdd }
+            { id: invoice.DocID, skip: isAdd ,queryParams: {} }
         );
 
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
@@ -79,59 +54,6 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr, taxPer: item.TaxPercentage, discountable: item.Discountable, taxable: item.Taxable }))
         : [];
 
-    const resetTotals = () => {
-        setValue("GrandTotal", 0)
-        setValue("SubTotal", 0)
-        setValue("Tax", 0)
-        setValue("Discount", 0)
-    }
-
-    const onSubmit = async (data) => {
-
-        const products = restructureData({ data, invoice })
-
-        const val = calculateItemDetails(products, invoice)
-        const totals = calculateInvoiceTotals(val)
-
-
-
-        setValue("Tax", totals.tax)
-        setValue("Discount", totals.discount)
-        setValue("GrandTotal", totals.netTotal)
-        setValue("SubTotal", totals.subTotal)
-
-        const invoiceData = {
-            DocID: invoice.DocID, ...totals,
-            Vtype: invoice.Vtype,
-            InvoiceNo: invoice.InvoiceNo,
-            DocDate: invoice.DocDate,
-            Supplier: invoice.Supplier,
-            PriceIncludeTax: invoice.PriceIncludeTax,
-            Note: invoice.Note,
-            Warehouse: invoice.Warehouse,
-            PayType: invoice.PayType,
-            purchase_Invoice_Insert_Details: val
-        }
-
-        if (isAddItem) {
-            const result = await onFirstSubmit(invoiceData)
-            if (result?.Success) {
-                setIAdd(false)
-                resetTotals()
-                navigate(routes.invoice.list, { replace: true })
-            }
-            return result;
-        }
-
-        return await handleEntityOperation({
-            operation: "add",
-            data: invoiceData,
-            cacheUpdater: refetch,
-            successMessage: AppStrings.product_added_successfully,
-            errorMessage: AppStrings.something_went_wrong
-        });
-
-    };
 
 
     const handleOnDeleteClick = async (data, handleCancel) => {
@@ -157,27 +79,17 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
         });
     };
 
-    const handleSelectChange = (e) => {
-        if (modalOpen.type === 'product') {
-            setSelectedProduct(e);
-        }
-        if (modalOpen.type === 'unit') {
-            setSelectedUnit(e);
-        }
-    };
-
-    const handleSaveOption = () => {
+       const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
+
         if (selectedRowParams) {
 
             if (modalOpen.type === 'product') {
-                setSelectedProduct(selectedProduct);
-
-                selectedRowParams.setValue(selectedProduct.value);
-                selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
-                selectedRowParams.node.data.TaxPercentage = selectedProduct.taxPer;
-                selectedRowParams.node.data.Discountable = selectedProduct.discountable;
-                selectedRowParams.node.data.Taxable = selectedProduct.taxable;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.ItemDescAr = item?.label;
+                selectedRowParams.node.data.TaxPercentage = item?.taxPer;
+                selectedRowParams.node.data.Discountable = item?.discountable;
+                selectedRowParams.node.data.Taxable = item?.taxable;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['ItemID'],
@@ -186,9 +98,9 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
             }
             if (modalOpen.type === 'unit') {
 
-                selectedRowParams.setValue(selectedUnit.value);
-                selectedRowParams.node.data.UnitDescAr = selectedUnit.label;
-                selectedRowParams.node.data.UnitID = selectedUnit.value;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.UnitDescAr = item?.label;
+                selectedRowParams.node.data.UnitID = item?.value;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['UnitID'],
@@ -204,6 +116,18 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
             type: null
         });
     };
+
+    const handleSelectChange = (e) => {
+        if (modalOpen.type === 'product') {
+            handleSaveOption(e);
+            setSelectedProduct(e);
+        }
+        if (modalOpen.type === 'unit') {
+            handleSaveOption(e);
+        }
+    };
+
+ 
 
     const columns = useInvoicesItemsColDefs({
         selectProduct: (value) => {
@@ -246,20 +170,23 @@ const ListInvoiceItems = ({ customSubmit, onFirstSubmit, invoice = [], isAdd = f
         setValue("SubTotal", totals.subTotal)
     }
 
-
-
-
-
-
+     const resetTotals = () => {
+            setValue("GrandTotal", 0)
+            setValue("SubTotal", 0)
+            setValue("Tax", 0)
+            setValue("Discount", 0)
+        }
+    
     return (
         <div> <TableWithCRUD
             add_title={AppStrings.add_new_product}
             isLoading={isLoading}
             isDeleting={isDeleting}
             onDelete={handleOnDeleteClick}
-            onSave={onSubmit}
             handleClickEnter={handleClickEnter}
             resetTotals={resetTotals}
+            ref={tableRef}
+            enableDelete={!isAdd}
             columns={columns}
             initialData={voucherProducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />

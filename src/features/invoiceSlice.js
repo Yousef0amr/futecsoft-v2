@@ -20,7 +20,7 @@ export const invoicesApi = createDynamicApi({
     transformData: (data) => transformData(data),
     isJson: true,
     active: false,
-    updateString: 'UpdateHeader',
+    updateJson: true
 });
 
 export const invoiceDetailsApi = createApi({
@@ -40,6 +40,7 @@ export const invoiceDetailsApi = createApi({
                 };
             },
             transformResponse: (response) => response.Response || response,
+              providesTags: ["voucher"]
         }),
         updateInvoiceDetails: builder.mutation({
             query: (data) => ({
@@ -53,7 +54,9 @@ export const invoiceDetailsApi = createApi({
                 url: '/DeleteVoucherDtl',
                 method: 'POST',
                 body: convertToFormData(data),
+                
             }),
+            invalidatesTags: ["voucher"]
         }),
     }),
 })

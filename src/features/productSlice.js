@@ -39,7 +39,11 @@ const transformProductData = (data) => {
         IsActive: data.IsActive,
         Saleable: data.Saleable,
         Taxable: data.Taxable,
-        Icon: data.Icon
+        Icon: data.Icon,
+        MinQty: data.MinQty ?? 0,
+        ReqQty: data.ReqQty ?? false,
+        CompositeMaterial: data.CompositeMaterial ?? false,
+        HotGroup: data.HotGroup
     };
 };
 
@@ -64,6 +68,7 @@ export const productsApi = createApi({
             query: ({ pageNumber, pageSize }) => ({
                 url: `/GetAll?paging.PageNumber=${pageNumber}&paging.PageSize=${pageSize}`,
             }),
+           providesTags: ['products'],
             keepUnusedDataFor: longCacheTime,
             transformResponse: (response) => {
                 const data = response.Response || response;
@@ -80,7 +85,6 @@ export const productsApi = createApi({
             query: (id) => ({
                 url: `/ApiGetByCategory?FatherID=${id}`,
             }),
-            keepUnusedDataFor: shortCacheTime,
             transformResponse: (response) => response.Response
         }),
         getProductById: builder.query({
@@ -107,12 +111,12 @@ export const productsApi = createApi({
         }),
 
         updateProduct: builder.mutation({
-            query: (product) => ({
+            query: ({product}) => ({
                 url: `/Update`,
                 method: 'POST',
-                body: convertToFormData(product),
+                body: product,
             }),
-
+      invalidatesTags: ['products']
         }),
         getProductUnits: builder.query({
             query: (id) => ({
@@ -126,6 +130,14 @@ export const productsApi = createApi({
                 method: 'POST',
                 body: convertToFormData(id),
             }),
+        }),
+          getCompositeComponentsById: builder.query({
+            query: (id) => ({
+                url: `/AppGetItemRecipeById?Id=${id}`,
+            }),
+            keepUnusedDataFor: longCacheTime,
+            transformResponse: (response) => response.Response,
+            providesTags: ['Components']
         }),
         addComponent: builder.mutation(
             {
@@ -145,6 +157,15 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Components']
         }),
+           deleteProductUnit: builder.mutation({
+            query: (component) => ({
+                url: `/DeleteItemUnit`,
+                method: 'POST',
+                body: convertToFormData(component),
+            }),
+              invalidatesTags: ['products']
+        }),
+
         deleteComponent: builder.mutation({
             query: ({ ItemID, SubItem }) => ({
                 url: `/DeleteItemRecipe`,
@@ -165,6 +186,7 @@ export const productsApi = createApi({
                 method: 'POST',
                 body: convertToFormData(product),
             }),
+                  invalidatesTags: ['products']
         }),
         getProductsCost: builder.query({
             query: ({ CatID, Warehouse }) => ({
@@ -200,5 +222,7 @@ export const {
     useLazyGetProductUnitsByIdQuery,
     useGetProductsCostsQuery,
     useGetProductUnitsQuery,
-    useUpdateProductUnitsMutation
+    useUpdateProductUnitsMutation,
+    useGetCompositeComponentsByIdQuery,
+    useDeleteProductUnitMutation
 } = productsApi;

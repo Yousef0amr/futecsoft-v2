@@ -6,18 +6,19 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import AppStrings from '../../config/appStrings';
 import { Button } from '@mui/material';
 import SpinnerLoader from '../common/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 const FormComponent = ({
     schema,
     resetForm,
-    onSubmit,
+    onSubmit = () => {},
     isLoading,
     defaultValues = {},
     children,
-    customSubmit = false,
     enableReset = true,
 }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const {
         register,
@@ -49,8 +50,8 @@ const FormComponent = ({
             {typeof children === 'function' ? children({ register, errors, setValue, watch, defaultValues }) : children}
             <Stack direction="horizontal" gap={3} className=" flex justify-content-center">
                 {
-                    customSubmit ? null :
-                        <Button
+                    <>
+                       <Button
                             type="submit"
                             sx={{
                                 fontSize: '16px',
@@ -63,6 +64,22 @@ const FormComponent = ({
                         >
                             {isLoading ? <SpinnerLoader /> : t(AppStrings.save)}
                         </Button>
+                         <Button
+                            type="submit"
+                            onClick={()=> navigate(-1)}
+                            sx={{
+                                fontSize: '16px',
+                                width: '50%',
+                                marginTop: '30px',
+                                color: 'white',
+                                padding: '3px',
+                                backgroundColor: 'var(--secondary-color)',
+                            }}
+                        >
+                            {isLoading ? <SpinnerLoader /> : t(AppStrings.saveAndClose)}
+                        </Button>
+                    </>
+                     
                 }
             </Stack>
         </Form>

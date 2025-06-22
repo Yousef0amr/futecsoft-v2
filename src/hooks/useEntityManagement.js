@@ -33,9 +33,10 @@ const useEntityManagement = ({
     cacheKey,
     defaultQueryArgs,
     skip = false,
+    queryParams,
     identifier = 'Id',
 }) => {
-    const { data, isLoading, error, refetch } = queryHook(defaultQueryArgs, { skip });
+    const { data, isLoading, error, refetch } = queryHook(defaultQueryArgs, { skip,...queryParams });
     const [addEntity, { isLoading: isAdding }] = addMutationHook();
     const [updateEntity, { isLoading: isUpdating }] = updateMutationHook();
     const [deleteEntity, { isLoading: isDeleting }] = deleteMutationHook();

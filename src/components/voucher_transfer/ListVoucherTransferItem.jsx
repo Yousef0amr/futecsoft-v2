@@ -10,11 +10,11 @@ import useUnitManagement from '../../hook/useUnitManagement'
 import SearchModal from '../common/SearchModal'
 
 
-const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
+const ListVoucherTransferItem = ({ voucher, tableRef, isAdd = false }) => {
     const { data: voucherPorducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherTransferItemsManagement({ id: voucher.DocNo, skip: isAdd });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits, isLoadingUnits } = useUnitManagement();
-    const [isAddItem, setIsAddItem] = useState(isAdd);
+
     const [modalOpen, setModalOpen] = useState({
         open: false,
         params: null,
@@ -50,40 +50,7 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr }))
         : [];
 
-    const onSubmit = async (data) => {
 
-        const products = data.reduce((acc, item,) => {
-            acc.push({
-                ItemID: item.ItemID,
-                Qty: item.Qty,
-                Unit: item.UnitID,
-                Cost: item.Cost,
-            });
-            return acc;
-        }, []);
-
-        if (isAddItem) {
-            const invoiceData = {
-                ...voucher,
-                Voucher_Transfer_Insert_Details: products
-            }
-            const result = await onFirstSubmit(invoiceData)
-            if (result?.Success) {
-                setIsAddItem(false)
-            }
-            return result;
-        }
-
-        Promise.all(data.map(async (item) => {
-            return await handleEntityOperation({
-                operation: "update",
-                data: { ...voucher, RowId: voucherPorducts.length > 0 ? +voucherPorducts[voucherPorducts.length - 1].RowID + 1 : 1, Cost: item.Cost, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID },
-                cacheUpdater: refetch,
-                successMessage: AppStrings.product_updated_successfully,
-                errorMessage: AppStrings.something_went_wrong
-            });
-        }))
-    };
     const handleOnDeleteClick = async (data, handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
@@ -107,24 +74,17 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
         });
     };
 
-    const handleSelectChange = (e) => {
-        if (modalOpen.type === 'product') {
-            setSelectedProduct(e);
-        }
-        if (modalOpen.type === 'unit') {
-            setSelectedUnit(e);
-        }
-    };
-
-    const handleSaveOption = () => {
+          const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
+
         if (selectedRowParams) {
 
             if (modalOpen.type === 'product') {
-                setSelectedProduct(selectedProduct);
-
-                selectedRowParams.setValue(selectedProduct.value);
-                selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.ItemDescAr = item?.label;
+                selectedRowParams.node.data.TaxPercentage = item?.taxPer;
+                selectedRowParams.node.data.Discountable = item?.discountable;
+                selectedRowParams.node.data.Taxable = item?.taxable;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['ItemID'],
@@ -133,9 +93,9 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
             }
             if (modalOpen.type === 'unit') {
 
-                selectedRowParams.setValue(selectedUnit.value);
-                selectedRowParams.node.data.UnitDescAr = selectedUnit.label;
-                selectedRowParams.node.data.UnitID = selectedUnit.value;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.UnitDescAr = item?.label;
+                selectedRowParams.node.data.UnitID = item?.value;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['UnitID'],
@@ -150,6 +110,16 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
             params: null,
             type: null
         });
+    };
+
+    const handleSelectChange = (e) => {
+        if (modalOpen.type === 'product') {
+            handleSaveOption(e);
+            setSelectedProduct(e);
+        }
+        if (modalOpen.type === 'unit') {
+            handleSaveOption(e);
+        }
     };
 
     const columns = useVoucherItemsColDefs({
@@ -175,8 +145,9 @@ const ListVoucherTransferItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
                 isLoading={isLoading}
                 isDeleting={isDeleting}
                 onDelete={handleOnDeleteClick}
-                onSave={onSubmit}
                 columns={columns}
+                enableDelete={!isAdd}
+                ref={tableRef}
                 initialData={voucherPorducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
 

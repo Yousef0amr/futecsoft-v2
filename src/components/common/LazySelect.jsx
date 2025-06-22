@@ -31,10 +31,16 @@ const MenuList = (props) => {
     );
 };
 
-const LazySelect = ({ options, selectedOption, setSelectedOption }) => (
+const LazySelect = ({ options, selectedOption, setSelectedOption   }) => (
     <div style={{ width: 500, height: 400 }}>
         <Select
-            onChange={setSelectedOption}
+        onKeyDown={ (e) => e.key === 'Enter' && setSelectedOption(selectedOption)}
+            onChange={(selectedOption) => 
+                     {
+                        console.log(selectedOption)
+                        setSelectedOption(selectedOption);
+                     }
+                }
             defaultValue={selectedOption}
             components={{ MenuList }}
             options={options}

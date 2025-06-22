@@ -30,7 +30,6 @@ const useEntityOperations = ({ addEntity = () => { }, updateEntity = () => { }, 
                 default:
                     throw new Error("Invalid operation type");
             }
-
             if (result?.Success) {
                 cacheUpdater && cacheUpdater(cacheData);
                 success(t(successMessage));

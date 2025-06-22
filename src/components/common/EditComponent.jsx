@@ -6,11 +6,11 @@ import NavButton from './NavButton'
 import useEntityOperations from '../../hooks/useEntityOperations'
 
 
-const EditComponent = ({ icon, title, successMessage, errorMessage, isRefetch, editData, path, Form, fetchHook, defaultQuery = {}, optionComponent }) => {
+const EditComponent = ({ icon, title, successMessage,onSubmit ,tableRef , errorMessage, isRefetch, editData, path, Form, fetchHook, defaultQuery = {}, optionComponent }) => {
     const { updateEntity, isUpdating, updateEntityInCache, refetch } = fetchHook(defaultQuery)
     const { handleEntityOperation } = useEntityOperations({ updateEntity })
     const [updatedData, setUpdatedData] = React.useState(editData)
-    const onSubmit = async (data) => {
+    const onSubmitDefault = async (data) => {
 
        const response = await handleEntityOperation({
             operation: 'update',
@@ -29,7 +29,7 @@ const EditComponent = ({ icon, title, successMessage, errorMessage, isRefetch, e
 
     return (
         <FormCard open={false} icon={icon} title={title} optionComponent={optionComponent} navButton={<NavButton icon={faArrowRight} title={AppStrings.back} path={path} />}>
-            <Form  isLoading={isUpdating} resetForm={false} enableReset={false} defaultValuesEdit={updatedData} onSubmit={onSubmit} />
+            <Form tableRef={tableRef}  isLoading={isUpdating} resetForm={false} enableReset={false} defaultValuesEdit={updatedData} onSubmit={onSubmit ? onSubmit : onSubmitDefault} />
         </FormCard>
     )
 }

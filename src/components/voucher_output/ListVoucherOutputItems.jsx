@@ -7,11 +7,11 @@ import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import useUnitManagement from '../../hook/useUnitManagement'
 import SearchModal from '../common/SearchModal'
-const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ id: voucher.DocNo, skip: isAdd });
+const ListVoucherOutputItems = ({ voucher, tableRef, isAdd = false }) => {
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntity, isDeleting, refetch } = useVoucherOutputItemsManagement({ queryParams: { },id: voucher.DocNo, skip: isAdd ,  });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
-    const [isAddItem, setIsAddItem] = useState(isAdd);
+
     const [modalOpen, setModalOpen] = useState({
         open: false,
         params: null,
@@ -47,53 +47,16 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr }))
         : [];
 
-    const onSubmit = async (data) => {
 
-        const products = data.reduce((acc, item,) => {
-            acc.push({
-                ItemId: item.ItemID,
-                Qty: item.Qty,
-                Unit: item.UnitID,
-                Cost: item.Cost,
-                OutputType: voucher.OutputType
-            });
-            return acc;
-        }, []);
 
-        if (isAddItem) {
-            const invoiceData = {
-                ...voucher,
-                voucher_Ouput_Insert_Detail: products
-            }
-            const result = await onFirstSubmit(invoiceData)
-            if (result?.Success) {
-                setIsAddItem(false)
-            }
-            return result;
-        }
-
-        Promise.all(data.map(async (item) => {
-            return await handleEntityOperation({
-                operation: "update",
-                data: {
-                    ...voucher, RowId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1]?.RowId + 1 : 1,
-                    Price: item.Cost,
-                    Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID
-                },
-                cacheUpdater: refetch,
-                successMessage: AppStrings.product_updated_successfully,
-                errorMessage: AppStrings.something_went_wrong
-            });
-        }))
-    };
-
-    const handleOnDeleteClick = async (data) => {
+    const handleOnDeleteClick = async (data,handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
             data: { ItemId: data.ItemID, DocNo: voucher.DocNo, Warehouse: voucher.Warehouse, Unit: data.UnitID, RowId: data.RowId },
             cacheUpdater: refetch,
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
+            finalCallback: handleCancel
         })
     };
 
@@ -109,24 +72,17 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
         });
     };
 
-    const handleSelectChange = (e) => {
-        if (modalOpen.type === 'product') {
-            setSelectedProduct(e);
-        }
-        if (modalOpen.type === 'unit') {
-            setSelectedUnit(e);
-        }
-    };
-
-    const handleSaveOption = () => {
+       const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
+
         if (selectedRowParams) {
 
             if (modalOpen.type === 'product') {
-                setSelectedProduct(selectedProduct);
-
-                selectedRowParams.setValue(selectedProduct.value);
-                selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.ItemDescAr = item?.label;
+                selectedRowParams.node.data.TaxPercentage = item?.taxPer;
+                selectedRowParams.node.data.Discountable = item?.discountable;
+                selectedRowParams.node.data.Taxable = item?.taxable;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['ItemID'],
@@ -135,9 +91,9 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
             }
             if (modalOpen.type === 'unit') {
 
-                selectedRowParams.setValue(selectedUnit.value);
-                selectedRowParams.node.data.UnitDescAr = selectedUnit.label;
-                selectedRowParams.node.data.UnitID = selectedUnit.value;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.UnitDescAr = item?.label;
+                selectedRowParams.node.data.UnitID = item?.value;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['UnitID'],
@@ -154,6 +110,15 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
         });
     };
 
+    const handleSelectChange = (e) => {
+        if (modalOpen.type === 'product') {
+            handleSaveOption(e);
+            setSelectedProduct(e);
+        }
+        if (modalOpen.type === 'unit') {
+            handleSaveOption(e);
+        }
+    };
     const columns = useVoucherItemsColDefs({
         selectProduct: (value) => {
             handleOpenModal({
@@ -176,7 +141,8 @@ const ListVoucherOutputItems = ({ voucher, onFirstSubmit, isAdd = false }) => {
                 isLoading={isLoading}
                 isDeleting={isDeleting}
                 onDelete={handleOnDeleteClick}
-                onSave={onSubmit}
+                ref={tableRef}
+                enableDetele={!isAdd}
                 columns={columns}
                 initialData={voucherProducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />

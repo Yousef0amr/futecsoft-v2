@@ -15,7 +15,10 @@ const MainMenuValidators = () => {
         TaxId: yup.string().optional(),
         Phones: yup.string().optional(),
         Mobiles: yup.string().optional(),
-        Website: yup.string().optional(),
+        Website: yup.string().matches(
+      /^(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/,
+      "Please enter a valid website URL (e.g., www.example.com)"
+    ).optional(),
         Email: yup.string().optional(),
         Address: yup.string().optional(),
         City: yup.string().optional(),
@@ -29,12 +32,15 @@ const MainMenuValidators = () => {
         NameEn: yup.string().required(t(AppStrings.productNameEn_required)).nullable(),
         Father: yup.string().required(t(AppStrings.category_required)).nullable(),
         Warehouse: yup.array().min(1, t(AppStrings.branch_required)).required(t(AppStrings.branch_required)).nullable(),
-        TaxPercentage: yup.string().optional(),
+        TaxPercentage: yup.mixed().optional(),
         Discountable: yup.boolean().optional(),
         IsService: yup.boolean().optional(),
         IsActive: yup.boolean().optional(),
         Saleable: yup.boolean().optional(),
         Taxable: yup.boolean().optional(),
+        HotGroup: yup.boolean().optional(),
+        ReqQty: yup.boolean().optional(),
+        MinQty: yup.string().optional().nullable(),
         Icon: yup.string().nullable(),
     }
 
@@ -104,7 +110,7 @@ const MainMenuValidators = () => {
 
     const discountSchemaValidator = {
         Serial: yup.string().optional(),
-        DiscountPercentage: yup.number().required(t(AppStrings.discount_percentage_required)).nullable(),
+        DiscountPercentage: yup.number().integer(t(AppStrings.integer_value_required)).required(t(AppStrings.discount_percentage_required)).nullable(),
         DiscountTypeAR: yup.string().required(t(AppStrings.discount_type_ar_required)).nullable(),
         DiscountTypeEN: yup.string().required(t(AppStrings.discount_type_en_required)).nullable(),
         IsActive: yup.boolean().optional(),

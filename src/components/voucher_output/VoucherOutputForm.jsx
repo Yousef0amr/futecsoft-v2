@@ -4,17 +4,17 @@ import FormComponent from '../common/FormComponent';
 import VoucherOutputFormFields from './VoucherOutputFormFields';
 import ListVoucherOutputItems from './ListVoucherOutputItems';
 
-const VoucherOutputForm = ({ customSubmit, onFirstSubmit, onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const VoucherOutputForm = ({ tableRef, onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { voucherOutputSchema, voucherOutputUpdatedSchema } = useValidators();
 
 
     return (
-        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? voucherOutputSchema : voucherOutputUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={ voucherOutputUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
 
                     <VoucherOutputFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
-                    <ListVoucherOutputItems isAdd={isAdd} onFirstSubmit={onFirstSubmit} voucher={
+                    <ListVoucherOutputItems tableRef={tableRef} isAdd={isAdd}  voucher={
                         {
                             ...defaultValuesEdit,
                             Note: watch('Note'),

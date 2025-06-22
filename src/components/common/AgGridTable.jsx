@@ -19,7 +19,6 @@ const AgGridTable = ({ enableActions = true, actions, actionsCellRenderer = Acti
             field: t(AppStrings.actions),
             cellRenderer: actionsCellRenderer,
             cellRendererParams: actions,
-
         } : { width: 0 },
         ...dynamicColumns,
     ], [dynamicColumns, t, actionsCellRenderer, actions, enableActions]);
@@ -49,6 +48,7 @@ const AgGridTable = ({ enableActions = true, actions, actionsCellRenderer = Acti
         return {
             cellStyle: {
                 display: 'flex',
+                flex: 1,
                 alignItems: 'center',
             },
             resizable: true,

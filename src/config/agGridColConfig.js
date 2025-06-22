@@ -427,26 +427,29 @@ export const useInvoicesItemsColDefs = ({
 };
 
 
-export const useItemsUnitsColDefs = ({ units = [], defaultBarcode }) => {
+export const useItemsUnitsColDefs = ({ units = [], loading ,defaultBarcode }) => {
     const { t } = useTranslation();
 
     return useMemo(() => [
-        {
-            field: 'UnitId',
-            headerName: t(AppStrings.unit),
-            flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: units.map(u => Number(u.value)),
-            },
-            valueParser: params => Number(params.newValue),
-            valueFormatter: params => {
-                const selected = units.find(u => u.value === params.value);
-                return selected ? selected.label : '';
-            },
-        },
+      {
+    field: 'UnitId',
+    headerName: t(AppStrings.unit),
+    flex: 1,
+    headerClass: 'ag-header-center',
+    editable: true,
+    cellEditor: 'agSelectCellEditor',
+    cellEditorParams: (params) => {
+        return loading
+            ? { values: [] } // or ['Loading...'] to show dummy
+            : { values: units.map(u => Number(u.value)) };
+    },
+    valueParser: params => Number(params.newValue),
+    valueFormatter: (params) => {
+        if (loading) return t(AppStrings.loading); // Show "loading..." in cell
+        const selected = units.find(u => u.value === params.value);
+        return selected ? selected.label : '';
+    },
+},
         {
             field: 'Barcode',
             headerName: t(AppStrings.barcode),
@@ -565,7 +568,7 @@ export const useItemsUnitsColDefs = ({ units = [], defaultBarcode }) => {
                 return true;
             }
         }
-    ], [t, units, defaultBarcode]);
+    ], [t, units, defaultBarcode , loading]);
 };
 
 

@@ -8,13 +8,11 @@ import ProductImageField from './ProductImageField';
 import ListProductUnits from './ListProductUnits';
 
 
-const ProductForm = ({ isAdd, onSubmit, isLoading, customSubmit = false, onFirstSubmit, defaultValuesEdit = {} }) => {
+const ProductForm = ({ isAdd,tableRef, onSubmit, isLoading,  defaultValuesEdit = {} }) => {
     const { productSchema } = useValidators();
 
-
-
     return (
-        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={productSchema} onSubmit={onSubmit}>
+        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={productSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) => (
                 <>
                     <Row style={{ marginTop: '15px' }} lg={1}>
@@ -22,7 +20,7 @@ const ProductForm = ({ isAdd, onSubmit, isLoading, customSubmit = false, onFirst
                         <ProductFormFields2 register={register} errors={errors} watch={watch} setValue={setValue} />
 
                     </Row>
-                    <ListProductUnits isAdd={isAdd} onFirstSubmit={onFirstSubmit} product={{
+                    <ListProductUnits tableRef={tableRef} isAdd={isAdd}  product={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
                         Discountable: watch('Discountable'),
@@ -37,6 +35,9 @@ const ProductForm = ({ isAdd, onSubmit, isLoading, customSubmit = false, onFirst
                         NameEn: watch('NameEn'),
                         Father: watch('Father'),
                         TaxPercentage: watch('TaxPercentage'),
+                        HotGroup: watch('HotGroup'),
+                        ReqQty: watch('ReqQty'),
+                        MinQty: watch('MinQty'),
                     }} />
                 </>
             )}

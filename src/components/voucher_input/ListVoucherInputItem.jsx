@@ -9,18 +9,21 @@ import useUnitManagement from '../../hook/useUnitManagement'
 import SearchModal from '../common/SearchModal'
 
 
-const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID, skip: isAdd });
+
+const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
+    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID, skip: isAdd ,queryParams: {          refetchOnMountOrArgChange: true,} });
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
-    const [isAddItem, setIsAddItem] = useState(isAdd);
+
     const [modalOpen, setModalOpen] = useState({
         open: false,
         params: null,
         type: null
     });
+
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedUnit, setSelectedUnit] = useState(null);
+
     const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery(
         {
             Warehouse: voucher.Warehouse,
@@ -48,54 +51,16 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
     const products = !isLoadingProducts
         ? productsData?.map((item) => ({ value: item.Id, label: item.NameAr }))
         : [];
-    const onSubmit = async (data) => {
 
-        const products = data.reduce((acc, item,) => {
-            acc.push({
-                ItemId: item.ItemID,
-                Qty: item.Qty,
-                Unit: item.UnitID,
-                UnitPrice: item.UnitPrice,
-                ItemDiscountPercentage: item.DiscountPercentage,
-                ItemDiscount: item.Discount
-            });
-            return acc;
-        }, []);
 
-        if (isAddItem) {
-            const invoiceData = {
-                ...voucher, DocID: voucher.DocID,
-                voucher_Input_Insert_Detail: products
-            }
-            const result = await onFirstSubmit(invoiceData)
-            if (result?.Success) {
-                setIsAddItem(false)
-            }
-            return result;
-        }
-
-        Promise.all(data.map(async (item) => {
-            return await handleEntityOperation({
-                operation: "update",
-                data: {
-                    ...voucher, LindId: voucherProducts.length > 0 ? +voucherProducts[voucherProducts.length - 1]?.LindId + 1 : 1,
-                    UnitPrice: item.UnitPrice, Qty: item.Qty, ItemID: item.ItemID, Unit: item.UnitID
-                },
-                cacheUpdater: refetch,
-                successMessage: AppStrings.product_updated_successfully,
-                errorMessage: AppStrings.something_went_wrong
-            });
-        }))
-
-    };
-
-    const handleOnDeleteClick = async (data) => {
+    const handleOnDeleteClick = async (data,handleCancel) => {
         return await handleEntityOperation({
             operation: "delete",
             data: { ItemId: data.ItemID, DocID: voucher.DocID, Warehouse: voucher.Warehouse, Unit: data.UnitID, LineID: data.LineId },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
             successMessage: AppStrings.product_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
+            finalCallback: handleCancel
         })
     };
 
@@ -110,24 +75,17 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
         });
     };
 
-    const handleSelectChange = (e) => {
-        if (modalOpen.type === 'product') {
-            setSelectedProduct(e);
-        }
-        if (modalOpen.type === 'unit') {
-            setSelectedUnit(e);
-        }
-    };
-
-    const handleSaveOption = () => {
+       const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
+
         if (selectedRowParams) {
 
             if (modalOpen.type === 'product') {
-                setSelectedProduct(selectedProduct);
-
-                selectedRowParams.setValue(selectedProduct.value);
-                selectedRowParams.node.data.ItemDescAr = selectedProduct.label;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.ItemDescAr = item?.label;
+                selectedRowParams.node.data.TaxPercentage = item?.taxPer;
+                selectedRowParams.node.data.Discountable = item?.discountable;
+                selectedRowParams.node.data.Taxable = item?.taxable;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['ItemID'],
@@ -136,9 +94,9 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
             }
             if (modalOpen.type === 'unit') {
 
-                selectedRowParams.setValue(selectedUnit.value);
-                selectedRowParams.node.data.UnitDescAr = selectedUnit.label;
-                selectedRowParams.node.data.UnitID = selectedUnit.value;
+                selectedRowParams.setValue(item?.value);
+                selectedRowParams.node.data.UnitDescAr = item?.label;
+                selectedRowParams.node.data.UnitID = item?.value;
                 selectedRowParams.api.refreshCells({
                     rowNodes: [selectedRowParams.node],
                     columns: ['UnitID'],
@@ -155,6 +113,15 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
         });
     };
 
+    const handleSelectChange = (e) => {
+        if (modalOpen.type === 'product') {
+            handleSaveOption(e);
+            setSelectedProduct(e);
+        }
+        if (modalOpen.type === 'unit') {
+            handleSaveOption(e);
+        }
+    };
     const columns = useVoucherInputItemsColDefs({
         selectProduct: (value) => {
             handleOpenModal({
@@ -177,12 +144,13 @@ const ListVoucherInputItem = ({ voucher, onFirstSubmit, isAdd = false }) => {
                 add_title={AppStrings.add_new_product}
                 isLoading={isLoading}
                 isDeleting={isDeleting}
+                ref={tableRef}
+                enableDetele={!isAdd}
                 onDelete={handleOnDeleteClick}
-                onSave={onSubmit}
                 columns={columns}
                 initialData={voucherProducts}
             />
-            <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
+            <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} handleSaveOption={handleSaveOption} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units}  selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
 
         </div>
 

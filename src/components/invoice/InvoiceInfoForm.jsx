@@ -1,14 +1,15 @@
-import React, { useRef } from 'react'
+
 import useValidators from '../../hooks/useValidators';
 import InvoiceInfoFormFields from './InvoiceInfoFormFields';
 import FormComponent from './../common/FormComponent';
 import ListInvoiceItems from './ListInvoiceItems';
 import InvoiceInfoDetlFormFields from './InvoiceInfoDetlFormFields';
 import { Stack } from '@mui/material';
+import { useState } from 'react';
 
-const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const InvoiceInfoForm = ({ onSubmit, tableRef,  isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { invoiceSchema, invoiceUpdatedSchema } = useValidators();
-    const [enableDiscountPre, setEnableDiscounPret] = React.useState(false)
+    const [enableDiscountPre, setEnableDiscounPret] = useState(false)
 
 
     const handleDiscount = (value) => {
@@ -17,12 +18,12 @@ const InvoiceInfoForm = ({ onSubmit, onFirstSubmit, customSubmit = false, isLoad
 
 
     return (
-        <FormComponent customSubmit={customSubmit} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <Stack gap={2}>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
 
-                    <ListInvoiceItems customSubmit={customSubmit} setValue={setValue} isAdd={isAdd} onFirstSubmit={onFirstSubmit} invoice={{
+                    <ListInvoiceItems tableRef={tableRef}  setValue={setValue} isAdd={isAdd} invoice={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
                         InvoiceNo: watch('InvoiceNo'),

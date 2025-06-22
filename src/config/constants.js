@@ -9,9 +9,11 @@ export const routes = {
         list: '/products/list',
         add: '/products/add',
         edit: '/products/edit',
-        compositeComponents: '/products/composite-components',
+        compositeComponents: '/products/composite-products',
+        compositeProductAdd: '/products/composite-products/add',
         compositeComponentsAdd: '/products/composite-components/add',
-        pricesAndCosts: '/products/prices-and-costs'
+        pricesAndCosts: '/products/prices-and-costs',
+        compositeComponentsEdit: '/products/composite-components/edit'
     },
     branch: {
         list: '/branches/list',
@@ -217,14 +219,7 @@ export const menuList = [
         label: AppStrings.materials_list,
         icon: faBarcode,
         subActions: [
-            {
-                label: AppStrings.materials,
-                icon: faBarcode,
-                type: 'unExpanded',
-                subHref: routes.product.add,
-                href: routes.product.list,
-                subHrefEdit: routes.product.edit
-            },
+        
             {
                 label: AppStrings.categories,
                 icon: faWindowRestore,
@@ -232,6 +227,22 @@ export const menuList = [
                 subHref: routes.category.add,
                 href: routes.category.list,
                 subHrefEdit: routes.category.edit
+            },
+                {
+                label: AppStrings.readyProducts,
+                icon: faBarcode,
+                type: 'unExpanded',
+                subHref: routes.product.add,
+                href: routes.product.list,
+                subHrefEdit: routes.product.edit
+            },
+                {
+                label: AppStrings.compositeComponents,
+                icon: faBarcode,
+                type: 'unExpanded',
+                href: routes.product.compositeComponents,
+                 subHref: routes.product.compositeProductAdd,
+                subHrefEdit: routes.product.compositeComponentsEdit || routes.product.compositeComponentsAdd
             },
             // {
             //     label: AppStrings.prices_and_costs,
@@ -460,6 +471,8 @@ export const defaultProductValues = {
     IsActive: true,
     Saleable: true,
     Taxable: true,
+    TaxPercentage: 0,
+    MinQty: 0,
     Icon: 'لا يوجد صورة',
 }
 

@@ -33,7 +33,7 @@ const AddBranch = () => {
                 <NavButton icon={'list'} title={AppStrings.list_branches} path={routes.branch.list} />
             </>
         }  >
-            <BranchForm isLoading={isAdding} onSubmit={onSubmit} defaultValuesEdit={{ BranchId: currentKey }} />
+            <BranchForm enableReset={true}  resetForm={!isAdding} isLoading={isAdding}  onSubmit={onSubmit} defaultValuesEdit={{ BranchId: currentKey }} />
         </FormCard>
     )
 }

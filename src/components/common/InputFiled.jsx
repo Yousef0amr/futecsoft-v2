@@ -14,7 +14,7 @@ const InputField = ({ name, label, disabled = false, register, errors, required,
             type={type}
             placeholder={`${t(AppStrings.enter)}  ${t(label)}`}
             min={min}
-            step={'any'}
+            step={"any"}
             disabled={disabled}
             className='custom-input'
             style={{ color: 'var(--text-color)', fontSize: '14px', backgroundColor: 'var(--background-color)', borderColor: '#ced4da', appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'textfield' }}

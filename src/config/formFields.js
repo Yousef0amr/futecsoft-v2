@@ -7,6 +7,8 @@ export const productCheckFormFields = [
     { name: 'IsActive', label: AppStrings.isActive, required: false, type: 'check' },
     { name: 'Saleable', label: AppStrings.saleable, required: false, type: 'check' },
     { name: 'Taxable', label: AppStrings.taxable, required: false, type: 'check' },
+    { name: 'HotGroup', label: AppStrings.hotGroup, required: false, type: 'check' },
+  
 ];
 
 export const productPriceFormFields = [
@@ -21,15 +23,19 @@ export const productImageField = {
 };
 
 export const productFormFields = [
-    { name: 'Id', label: AppStrings.productId, required: false, type: 'number', disabled: true },
+
     { name: 'NameAr', label: AppStrings.productNameAr, required: true, type: 'text' },
     { name: 'NameEn', label: AppStrings.productNameEn, required: true, type: 'text' },
+     { name: 'MinQty', label: AppStrings.minQty, required: false, type: 'number' },
+      { name: 'ReqQty', label: AppStrings.reqQty, required: false, type: 'check' },
+   
 ];
 
 export const productSelectFormFields = [
     { name: 'Warehouse', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },
     { name: 'Father', label: AppStrings.category, required: true, options: [], type: 'select' },
     { name: 'TaxPercentage', label: AppStrings.taxPercentage, required: false, options: [], type: 'select' },
+        { name: 'Id', label: AppStrings.productId, required: false, type: 'number', disabled: true },
 ];
 
 export const productUnitsFormFields = [
@@ -44,11 +50,19 @@ export const productUnitsFormFields = [
     },
 ];
 
+export const productComponentsFormFields = [
+    { name: 'ItemID', label: AppStrings.productId, required: true, disabled: true, type: 'number' },
+    { name: 'Name', label: AppStrings.description, required: false, disabled: true, type: 'text' },
+    { name: 'FoodQty', label: AppStrings.quantity, required: true, type: 'number' },
+    { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
+];
+
 export const productComponentsFormFields1 = [
     { name: 'Father', label: AppStrings.category, required: true, options: [], type: 'select' },
     { name: 'SubItem', label: AppStrings.materials, required: true, options: [], type: 'select' },
     { name: 'Unit', label: AppStrings.unit, required: true, options: [], type: 'select' },
 ];
+
 
 
 export const productTypeFormFields = [
@@ -219,7 +233,7 @@ export const userGroupsFormFields = [
 export const usersFormFields = [
     { name: 'UserNo', label: AppStrings.userId, required: true, type: 'number', disabled: true },
     { name: 'UserName', label: AppStrings.username, required: true, type: 'text' },
-    { name: 'UserPassword', label: AppStrings.password, required: true, type: 'password' },
+    { name: 'UserPassword', label: AppStrings.password, required: true, type: 'text' },
     { name: 'GroupType', label: AppStrings.user_group, required: true, options: [], type: 'select' },
     { name: 'Branch', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },
     { name: 'IsActive', label: AppStrings.isActive, type: 'check' },
@@ -227,6 +241,7 @@ export const usersFormFields = [
 
 
 export const permissionsFormFields = [
+     
     { name: '0101', label: AppStrings.permission0101, type: 'check' },
     { name: '0102', label: AppStrings.permission0102, type: 'check' },
     { name: '0103', label: AppStrings.permission0103, type: 'check' },

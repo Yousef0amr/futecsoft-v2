@@ -2,8 +2,9 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AppStrings from "./../../config/appStrings";
 import { DeleteOutline } from "@mui/icons-material";
+import NavButton from "./NavButton";
 
-const ActionsCellRenderer = ({ node, api, handleOnEditClick, handleDeleteClick, editContent }) => {
+const ActionsCellRenderer = ({ node, api, handleOnEditClick, handleDeleteClick, editContent ,path ,title, navButton = false }) => {
   const { t } = useTranslation();
   const selectedRow = JSON.parse(localStorage.getItem("selectedRows"))
   const [active, setActive] = useState((selectedRow?.ItemId + selectedRow?.SubItem) === (node.data.ItemId + node.data.SubItem))
@@ -35,6 +36,7 @@ const ActionsCellRenderer = ({ node, api, handleOnEditClick, handleDeleteClick, 
       >
         <DeleteOutline style={{ fontSize: "20px" }} />
       </button>
+      { navButton &&    <NavButton icon={'add'} node={node}  title={title} path={path} />}
     </div>
   );
 };

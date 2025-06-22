@@ -11,23 +11,19 @@ const SearchModal = ({
     open,
     handleClose,
     handleSelectChange,
-    handleSaveOption,
     selectedOption,
     options
 }) => {
     const { t } = useTranslation()
+
+    
     return (
-        <Dialog open={open} onClose={handleClose} onKeyDown={(e) => e.key === 'Enter' && handleSaveOption()}>
+        <Dialog open={open} onClose={handleClose}>
             <DialogContent>
-                <LazySelect options={options} selectedOption={selectedOption} setSelectedOption={handleSelectChange} />
+                <LazySelect options={options} selectedOption={selectedOption} setSelectedOption={handleSelectChange}  />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>{t(AppStrings.cancel)}</Button>
-                <Button variant="contained" className='bg-[var(--primary-color)]'  onClick={() =>
-                    handleSaveOption()}
-                >
-                    {t(AppStrings.save)}
-                </Button>
             </DialogActions>
         </Dialog>
     )

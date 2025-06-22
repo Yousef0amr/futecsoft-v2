@@ -6,6 +6,8 @@ import { ProtectedRoute, LoginRoute } from './../components/common/ProtectedRout
 import Loader from '../components/common/Loader';
 import { routes } from '../config/constants';
 import NotFound from '../components/common/NotFound';
+import CompositeProducts from '../pages/product/CompositeProducts';
+import AddCompositeComponent from '../pages/product/AddCompositeComponent';
 
 
 // Lazy imports
@@ -189,6 +191,12 @@ const pagesList = [
     { path: routes.recieving_voucher.list, component: <ListVoucherRecieving /> },
     { path: routes.recieving_voucher.add, component: <AddVoucherRecieving /> },
     { path: routes.recieving_voucher.edit, component: <EditVoucherRecieving /> },
+
+    {path : routes.product.compositeComponents, component : <CompositeProducts />},
+    {path : routes.product.compositeComponentsAdd, component : <AddCompositeComponent />},
+
+    {path : routes.product.compositeProductAdd, component : <AddProduct />},
+    {path : routes.product.compositeComponentsEdit, component : <EditProduct />},
 ];
 
 const reportsPages = [

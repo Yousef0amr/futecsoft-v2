@@ -17,7 +17,7 @@ const useInvoiceManagement = () => {
     });
 }
 
-export const useInvoiceItemsManagement = ({ id, skip }) => {
+export const useInvoiceItemsManagement = ({ id, skip,queryParams }) => {
     return useEntityManagement({
         apiSlice: invoiceDetailsApi,
         queryHook: useGetAllInvoiceDetailsQuery,
@@ -29,6 +29,7 @@ export const useInvoiceItemsManagement = ({ id, skip }) => {
             id
         },
         skip,
+        queryParams,
         identifier: 'ItemID'
     });
 }

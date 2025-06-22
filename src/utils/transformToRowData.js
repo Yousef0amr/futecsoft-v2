@@ -1,0 +1,1 @@
+export  const transformToRowData =  (initialData) =>  initialData.map((row, index) => ({ id: index, ...row }));

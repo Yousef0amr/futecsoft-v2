@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -11,34 +11,43 @@ import { faAdd, faSave } from "@fortawesome/free-solid-svg-icons";
 import { Close, DeleteOutline } from "@mui/icons-material";
 import DialogModel from './../../components/common/DialogModel';
 import DeleteComponent from './../../components/common/DeleteComponent';
+import {transformToRowData} from "./../../utils/transformToRowData"
 
+function shallowCompareById(prev, next) {
+  if (prev.length !== next.length) return false;
+  for (let i = 0; i < prev.length; i++) {
+    if (prev[i].id !== next[i].id) return false;
+  }
+  return true;
+}
 
-const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete, isLoading, isDeleting, handleClickEnter = () => { }, resetTotals }) => {
+const TableWithCRUD = forwardRef (({enableDetele = true , columns, initialData = [], add_title,  onDelete, isLoading, isDeleting, handleClickEnter = () => { }, resetTotals }, ref) => {
     const gridRef = useRef(null);
     const { t, i18n } = useTranslation();
     const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);
     const localeText = useMemo(() => (isRtl ? AG_GRID_LOCALE_EG : AG_GRID_LOCALE_EN), [isRtl]);
 
-    const [rowData, setRowData] = useState([]);
+     const [rowData, setRowData] = useState(transformToRowData(initialData));
     const [dirtyRows, setDirtyRows] = useState(new Set());
     const [open, setOpen] = useState({ data: null, isOpen: false });
 
     const containerStyle = useMemo(() => ({ width: "100%", height: "35vh" }), []);
     const defaultColDef = useMemo(() => ({ resizable: true, flex: 1, editable: true }), []);
-    const initialized = useRef(false);
 
+const prevInitialDataRef = useRef(initialData);
 
-    useEffect(() => {
-        if (!isLoading && !initialized.current) {
-            const data = initialData.map((row, index) => ({ id: index, ...row }));
-            setRowData(data);
-            initialized.current = true;
-        }
-    }, [initialData, isLoading]);
+useEffect(() => {
+  const hasChanged = !shallowCompareById(prevInitialDataRef.current, initialData);
+  if (hasChanged) {
+    prevInitialDataRef.current = initialData;
+    setRowData(transformToRowData(initialData));
+    setDirtyRows(new Set());
+  }
+}, [initialData]);
 
     const handleAddRow = () => {
         const newRow = {
-            id: (rowData.length + 1).toString(),
+            id: `new-${Date.now()}`,
             ...Object.fromEntries(columns.map(col => [col.field, null]))
         };
         setRowData(prev => [...prev, newRow]);
@@ -67,15 +76,11 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
         setOpen({ data: null, isOpen: false });
     };
 
-    const handleSaveAll = async () => {
-        const updatedRows = rowData.filter(row => dirtyRows.has(row.id));
-        if (updatedRows.length > 0) {
-            const result = await onSave(updatedRows)
-            if (result?.Success) {
-                setDirtyRows(new Set());
-            }
-        }
-    };
+
+      useImperativeHandle(ref, () => ({
+    getData: () => rowData,
+    getDirtyData: () => rowData.filter(row => dirtyRows.has(row.id)),
+  }));
 
 
     const handleRemoveRow = useCallback((data) => {
@@ -115,7 +120,7 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
                         </button>
                     </div>}
                     {
-                        <div className="buttonCell px-0 py-1">
+                       enableDetele && <div className="buttonCell px-0 py-1">
                             <button
                                 type='button'
                                 className="button-secondary removeButton "
@@ -128,7 +133,7 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
             ),
         },
         ...columns.map(col => ({ ...col })),
-    ], [columns, t, handleOpen, handleRemoveRow]);
+    ], [columns, t, handleOpen, handleRemoveRow, enableDetele]);
 
     const handleCellValueChanged = (params) => {
         setDirtyRows(prev => {
@@ -159,7 +164,7 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
                     <FontAwesomeIcon icon={faAdd} />
                     {t(add_title)}
                 </Button>
-                <Button
+                {/* <Button
                     type='submit'
                     onClick={handleSaveAll}
                     disabled={dirtyRows.size === 0}
@@ -174,7 +179,7 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
                 >
                     <FontAwesomeIcon icon={faSave} />
                     {t(AppStrings.save)}
-                </Button>
+                </Button> */}
             </div>
             <div style={containerStyle} className="ag-theme-alpine w-100 p-1">
                 <AgGridReact
@@ -217,7 +222,6 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
                 <DeleteComponent
                     handleDelete={async () => {
                         const result = await onDelete(open.data, handleCancel)
-                        handleCancel()
                         if (result?.Success) {
                             setRowData(prev => prev.filter(row => row.id !== open.data.id));
                         }
@@ -229,6 +233,6 @@ const TableWithCRUD = ({ columns, initialData = [], add_title, onSave, onDelete,
             </DialogModel>
         </div>
     );
-};
+} );
 
 export default TableWithCRUD;

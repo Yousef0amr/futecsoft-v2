@@ -19,6 +19,7 @@ export const voucherInputsApi = createDynamicApi({
     baseEndpoint: BASEURL + VOUCHER_INPUT,
     active: true,
     isJson: true,
+    updateJson: true,
     transformData: transformVoucherData
 });
 
@@ -36,8 +37,8 @@ export const voucherInputDetailsApi = createApi({
             query: ({ id }) => ({
                 url: `/GetDatailsByDocID?DocID=${id}`,
             }),
-            keepUnusedDataFor: longCacheTime,
             transformResponse: (response) => response.Response || response,
+              providesTags: ["voucher"]
         }),
         updateVoucherInputDetails: builder.mutation({
             query: (data) => ({
@@ -52,6 +53,7 @@ export const voucherInputDetailsApi = createApi({
                 method: 'POST',
                 body: convertToFormData(data),
             }),
+                     invalidatesTags: ["voucher"]
         }),
     }),
 })
