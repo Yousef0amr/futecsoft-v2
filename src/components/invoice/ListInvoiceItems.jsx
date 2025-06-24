@@ -143,7 +143,7 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
 
     })
 
-    const handleClickEnter = (grid,handleAddRow) => {
+    const handleClickEnter = (grid) => {
         const data = grid.current.props.rowData
 
         if (!data) return
@@ -163,10 +163,6 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
                 force: true,
             });
         })
-
-       if(checkRequiredData({products}) ){ 
-            handleAddRow()
-        }
 
         setValue("Tax", totals.tax)
         setValue("Discount", totals.discount)

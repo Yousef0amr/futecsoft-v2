@@ -4,14 +4,14 @@ import FormFieldsComponent from '../common/FormFieldsComponent'
 
 const BranchFormFields = ({ setValue ,watch ,register, errors }) => {
 
- const branchNameAr = watch("BranchNameAr");
- const branchNameEn = watch("BranchNameEn");
+//  const branchNameAr = watch("BranchNameAr");
+//  const branchNameEn = watch("BranchNameEn");
 
-useEffect(() => {
-    if (branchNameAr && !branchNameEn) {
-        setValue("BranchNameEn", branchNameAr);
-    }
-}, [branchNameAr, setValue, branchNameEn]);
+// useEffect(() => {
+//     if (branchNameAr && !branchNameEn) {
+//         setValue("BranchNameEn", branchNameAr);
+//     }
+// }, [branchNameAr, setValue, branchNameEn]);
 
     return (
         <FormFieldsComponent errors={errors} register={register} fields={branchFormFields} />

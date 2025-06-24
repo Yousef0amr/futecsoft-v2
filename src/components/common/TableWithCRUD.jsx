@@ -58,8 +58,7 @@ useEffect(() => {
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Enter') {
-                handleClickEnter(gridRef,handleAddRow)
-enableAddNewRow && handleAddRow()
+                handleClickEnter(gridRef)
             }
         };
 
@@ -68,7 +67,7 @@ enableAddNewRow && handleAddRow()
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [handleClickEnter, gridRef, handleAddRow, enableAddNewRow]);
+    }, [handleClickEnter, gridRef, enableAddNewRow]);
 
     const handleOpen = useCallback((data) => {
         setOpen({ data, isOpen: true });
