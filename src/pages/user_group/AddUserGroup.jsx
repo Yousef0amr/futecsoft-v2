@@ -12,15 +12,18 @@ import { useGetCurrentUserGroupKeyQuery } from '../../features/userGroupSlice';
 
 const AddUserGroup = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, addEntityToCache } = useUserGroupManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useUserGroupManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentUserGroupKeyQuery();
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
-            cacheUpdater: addEntityToCache,
+            data: {
+                ...data,
+                GroupId: currentKey
+            },
+            cacheUpdater: refetch,
             cacheData: data,
             successMessage: AppStrings.group_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -32,7 +35,7 @@ const AddUserGroup = () => {
                 <NavButton icon={'list'} title={AppStrings.list_groups} path={routes.user_group.list} />
             </>
         }  >
-            <UserGroupForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ GroupId: currentKey, IsActive: true }} />
+            <UserGroupForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{ GroupId: currentKey, IsActive: true }} />
         </FormCard>
     )
 }

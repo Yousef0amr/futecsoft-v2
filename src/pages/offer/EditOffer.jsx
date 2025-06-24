@@ -11,40 +11,43 @@ import { useTranslation } from 'react-i18next';
 import TabsSelect from '../../components/common/TabsSelect';
 
 const EditOffer = () => {
-    const loaction = useLocation()
+    const location = useLocation()
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState(loaction.state.OfferTypeEn.replace(/\s+/g, ''));
+     const offerTypeEn = location.state.OfferTypeEn.replace(/\s+/g, '');
 
+const [activeTab, setActiveTab] = useState({
+    PriceOffer: offerTypeEn === 'PriceOffer',
+    QtyOffer: offerTypeEn === 'QtyOffer',
+    ExtraOffer: offerTypeEn === 'ExtraOffer',
+});
 
-    const offerType = activeTab === 'PriceOffer' ? {
-        PriceOffer: true,
-        QtyOffer: false,
-        ExtraOffer: false
-    } : activeTab === 'QtyOffer' ? {
-        PriceOffer: false,
-        QtyOffer: true,
-        ExtraOffer: false
-    } : {
-        PriceOffer: false,
-        QtyOffer: false,
-        ExtraOffer: true
-    };
     const handleTabClick = (type) => {
-        setActiveTab(type);
+        setActiveTab({
+    PriceOffer: type === 'PriceOffer',
+    QtyOffer:   type === 'QtyOffer',
+    ExtraOffer: type === 'ExtraOffer',
+  });
     };
 
+    const Branch = typeof location.state.Branch === 'string'
+  ? location.state.Branch.split(',')
+  : Array.isArray(location.state.Branch)
+    ? location.state.Branch
+    : []
     return (
         <EditComponent
-            optionComponent={<TabsSelect handleTabClick={handleTabClick} activeTab={activeTab} options={offerTypeFormFields} />}
+            optionComponent={<TabsSelect handleTabClick={handleTabClick} activeTab={ activeTab.PriceOffer ? 'PriceOffer' : activeTab.QtyOffer ? 'QtyOffer' : 'ExtraOffer'} options={offerTypeFormFields} />}
             errorMessage={AppStrings.something_went_wrong}
             successMessage={AppStrings.offer_updated_successfully}
             fetchHook={useOfferManagement}
+optionalTab={activeTab}
+
             icon={faStar}
             isRefetch={true}
-            title={t(AppStrings.edit_offer) + '  | ' + loaction.state.OfferId}
+            title={t(AppStrings.edit_offer) + '  | ' + location.state.OfferId}
             path={routes.offer.list}
             Form={OfferForm}
-            editData={{ ...loaction.state, Branch: loaction.state.Branch.split(','), Product: loaction.state.ProductId, ExtraProduct: loaction.state.ExtraProduct, ...offerType }}
+            editData={{ ...location.state, Branch: Branch, Product: location.state.ProductId, ExtraProduct: location.state.ExtraProduct ?? 0 }}
         />
     )
 }

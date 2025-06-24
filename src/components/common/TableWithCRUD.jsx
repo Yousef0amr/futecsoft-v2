@@ -21,7 +21,7 @@ function shallowCompareById(prev, next) {
   return true;
 }
 
-const TableWithCRUD = forwardRef (({enableDetele = true , columns, initialData = [], add_title,  onDelete, isLoading, isDeleting, handleClickEnter = () => { }, resetTotals }, ref) => {
+const TableWithCRUD = forwardRef (({enableDelete = true ,enableAddNewRow = true, getChangedRow = () => { }, columns, initialData = [], add_title,  onDelete, isLoading, isDeleting, handleClickEnter = () => { }, resetTotals }, ref) => {
     const gridRef = useRef(null);
     const { t, i18n } = useTranslation();
     const isRtl = useMemo(() => i18n.language !== 'en', [i18n.language]);
@@ -45,19 +45,21 @@ useEffect(() => {
   }
 }, [initialData]);
 
-    const handleAddRow = () => {
+    const handleAddRow =useCallback( () => {
         const newRow = {
             id: `new-${Date.now()}`,
             ...Object.fromEntries(columns.map(col => [col.field, null]))
         };
         setRowData(prev => [...prev, newRow]);
         setDirtyRows(prev => new Set(prev).add(newRow.id));
-    };
+    }, [columns]);
+
 
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Enter') {
-                handleClickEnter(gridRef)
+                handleClickEnter(gridRef,handleAddRow)
+enableAddNewRow && handleAddRow()
             }
         };
 
@@ -66,7 +68,7 @@ useEffect(() => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [handleClickEnter]);
+    }, [handleClickEnter, gridRef, handleAddRow, enableAddNewRow]);
 
     const handleOpen = useCallback((data) => {
         setOpen({ data, isOpen: true });
@@ -80,6 +82,7 @@ useEffect(() => {
       useImperativeHandle(ref, () => ({
     getData: () => rowData,
     getDirtyData: () => rowData.filter(row => dirtyRows.has(row.id)),
+    resetTable: () => setRowData(transformToRowData(initialData)),
   }));
 
 
@@ -120,7 +123,7 @@ useEffect(() => {
                         </button>
                     </div>}
                     {
-                       enableDetele && <div className="buttonCell px-0 py-1">
+                       enableDelete && <div className="buttonCell px-0 py-1">
                             <button
                                 type='button'
                                 className="button-secondary removeButton "
@@ -133,9 +136,10 @@ useEffect(() => {
             ),
         },
         ...columns.map(col => ({ ...col })),
-    ], [columns, t, handleOpen, handleRemoveRow, enableDetele]);
+    ], [columns, t, handleOpen, handleRemoveRow, enableDelete]);
 
     const handleCellValueChanged = (params) => {
+        getChangedRow(params);
         setDirtyRows(prev => {
             const updated = new Set(prev);
             updated.add(params.data.id);

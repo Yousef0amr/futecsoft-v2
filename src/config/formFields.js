@@ -35,7 +35,7 @@ export const productSelectFormFields = [
     { name: 'Warehouse', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },
     { name: 'Father', label: AppStrings.category, required: true, options: [], type: 'select' },
     { name: 'TaxPercentage', label: AppStrings.taxPercentage, required: false, options: [], type: 'select' },
-        { name: 'Id', label: AppStrings.productId, required: false, type: 'number', disabled: true },
+        // { name: 'Id', label: AppStrings.productId, required: false, type: 'number', disabled: true },
 ];
 
 export const productUnitsFormFields = [
@@ -73,7 +73,6 @@ export const productTypeFormFields = [
 
 
 export const branchFormFields = [
-    { name: 'BranchId', label: AppStrings.branchId, required: true, type: 'number', disabled: true },
     { name: 'TaxId', label: AppStrings.taxId, required: false, type: 'number' },
     { name: 'BranchNameAr', label: AppStrings.branchNameAr, required: true, type: 'text' },
     { name: 'BranchNameEn', label: AppStrings.branchNameEn, required: true, type: 'text' },
@@ -92,7 +91,7 @@ export const pricesAndCostsFormFields = [
 ];
 
 export const categoryFormFields = [
-    { name: 'Id', label: AppStrings.categoryId, required: true, type: 'number', disabled: true },
+    // { name: 'Id', label: AppStrings.categoryId, required: true, type: 'number', disabled: true },
     { name: 'Warehouse', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },
     { name: 'NameAr', label: AppStrings.categoryNameAr, required: true, type: 'text' },
     { name: 'NameEn', label: AppStrings.categoryNameEn, required: true, type: 'text' },
@@ -102,7 +101,7 @@ export const categoryFormFields = [
 ]
 
 export const unitsFormFields = [
-    { name: 'UnitID', label: AppStrings.unitId, required: true, type: 'number', disabled: true },
+    // { name: 'UnitID', label: AppStrings.unitId, required: true, type: 'number', disabled: true },
     { name: 'Unit_AR', label: AppStrings.unitNameAr, required: true, type: 'text' },
     { name: 'Unit_EN', label: AppStrings.unitNameEn, required: true, type: 'text' },
     { name: 'Active', label: AppStrings.isActive, type: 'check' },
@@ -112,7 +111,7 @@ export const unitsFormFields = [
 
 
 export const offersFormFields = [
-    { name: 'OfferId', label: AppStrings.offerId, required: true, type: 'number', disabled: true },
+    // { name: 'OfferId', label: AppStrings.offerId, required: true, type: 'number', disabled: true },
     { name: 'Branch', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },
     { name: 'FromDate', label: AppStrings.from_date, required: true, type: 'date' },
     { name: 'ToDate', label: AppStrings.to_date, required: true, type: 'date' },
@@ -144,18 +143,18 @@ export const offerTypeFormFields = [
 
 
 export const discountsFormFields = [
-    { name: 'Serial', label: AppStrings.discountId, required: true, type: 'number', disabled: true },
-    { name: 'DiscountPercentage', label: AppStrings.discount_percentage, required: true, type: 'number' },
+   
     { name: 'DiscountTypeAR', label: AppStrings.discount_type_ar, required: true, type: 'text' },
     { name: 'DiscountTypeEN', label: AppStrings.discount_type_en, required: true, type: 'text' },
+     { name: 'DiscountPercentage', label: AppStrings.discount_percentage, required: true, type: 'number' },
     { name: 'IsActive', label: AppStrings.isActive, type: 'check' },
 ]
 
 export const taxsFormFields = [
-    { name: 'TaxId', label: AppStrings.tax_type_id, required: true, type: 'number', disabled: true },
-    { name: 'TaxPercentage', label: AppStrings.taxPercentage, required: true, type: 'number' },
-    { name: 'TaxAr', label: AppStrings.tax_type_ar, required: true, type: 'text' },
+        { name: 'TaxAr', label: AppStrings.tax_type_ar, required: true, type: 'text' },
     { name: 'TaxEn', label: AppStrings.tax_type_en, required: true, type: 'text' },
+    { name: 'TaxPercentage', label: AppStrings.taxPercentage, required: true, type: 'number' },
+
     { name: 'TaxIsActive', label: AppStrings.isActive, type: 'check' },
     { name: 'IsDefault', label: AppStrings.isDefault, type: 'check' },
 ]
@@ -171,7 +170,6 @@ export const currenciesFormFields = [
 
 
 export const paymentTypesFormFields = [
-    { name: 'Ptype', label: AppStrings.paymentTypeId, required: true, type: 'number', disabled: true },
     { name: 'Commissions', label: AppStrings.commissions, required: false, type: 'number' },
     { name: 'PaymentArDesc', label: AppStrings.paymentTypeAr, required: true, type: 'text' },
     { name: 'PaymentEnDesc', label: AppStrings.paymentTypeEn, required: true, type: 'text' },
@@ -190,10 +188,9 @@ export const paymentTypeFormFields = [
 
 
 export const suppliersFormFields = [
-    { name: 'SupplierId', label: AppStrings.supplierId, required: true, type: 'number', disabled: true },
     { name: 'SupplierCompany', label: AppStrings.supplierCompany, required: true, type: 'text' },
     { name: 'ContactName', label: AppStrings.contactName, required: true, type: 'text' },
-    { name: 'Email', label: AppStrings.email, required: false, type: 'email' },
+    { name: 'Email', label: AppStrings.email, required: true, type: 'email' },
     { name: 'Phones', label: AppStrings.phones, required: false, type: 'text' },
     { name: 'Mobiles', label: AppStrings.mobiles, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, options: [], multiple: true, required: true, type: 'select' },
@@ -224,14 +221,12 @@ export const deliveryDiscountFormFields = [
 
 
 export const userGroupsFormFields = [
-    { name: 'GroupId', label: AppStrings.groupId, required: true, type: 'number', disabled: true },
     { name: 'GroupArName', label: AppStrings.group_name_ar, required: true, type: 'text' },
     { name: 'GroupEnName', label: AppStrings.group_name_en, required: true, type: 'text' },
     { name: 'IsActive', label: AppStrings.isActive, type: 'check' },
 ]
 
 export const usersFormFields = [
-    { name: 'UserNo', label: AppStrings.userId, required: true, type: 'number', disabled: true },
     { name: 'UserName', label: AppStrings.username, required: true, type: 'text' },
     { name: 'UserPassword', label: AppStrings.password, required: true, type: 'text' },
     { name: 'GroupType', label: AppStrings.user_group, required: true, options: [], type: 'select' },
@@ -269,7 +264,6 @@ export const permissionsFormFields = [
 
 
 export const invoiceInfFormFields = [
-    { name: 'DocID', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
     { name: 'InvoiceNo', label: AppStrings.invoiceNo, required: false, type: 'text' },
     { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
@@ -301,7 +295,6 @@ export const invoiceItemsFormFields = [
 
 
 export const voucherInputFormFields = [
-    { name: 'DocID', label: AppStrings.voucherId, required: true, type: 'number', disabled: true },
     { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
@@ -317,7 +310,6 @@ export const voucherInputItemsFormFields = [
 
 
 export const voucherOutputFormFields = [
-    { name: 'DocNo', label: AppStrings.voucherId, required: true, type: 'number', disabled: true },
     { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },
     { name: 'Warehouse', label: AppStrings.branch, required: false, options: [], type: 'select' },
@@ -335,7 +327,6 @@ export const voucherOutputItemsFormFields = [
 
 
 export const voucherTransferFormFields = [
-    { name: 'DocNo', label: AppStrings.invoiceId, required: true, type: 'number', disabled: true },
     { name: 'TransferNo', label: AppStrings.voucherId, required: false, type: 'text' },
     { name: 'DocDate', label: AppStrings.date, required: false, type: 'date' },
     { name: 'Note', label: AppStrings.note, required: false, type: 'text' },

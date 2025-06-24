@@ -37,8 +37,8 @@ const useEntityManagement = ({
     identifier = 'Id',
 }) => {
     const { data, isLoading, error, refetch } = queryHook(defaultQueryArgs, { skip,...queryParams });
-    const [addEntity, { isLoading: isAdding }] = addMutationHook();
-    const [updateEntity, { isLoading: isUpdating }] = updateMutationHook();
+    const [addEntity, { isLoading: isAdding, isSuccess: isAddedSuccess }] = addMutationHook();
+    const [updateEntity, { isLoading: isUpdating, isSuccess: isUpdatedSuccess }] = updateMutationHook();
     const [deleteEntity, { isLoading: isDeleting }] = deleteMutationHook();
     const dispatch = useDispatch();
     const { setShowLoginModal } = useAuth()
@@ -122,6 +122,8 @@ const useEntityManagement = ({
         isUpdating,
         deleteEntity,
         isDeleting,
+        isAddedSuccess,
+        isUpdatedSuccess,
         deleteEntityFromCache,
         addEntityToCache,
         updateEntityInCache,

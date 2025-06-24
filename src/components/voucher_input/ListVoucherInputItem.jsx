@@ -145,7 +145,7 @@ const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
                 isLoading={isLoading}
                 isDeleting={isDeleting}
                 ref={tableRef}
-                enableDetele={!isAdd}
+                enableDelete={!isAdd}
                 onDelete={handleOnDeleteClick}
                 columns={columns}
                 initialData={voucherProducts}

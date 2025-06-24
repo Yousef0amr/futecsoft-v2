@@ -14,28 +14,19 @@ import useNotification from '../../hooks/useNotification';
 import { calculateItemDetails, calculateInvoiceTotals,restructureData } from '../../utils/calcInvoiceDetl'
 const AddInvoice = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useInvoiceManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useInvoiceManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
-    const [fetchKey, setFetchKey] = useState(true);
-    const [triggerGetCurrentInvoiceKey, { data: currentKey }] = useGetCurrentInvoiceKeyQuery();
+    const  { data: currentKey } = useGetCurrentInvoiceKeyQuery();
     const { success } = useNotification();
     const tableRef = useRef()
     
-    const fetchData = async () => {
-        await triggerGetCurrentInvoiceKey()
-    }
-
-    if (fetchKey) {
-        fetchData()
-        setFetchKey(false)
-    }
 
     const [defaultCalData,setDefaultCalData] = useState()
 
         const onSubmit = async (invoice) => {
             const data = tableRef.current?.getData();
             const products = restructureData({ data, invoice })
-    
+            
             const val = calculateItemDetails(products, invoice)
             const totals = calculateInvoiceTotals(val)
     
@@ -47,7 +38,8 @@ const AddInvoice = () => {
             })
    
             const invoiceData = {
-                DocID: invoice.DocID, ...totals,
+                DocID: currentKey
+                , ...totals,
                 Vtype: invoice.Vtype,
                 InvoiceNo: invoice.InvoiceNo,
                 DocDate: invoice.DocDate,
@@ -66,8 +58,9 @@ const AddInvoice = () => {
             errorMessage: AppStrings.something_went_wrong
         })
 
-        if (result.Success) {
-            setFetchKey(true)
+        if (result?.Success) {
+            tableRef.current?.resetTable()
+            
         }
 
                 return result;
@@ -80,7 +73,7 @@ const AddInvoice = () => {
                 <NavButton icon={'list'} title={AppStrings.list_invoices} path={routes.invoice.list} />
             </>
         }  >
-            <InvoiceInfoForm  tableRef={tableRef} isAdd={true} isLoading={isAdding} onSubmit={onSubmit}  defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice , ...defaultCalData,DiscountValue: 0 }} />
+            <InvoiceInfoForm  tableRef={tableRef} isSuccess={isAddedSuccess} enableReset={true} isAdd={true} isLoading={isAdding} onSubmit={onSubmit}  defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.invoice , ...defaultCalData,DiscountValue: 0 }} />
         </FormCard>
     )
 }

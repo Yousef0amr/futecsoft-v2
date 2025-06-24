@@ -372,7 +372,10 @@ export const useInvoicesItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: true,
             cellDataType: 'number',
-            valueGetter: (params) => params.data?.Qty ?? 1,
+          valueGetter: (params) => {
+    const qty = params.data?.Qty;
+    return qty != null ? Number(qty) : 1;
+},
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -382,7 +385,7 @@ export const useInvoicesItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: true,
             cellDataType: 'number',
-            valueGetter: (params) => params.data?.UnitPrice ?? 0,
+            valueGetter: (params) => Number(params.data?.UnitPrice ?? 0 ),
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -459,14 +462,20 @@ export const useItemsUnitsColDefs = ({ units = [], loading ,defaultBarcode }) =>
             valueParser: params => Number(params.newValue),
             valueGetter: params => params.data?.Barcode ?? defaultBarcode,
         },
-        {
-            field: 'Factor',
-            headerName: t(AppStrings.factor),
-            flex: 1,
-            headerClass: 'ag-header-center',
-            editable: true,
-            valueParser: params => Number(params.newValue),
-        },
+  {
+    field: 'Factor',
+    headerName: t(AppStrings.factor),
+    flex: 1,
+    headerClass: 'ag-header-center',
+    editable: true,
+    valueGetter: (params) => {
+        if (params.data?.IsSmall === true) {
+            return 1;
+        }
+        return params.data?.Factor ?? 0;
+    },
+    valueParser: (params) => Number(params.newValue),
+},
         {
             field: 'IsSmall',
             headerName: t(AppStrings.isSmall),

@@ -63,7 +63,7 @@ export const invoiceDetailsApi = createApi({
 
 
 export const {
-    useLazyGetCurrentKeyQuery: useGetCurrentInvoiceKeyQuery,
+    useGetCurrentKeyQuery: useGetCurrentInvoiceKeyQuery,
     useGetAllQuery: useGetInvoicesQuery,
     useAddMutation: useAddInvoiceMutation,
     useUpdateMutation: useUpdateInvoiceMutation,

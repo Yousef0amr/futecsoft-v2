@@ -3,10 +3,10 @@ import FormComponent from '../common/FormComponent';
 import UserGroupFormFields from './UserGroupFormFields';
 import useValidators from '../../hooks/useValidators';
 
-const UserGroupForm = ({ onSubmit, isLoading, defaultValuesEdit = {} }) => {
+const UserGroupForm = ({  isSuccess , enableReset ,onSubmit, isLoading, defaultValuesEdit = {} }) => {
     const { userGroupSchema } = useValidators();
     return (
-        <FormComponent isLoading={isLoading} defaultValues={defaultValuesEdit} schema={userGroupSchema} onSubmit={onSubmit}>
+        <FormComponent isSuccess={isSuccess} enableReset={enableReset} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={userGroupSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) => (
                 <UserGroupFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
             )}

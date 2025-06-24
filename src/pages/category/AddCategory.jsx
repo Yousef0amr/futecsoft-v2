@@ -12,15 +12,18 @@ import NavButton from '../../components/common/NavButton';
 
 const AddCategory = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, addEntityToCache } = useCategoryManagement();
+    const { addEntity, isAdding, isAddedSuccess, refetch } = useCategoryManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentCategoryKeyQuery();
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
-            cacheUpdater: addEntityToCache,
+            data: {
+                ...data,
+                Id: currentKey
+            },
+            cacheUpdater: refetch,
             cacheData: data,
             successMessage: AppStrings.category_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -32,7 +35,7 @@ const AddCategory = () => {
                 <NavButton icon={'list'} title={AppStrings.list_categories} path={routes.category.list} />
             </>
         }  >
-            <CategoryForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ Id: currentKey, Saleable: true, IsActive: true }} />
+            <CategoryForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true}  onSubmit={onSubmit} defaultValuesEdit={{ Saleable: true, IsActive: true }} />
         </FormCard>
     )
 }

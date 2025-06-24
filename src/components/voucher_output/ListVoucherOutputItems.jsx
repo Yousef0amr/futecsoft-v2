@@ -142,7 +142,7 @@ const ListVoucherOutputItems = ({ voucher, tableRef, isAdd = false }) => {
                 isDeleting={isDeleting}
                 onDelete={handleOnDeleteClick}
                 ref={tableRef}
-                enableDetele={!isAdd}
+                enableDelete={!isAdd}
                 columns={columns}
                 initialData={voucherProducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />

@@ -4,12 +4,12 @@ import FormComponent from '../common/FormComponent';
 import VoucherOutputFormFields from './VoucherOutputFormFields';
 import ListVoucherOutputItems from './ListVoucherOutputItems';
 
-const VoucherOutputForm = ({ tableRef, onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const VoucherOutputForm = ({  isSuccess , enableReset, tableRef, onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { voucherOutputSchema, voucherOutputUpdatedSchema } = useValidators();
 
 
     return (
-        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={ voucherOutputUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent isSuccess={isSuccess} enableReset={enableReset}  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={ voucherOutputUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <>
 

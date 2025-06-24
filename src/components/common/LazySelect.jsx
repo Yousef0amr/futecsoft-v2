@@ -34,10 +34,11 @@ const MenuList = (props) => {
 const LazySelect = ({ options, selectedOption, setSelectedOption   }) => (
     <div style={{ width: 500, height: 400 }}>
         <Select
-        onKeyDown={ (e) => e.key === 'Enter' && setSelectedOption(selectedOption)}
+        onKeyDown={ (e) =>{
+             e.key === 'Enter' && setSelectedOption(e.target.value)
+            }}
             onChange={(selectedOption) => 
                      {
-                        console.log(selectedOption)
                         setSelectedOption(selectedOption);
                      }
                 }

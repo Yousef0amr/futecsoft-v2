@@ -9,21 +9,24 @@ import useProductManagement from '../../hook/useProductManagement';
 import { defaultProductValues, routes } from '../../config/constants';
 import useEntityOperations from '../../hooks/useEntityOperations';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useNotification from '../../hooks/useNotification';
 
 
 const AddProduct = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useProductManagement()
-    
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useProductManagement()
+     
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const location = useLocation();
-
+        const {error} = useNotification()
         const tableRef = useRef()
         const navigate = useNavigate();
         const CompositeMaterial = location.state?.CompositeMaterial
+
     
       const onSubmit = async (product) => {
         const data = tableRef.current?.getDirtyData();
+
         if(data) {
        const unitsProducts = data.reduce((acc, item,) => {
                 acc.push({
@@ -61,15 +64,16 @@ const AddProduct = () => {
             cacheUpdater: refetch,
             cacheData: data,
             successMessage: AppStrings.product_added_successfully,
-            errorMessage: AppStrings.something_went_wrong
+            errorMessage: AppStrings.something_went_wrong,
+            enableApiMessage: true
                              })
     
                 if (result?.Success) {
-                    navigate(CompositeMaterial ? routes.product.compositeComponents : routes.product.list, { replace: true });
+                    tableRef.current?.resetTable()
                 }
                 return result;
         } else {
-console.log("error add units")
+                error(t(AppStrings.please_add_at_least_one_unit))
         }
         };
     
@@ -84,7 +88,7 @@ console.log("error add units")
                     } />
                 </div>
             }>
-            <ProductForm tableRef={tableRef}  isAdd={true}  isLoading={isAdding} onSubmit={onSubmit} defaultValuesEdit={{ ...defaultProductValues ,StandardItem: !CompositeMaterial, CompositeMaterial}} />
+            <ProductForm tableRef={tableRef}  isAdd={true} enableReset={true} isLoading={isAdding} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ ...defaultProductValues ,StandardItem: !CompositeMaterial, CompositeMaterial}} />
         </FormCard>
     )
 }

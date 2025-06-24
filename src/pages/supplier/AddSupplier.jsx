@@ -13,14 +13,17 @@ import { useGetCurrentSupplierKeyQuery } from '../../features/supplierSlice';
 
 const AddSupplier = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useSupplierManagement();
+    const { addEntity, isAdding, refetch , isAddedSuccess} = useSupplierManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentSupplierKeyQuery();
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
+            data: {
+                ...data,
+                SupplierId: currentKey
+            },
             cacheUpdater: refetch,
             successMessage: AppStrings.supplier_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -32,7 +35,7 @@ const AddSupplier = () => {
                 <NavButton icon={'list'} title={AppStrings.list_suppliers} path={routes.supplier.list} />
             </>
         }  >
-            <SupplierForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ SupplierId: currentKey, IsActive: true }} />
+            <SupplierForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{  IsActive: true ,Mobiles: "-",Phones: "-",Email:"" }} />
         </FormCard>
     )
 }

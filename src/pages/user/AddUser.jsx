@@ -13,14 +13,17 @@ import { useGetCurrentUserKeyQuery } from '../../features/userSlice';
 
 const AddUser = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useUserManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useUserManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentUserKeyQuery();
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
+            data: {
+                ...data,
+                UserNo: currentKey
+            },
             cacheUpdater: refetch,
             successMessage: AppStrings.user_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -32,7 +35,7 @@ const AddUser = () => {
                 <NavButton icon={'list'} title={AppStrings.list_users} path={routes.user.list} />
             </>
         }  >
-            <UserForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ UserNo: currentKey, IsActive: true }} />
+            <UserForm isSuccess={isAddedSuccess} isLoading={isAdding} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{ UserNo: currentKey, IsActive: true }} />
         </FormCard>
     )
 }

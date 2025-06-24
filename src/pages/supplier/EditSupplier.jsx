@@ -9,19 +9,23 @@ import useSupplierManagement from '../../hook/useSupplierManagement'
 import AppStrings from '../../config/appStrings'
 
 const EditSupplier = () => {
-    const loaction = useLocation()
+    const location = useLocation()
     const { t } = useTranslation();
-
+const Branch = typeof location.state.Warehouse === 'string'
+  ? location.state.Warehouse.split(',')
+  : Array.isArray(location.state.Warehouse)
+    ? location.state.Warehouse
+    : [];
     return (
         <EditComponent
             errorMessage={AppStrings.something_went_wrong}
             successMessage={AppStrings.supplier_updated_successfully}
             fetchHook={useSupplierManagement}
             icon={faVcard}
-            title={t(AppStrings.edit_supplier) + '  | ' + loaction.state.SupplierId}
+            title={t(AppStrings.edit_supplier) + '  | ' + location.state.SupplierId}
             path={routes.supplier.list}
             Form={SupplierForm}
-            editData={{ ...loaction.state, Warehouse: loaction.state.Warehouse.split(',') }}
+            editData={{ ...location.state, Warehouse:Branch }}
         />
     )
 }

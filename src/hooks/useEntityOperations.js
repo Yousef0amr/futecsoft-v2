@@ -13,6 +13,7 @@ const useEntityOperations = ({ addEntity = () => { }, updateEntity = () => { }, 
         cacheData,
         successMessage,
         errorMessage,
+        enableApiMessage = false,
         finalCallback = () => { }
     }) => {
         try {
@@ -35,10 +36,10 @@ const useEntityOperations = ({ addEntity = () => { }, updateEntity = () => { }, 
                 success(t(successMessage));
                 return result;
             } else {
-                throw new Error(result?.Success);
+                throw new Error(result);
             }
         } catch (e) {
-            error(t(errorMessage));
+            error(t(enableApiMessage ? e.data.ErrorMessage  : errorMessage));
             return e;
         } finally {
             finalCallback && finalCallback();

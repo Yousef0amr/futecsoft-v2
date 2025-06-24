@@ -35,8 +35,28 @@ const ListProductUnits = ({ tableRef, isAdd, product = [] }) => {
             successMessage: AppStrings.unit_deleted_successfully,
             errorMessage: AppStrings.something_went_wrong,
             finalCallback: handleCancel,
+            
         });
     };
+
+    const handleCellValueChanged = (params) => {
+    if (params.colDef.field === 'IsSmall' && params.newValue === true) {
+        const allRows = [];
+        params.api.forEachNode((node) => {
+            if (node.id !== params.node.id && node.data.IsSmall) {
+                node.setDataValue('IsSmall', false); 
+            }
+            allRows.push(node);
+        });
+
+          params.node.setDataValue('Factor', 1);
+
+        params.api.refreshCells({
+            force: true,
+            columns: ['IsSmall'],
+        });
+    }
+};
 
     const columns = useItemsUnitsColDefs(
         {
@@ -48,8 +68,9 @@ const ListProductUnits = ({ tableRef, isAdd, product = [] }) => {
 
     return (
         <TableWithCRUD
+        getChangedRow={handleCellValueChanged}
             ref={tableRef}
-            enableDetele={!isAdd}
+            enableDelete={!isAdd}
             add_title={AppStrings.add_new_unit}
             isLoading={isLoading}
             isDeleting={isDeleting}

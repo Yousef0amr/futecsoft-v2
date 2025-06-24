@@ -7,7 +7,7 @@ import InvoiceInfoDetlFormFields from './InvoiceInfoDetlFormFields';
 import { Stack } from '@mui/material';
 import { useState } from 'react';
 
-const InvoiceInfoForm = ({ onSubmit, tableRef,  isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const InvoiceInfoForm = ({ isSuccess, enableReset, onSubmit, tableRef,  isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { invoiceSchema, invoiceUpdatedSchema } = useValidators();
     const [enableDiscountPre, setEnableDiscounPret] = useState(false)
 
@@ -18,7 +18,7 @@ const InvoiceInfoForm = ({ onSubmit, tableRef,  isLoading, defaultValuesEdit = {
 
 
     return (
-        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent isSuccess={isSuccess} enableReset={enableReset}  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={isAdd ? invoiceSchema : invoiceUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
                 <Stack gap={2}>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />

@@ -10,16 +10,19 @@ import { useNavigate } from 'react-router-dom';
 
 const FormComponent = ({
     schema,
-    resetForm,
     onSubmit = () => {},
     isLoading,
+    isSuccess,
     defaultValues = {},
     children,
     enableReset = true,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [enableClose, setEnableClose] = React.useState(false);
 
+
+    
     const {
         register,
         handleSubmit,
@@ -33,17 +36,17 @@ const FormComponent = ({
     });
 
     useEffect(() => {
-        if (enableReset) {
-            reset(defaultValues);
-        }
-    }, [defaultValues, enableReset, reset]);
-
-    useEffect(() => {
-        if (resetForm) {
+        if (enableReset && isSuccess) {
             reset();
         }
-    }, [resetForm, reset]);
+    }, [isSuccess, enableReset, reset]);
 
+
+    useEffect (() => {
+        if (isSuccess && enableClose) {
+            navigate(-1);
+        }
+    }, [isSuccess, navigate, enableClose]);
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -53,6 +56,7 @@ const FormComponent = ({
                     <>
                        <Button
                             type="submit"
+
                             sx={{
                                 fontSize: '16px',
                                 width: '50%',
@@ -62,11 +66,11 @@ const FormComponent = ({
                                 backgroundColor: 'var(--primary-color)',
                             }}
                         >
-                            {isLoading ? <SpinnerLoader /> : t(AppStrings.save)}
+                            {(isLoading && !enableClose)  ? <SpinnerLoader /> : t(AppStrings.save)}
                         </Button>
                          <Button
                             type="submit"
-                            onClick={()=> navigate(-1)}
+                            onClick={() => setEnableClose(true)}
                             sx={{
                                 fontSize: '16px',
                                 width: '50%',
@@ -76,7 +80,7 @@ const FormComponent = ({
                                 backgroundColor: 'var(--secondary-color)',
                             }}
                         >
-                            {isLoading ? <SpinnerLoader /> : t(AppStrings.saveAndClose)}
+                            {(isLoading && enableClose) ? <SpinnerLoader /> : t(AppStrings.saveAndClose)}
                         </Button>
                     </>
                      

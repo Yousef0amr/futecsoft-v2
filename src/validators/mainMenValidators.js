@@ -1,7 +1,7 @@
 import AppStrings from "./../config/appStrings";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-import { Source } from "@mui/icons-material";
+
 
 
 const MainMenuValidators = () => {
@@ -9,7 +9,6 @@ const MainMenuValidators = () => {
 
 
     const branchSchemaValidator = {
-        BranchId: yup.string().optional(),
         BranchNameAr: yup.string().required(t(AppStrings.branchNameAr_required)),
         BranchNameEn: yup.string().required(t(AppStrings.branchNameEn_required)),
         TaxId: yup.string().optional(),
@@ -63,7 +62,6 @@ const MainMenuValidators = () => {
 
 
     const categorySchemaValidator = {
-        Id: yup.string().required(t(AppStrings.categoryId_required)).nullable(),
         NameAr: yup.string().required(t(AppStrings.categoryNameAr_required)).nullable(),
         NameEn: yup.string().required(t(AppStrings.categoryNameEn_required)).nullable(),
         Saleable: yup.boolean().optional(),
@@ -72,7 +70,6 @@ const MainMenuValidators = () => {
     }
 
     const unitSchemaValidator = {
-        UnitID: yup.string().required(t(AppStrings.unitId_required)).nullable(),
         Unit_AR: yup.string().required(t(AppStrings.unitNameAr_required)).nullable(),
         Unit_EN: yup.string().required(t(AppStrings.unitNameEn_required)).nullable(),
         Active: yup.boolean().optional(),
@@ -90,7 +87,6 @@ const MainMenuValidators = () => {
     }
 
     const offerSchemaValidator = {
-        OfferId: yup.string().required(t(AppStrings.offerId_required)).nullable(),
         Product: yup.string().required(t(AppStrings.product_required)).nullable(),
         FromDate: yup.string().required(t(AppStrings.from_date_required)).nullable(),
         ToDate: yup.string().required(t(AppStrings.to_date_required)).nullable(),
@@ -109,7 +105,6 @@ const MainMenuValidators = () => {
 
 
     const discountSchemaValidator = {
-        Serial: yup.string().optional(),
         DiscountPercentage: yup.number().integer(t(AppStrings.integer_value_required)).required(t(AppStrings.discount_percentage_required)).nullable(),
         DiscountTypeAR: yup.string().required(t(AppStrings.discount_type_ar_required)).nullable(),
         DiscountTypeEN: yup.string().required(t(AppStrings.discount_type_en_required)).nullable(),
@@ -118,7 +113,6 @@ const MainMenuValidators = () => {
 
 
     const taxSchemaValidator = {
-        TaxId: yup.string().required(t(AppStrings.taxId_required)).nullable(),
         TaxPercentage: yup.string().required(t(AppStrings.taxPercentage_required)).nullable(),
         TaxAr: yup.string().required(t(AppStrings.tax_type_ar_required)).nullable(),
         TaxEn: yup.string().required(t(AppStrings.tax_type_en_required)).nullable(),
@@ -147,9 +141,8 @@ const MainMenuValidators = () => {
 
 
     const supplierSchemaValidator = {
-        SupplierId: yup.number().required(t(AppStrings.supplierId_required)).nullable(),
         SupplierCompany: yup.string().required(t(AppStrings.supplierCompany_required)).nullable(),
-        ContactName: yup.string().nullable(),
+        ContactName: yup.string().required(t(AppStrings.contactName)).nullable(),
         Email: yup.string().optional(),
         Phones: yup.string().optional(),
         Mobiles: yup.string().optional(),
@@ -178,14 +171,12 @@ const MainMenuValidators = () => {
     }
 
     const userGroupSchemaValidator = {
-        GroupId: yup.string().required(t(AppStrings.groupId_required)).nullable(),
         GroupArName: yup.string().required(t(AppStrings.group_name_ar_required)).nullable(),
         GroupEnName: yup.string().required(t(AppStrings.group_name_en_required)).nullable(),
         IsActive: yup.boolean().optional(),
     }
 
     const userSchemaValidator = {
-        UserNo: yup.string().required(t(AppStrings.userId_required)).nullable(),
         UserName: yup.string().required(t(AppStrings.username_required)).nullable(),
         UserPassword: yup.string().required(t(AppStrings.password_required)).nullable(),
         GroupType: yup.string().required(t(AppStrings.user_group_required)).nullable(),
@@ -228,7 +219,6 @@ const MainMenuValidators = () => {
     }
 
     const invoiceSchemaValidator = {
-        DocID: yup.string().required().nullable(),
         InvoiceNo: yup.string().optional(),
         DocDate: yup.string().optional(),
         Warehouse: yup.string().required(t(AppStrings.branch_required)),
@@ -247,7 +237,6 @@ const MainMenuValidators = () => {
     }
 
     const invoiceUpdatedSchemaValidator = {
-        DocID: yup.string().required().nullable(),
         InvoiceNo: yup.string().optional(),
         DocDate: yup.string().optional(),
         Warehouse: yup.string().required(t(AppStrings.branch_required)),
@@ -264,7 +253,6 @@ const MainMenuValidators = () => {
 
 
     const voucherInputSchemaValidator = {
-        DocID: yup.string().required().nullable(),
         Vtype: yup.number().optional(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
@@ -276,14 +264,12 @@ const MainMenuValidators = () => {
     }
 
     const voucherInputUpdatedSchemaValidator = {
-        DocID: yup.string().required().nullable(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
         Warehouse: yup.string().required(t(AppStrings.branch_required)).nullable(),
     }
 
     const voucherOutputSchemaValidator = {
-        DocNo: yup.string().required().nullable(),
         DocType: yup.number().required().nullable(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
@@ -296,7 +282,6 @@ const MainMenuValidators = () => {
     }
 
     const voucherOutputUpdatedSchemaValidator = {
-        DocNo: yup.string().required().nullable(),
         DocType: yup.number().required().nullable(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
@@ -306,7 +291,6 @@ const MainMenuValidators = () => {
 
 
     const voucherTransferSchemaValidator = {
-        DocNo: yup.string().required().nullable(),
         TransferNo: yup.string().nullable(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),
@@ -319,7 +303,6 @@ const MainMenuValidators = () => {
     }
 
     const voucherTransferUpdatedSchemaValidator = {
-        DocNo: yup.string().required().nullable(),
         TransferNo: yup.string().nullable(),
         DocDate: yup.string().optional().nullable(),
         Note: yup.string().optional().nullable(),

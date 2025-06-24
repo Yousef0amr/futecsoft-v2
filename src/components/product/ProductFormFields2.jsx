@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import { productCheckFormFields, productFormFields } from '../../config/formFields'
 import FormFieldsComponent from '../common/FormFieldsComponent'
+import DialogModel from '../common/DialogModel'
+import AppStrings from '../../config/appStrings'
+import InputField from '../common/InputFiled'
+import { useTranslation } from 'react-i18next'
 
 
 const ProductFormFields2 = ({ register, errors, watch, setValue }) => {
@@ -12,6 +16,14 @@ const ProductFormFields2 = ({ register, errors, watch, setValue }) => {
             setValue(field, priceChange);
         });
     }, [priceChange, setValue]);
+
+    const [open , setOpen] = React.useState(watch('ReqQty'));
+    const { t } = useTranslation();
+
+    const handleClose = () => {
+        setValue('ReqQty', false);
+    };
+
     return (
         <Col >
             <Row >
@@ -26,7 +38,16 @@ const ProductFormFields2 = ({ register, errors, watch, setValue }) => {
                 <Col xs={12} md={1} >
                 </Col>
             </Row>
-
+   <DialogModel open={watch('ReqQty')} onClose={handleClose}>
+                   <div className='p-3 d-flex flex-column justify-content-center align-items-center gap-2'>
+                    <p className='fs-5'>{t(AppStrings.required_quantity)}</p>
+                        <input  name="Qty" label="Quantity"  type="number" min={0} />
+                          <div>
+                  <Button variant='danger' onClick={handleClose}>{t(AppStrings.cancel)}</Button>
+              </div>
+                   </div>
+            
+          </DialogModel>
         </Col>
     )
 }

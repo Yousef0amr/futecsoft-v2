@@ -13,15 +13,18 @@ import TaxForm from '../../components/tax/TaxForm'
 
 const AddTax = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, addEntityToCache } = useTaxManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useTaxManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentTaxKeyQuery();
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
-            cacheUpdater: addEntityToCache,
+            data: {
+                ...data,
+                TaxId: currentKey
+            },
+            cacheUpdater: refetch,
             cacheData: data,
             successMessage: AppStrings.tax_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -33,7 +36,7 @@ const AddTax = () => {
                 <NavButton icon={'list'} title={AppStrings.list_taxes} path={routes.tax.list} />
             </>
         }  >
-            <TaxForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ TaxId: currentKey, IsDefault: true, TaxIsActive: true }} />
+            <TaxForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{  IsDefault: true, TaxIsActive: true }} />
         </FormCard>
     )
 }

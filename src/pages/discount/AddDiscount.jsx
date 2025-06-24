@@ -14,14 +14,17 @@ import { useGetCurrentDiscountKeyQuery } from '../../features/discountSlice';
 
 const AddDiscount = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useDiscountManagement();
+    const { addEntity, isAdding, refetch , isAddedSuccess } = useDiscountManagement();
     const { data: currentKey } = useGetCurrentDiscountKeyQuery();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
+            data: {
+                ...data,
+                Serial: currentKey
+            },
             cacheUpdater: refetch,
             successMessage: AppStrings.discount_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -33,7 +36,7 @@ const AddDiscount = () => {
                 <NavButton icon={'list'} title={AppStrings.list_discounts} path={routes.discountType.list} />
             </>
         }  >
-            <DiscountForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ Serial: currentKey, IsActive: true }} />
+            <DiscountForm  enableReset={true} isLoading={isAdding} isSuccess={isAddedSuccess}  onSubmit={onSubmit} defaultValuesEdit={{  IsActive: true }} />
         </FormCard>
     )
 }

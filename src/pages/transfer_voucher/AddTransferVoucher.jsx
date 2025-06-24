@@ -12,17 +12,17 @@ import useEntityOperations from '../../hooks/useEntityOperations';
 
 const AddTransferVoucher = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useVoucherTransferManagement();
+    const { addEntity, isAdding, refetch,isAddedSuccess } = useVoucherTransferManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherTransferKeyQuery();
   const tableRef = useRef()
 
       const onSubmit = async (voucher) => {
         const data = tableRef.current?.getDirtyData();
-          const products = data.reduce((acc, item,) => {
+          const products = data.filter(item => item?.ItemID != null && item?.UnitID != null && item?.Cost != null).reduce((acc, item,) => {
               acc.push({
                   ItemID: item.ItemID,
-                  Qty: item.Qty,
+                  Qty: item.Qty?? 1,
                   Unit: item.UnitID,
                   Cost: item.Cost,
               });
@@ -31,6 +31,7 @@ const AddTransferVoucher = () => {
 
               const invoiceData = {
                   ...voucher,
+                  DocNo: currentKey,
                   Voucher_Transfer_Insert_Details: products
               }
               const result =  await handleEntityOperation({
@@ -40,6 +41,10 @@ const AddTransferVoucher = () => {
             successMessage: AppStrings.voucher_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
+
+               if(result?.Success){
+                tableRef.current?.resetTable()
+              }
               return result;
         
       };
@@ -49,7 +54,10 @@ const AddTransferVoucher = () => {
                 <NavButton icon={'list'} title={AppStrings.list_vouchers_transfer} path={routes.transfer_voucher.list} />
             </>
         }  >
-            <VoucherTransferForm tableRef={tableRef} isAdd={true} isLoading={isAdding}  onSubmit={onSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], ...defaultInvoiceItem }} />
+            <div className='w-100'>
+            <VoucherTransferForm isSuccess={isAddedSuccess} enableReset={true} tableRef={tableRef} isAdd={true} isLoading={isAdding}  onSubmit={onSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], ...defaultInvoiceItem }} />
+
+            </div>
         </FormCard>
     )
 }

@@ -6,25 +6,25 @@ import { useGetAllProductsQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
 
 
-const OfferFormFields = ({ register, errors, setValue, watch }) => {
+const OfferFormFields = ({activeTab , register, errors, setValue, watch }) => {
     const [open, setModalOpen] = React.useState({ open: false, name: '' });
-    const [selectedOption, setSelectedOption] = React.useState({});
-
+     const {  PriceOffer,QtyOffer,ExtraOffer} = activeTab
+    
+     setValue('PriceOffer', PriceOffer);
+     setValue('QtyOffer', QtyOffer);
+     setValue('ExtraOffer', ExtraOffer);
     const handleModalClick = (name) => () => {
         setModalOpen({ open: true, name });
     }
 
     const handleSelectChange = (selectedOption) => {
-        setSelectedOption(selectedOption);
-    }
-    const handleSaveOption = () => {
-        setValue(open.name, selectedOption.value);
+          setValue(open.name, selectedOption.value);
         setModalOpen({
             open: false,
             name: '',
         });
-        setSelectedOption({});
-    };
+    }
+
 
     const handleCloseModal = () => {
         setModalOpen({
@@ -51,12 +51,12 @@ const OfferFormFields = ({ register, errors, setValue, watch }) => {
             <FormFieldsComponent selectedValue={products} handleModalClick={handleModalClick} isLoading={isLoadingProducts} errors={errors} register={register} setValue={setValue} options={{ Branch: branches }} watch={watch} fields={offersFormFields} />
 
             <FormFieldsComponent selectedValue={products} handleModalClick={handleModalClick} errors={errors} register={register} setValue={setValue} watch={watch} fields={
-                (watch('PriceOffer') && priceOfferFormFields) ||
-                (watch('QtyOffer') && qtyOfferFormFields) ||
-                (watch('ExtraOffer') && extraOfferFormFields)
+                (PriceOffer && priceOfferFormFields) ||
+                (QtyOffer && qtyOfferFormFields) ||
+                (ExtraOffer && extraOfferFormFields)
             } />
 
-            <SearchModal open={open.open} handleSelectChange={handleSelectChange} options={products} handleSaveOption={handleSaveOption} selectedOption={selectedOption} handleClose={handleCloseModal} />
+            <SearchModal open={open.open} handleSelectChange={handleSelectChange}  options={products}   handleClose={handleCloseModal} />
 
         </>
     )

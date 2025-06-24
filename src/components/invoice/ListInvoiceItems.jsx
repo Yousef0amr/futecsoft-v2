@@ -7,7 +7,7 @@ import { useInvoicesItemsColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
-import { calculateItemDetails, calculateInvoiceTotals,restructureData } from '../../utils/calcInvoiceDetl'
+import { calculateItemDetails, calculateInvoiceTotals,restructureData,checkRequiredData } from '../../utils/calcInvoiceDetl'
 
 const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
@@ -109,7 +109,6 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
             }
 
         }
-
         setModalOpen({
             open: false,
             params: null,
@@ -144,25 +143,30 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
 
     })
 
-    const handleClickEnter = (grid) => {
-
+    const handleClickEnter = (grid,handleAddRow) => {
         const data = grid.current.props.rowData
 
         if (!data) return
 
         const products = restructureData({ data, invoice })
+
+        console.log(products)
         const val = calculateItemDetails(products, invoice)
         const totals = calculateInvoiceTotals(val)
 
         data.forEach((p, index) => {
             let rowNode = grid.current.api.getRowNode(p.id);
-            rowNode.data.GrandTotal = val[index].GrandTotal
+            rowNode.data.GrandTotal = val[index]?.GrandTotal
             grid.current.api.refreshCells({
                 rowNodes: [rowNode],
                 columns: ['GrandTotal'],
                 force: true,
             });
         })
+
+       if(checkRequiredData({products}) ){ 
+            handleAddRow()
+        }
 
         setValue("Tax", totals.tax)
         setValue("Discount", totals.discount)
@@ -187,6 +191,7 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
             resetTotals={resetTotals}
             ref={tableRef}
             enableDelete={!isAdd}
+            enableAddNewRow={false}
             columns={columns}
             initialData={voucherProducts} />
             <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} handleSaveOption={handleSaveOption} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />

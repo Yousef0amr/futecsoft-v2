@@ -12,16 +12,18 @@ import useEntityOperations from '../../hooks/useEntityOperations';
 
 const AddBranch = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, addEntityToCache } = useBranchManagement();
+    const { addEntity, isAdding, refetch , isAddedSuccess } = useBranchManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentBranchKeyQuery();
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+    await handleEntityOperation({
             operation: 'add',
-            data,
-            cacheUpdater: addEntityToCache,
-            cacheData: data,
+            data: {
+                ...data,
+                BranchId: currentKey
+            },
+            cacheUpdater: () => { refetch() },
             successMessage: AppStrings.branch_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
@@ -33,7 +35,7 @@ const AddBranch = () => {
                 <NavButton icon={'list'} title={AppStrings.list_branches} path={routes.branch.list} />
             </>
         }  >
-            <BranchForm enableReset={true}  resetForm={!isAdding} isLoading={isAdding}  onSubmit={onSubmit} defaultValuesEdit={{ BranchId: currentKey }} />
+            <BranchForm enableReset={true}   isSuccess={isAddedSuccess} isLoading={isAdding}  onSubmit={onSubmit}  />
         </FormCard>
     )
 }

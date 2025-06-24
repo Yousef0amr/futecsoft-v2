@@ -4,12 +4,12 @@ import useValidators from '../../hooks/useValidators'
 import PaymentTypeFormFields from './PaymentTypeFormFields'
 
 
-const PaymentTypeForm = ({ onSubmit, isLoading, defaultValuesEdit = {} }) => {
+const PaymentTypeForm = ({ isSuccess, enableReset, onSubmit, isLoading, defaultValuesEdit = {} }) => {
     const { paymentTypesSchema } = useValidators();
     return (
-        <FormComponent isLoading={isLoading} defaultValues={defaultValuesEdit} schema={paymentTypesSchema} onSubmit={onSubmit}>
+        <FormComponent isSuccess={isSuccess} enableReset={enableReset} isLoading={isLoading} defaultValues={defaultValuesEdit} schema={paymentTypesSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) => (
-                <PaymentTypeFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
+                <PaymentTypeFormFields  register={register} errors={errors} setValue={setValue} watch={watch} />
             )}
         </FormComponent>
     )

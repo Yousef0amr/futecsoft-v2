@@ -1,24 +1,32 @@
-export const  restructureData = ({ data, invoice }) => {
-    return data.reduce((acc, item,) => {
-        acc.push({
-            DocID: invoice.DocID,
-            PriceIncludeTax: invoice.PriceIncludeTax,
-            ItemId: item.ItemID,
-            Qty: item.Qty,
-            Unit: item.UnitID,
-            UnitPrice: item.UnitPrice,
-            Discountable: item.Discountable,
-            Taxable: item.Taxable,
-            TaxPercentage: item.TaxPercentage,
-            Tax: (item.TaxPercentage / 100) * ((item.Qty * item.UnitPrice) - item.Discount),
-            ItemDiscountPercentage: item.DiscountPercentage ?? 0,
-            ItemDiscount: item.Discount ?? 0
-        });
-        return acc;
-    }, []);
-}
+export const restructureData = ({ data, invoice }) => {
+
+    console.log(data)
+    return data
+        .filter(item =>
+            item?.ItemID != null &&
+            item?.UnitID != null &&
+            item?.UnitPrice != null 
+        )
+        .reduce((acc, item) => {
+            acc.push({
+                DocID: invoice.DocID,
+                PriceIncludeTax: invoice.PriceIncludeTax,
+                ItemId: item.ItemID,
+                Qty: item.Qty ?? 1,
+                Unit: item.UnitID,
+                UnitPrice: item.UnitPrice,
+                Discountable: item.Discountable,
+                Taxable: item.Taxable,
+                TaxPercentage: item.TaxPercentage,
+                Tax: (item.TaxPercentage / 100) * ((item.Qty * item.UnitPrice) - item.Discount),
+                ItemDiscountPercentage: item.DiscountPercentage ?? 0,
+                ItemDiscount: item.Discount ?? 0
+            });
+            return acc;
+        }, []);
+};
 export function calculateItemDetails(items, invoice) {
-    return items.map((item) => {
+    return items?.map((item) => {
         let subTotal = 0;
         let taxAmount = 0;
         let taxPercentage = 0;
@@ -104,6 +112,15 @@ export function calculateInvoiceTotals(itemDetails) {
         netTotal: Number(summary.GrandTotal.toFixed(3)),
     };
 }
+
+export const checkRequiredData = ({ products }) => {
+    for (const item of products) {
+        if (!item.Qty || !item.Unit || !item.UnitPrice) {
+            return false;
+        }
+    }
+    return true;
+};
 
 
 

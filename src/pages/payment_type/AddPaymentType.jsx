@@ -15,15 +15,22 @@ import { paymentTypeFormFields } from '../../config/formFields';
 
 const AddPaymentType = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = usePaymentTypeManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = usePaymentTypeManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentPaymentTypeKeyQuery();
-    const [activeTab, setActiveTab] = useState(paymentTypeFormFields[0].name);
+    const [activeTab, setActiveTab] = useState({
+        CashMoney: true,
+        IsCredit: false
+    });
 
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
+            data: {
+                ...data,
+                Ptype: currentKey,
+                ...activeTab
+            },
             cacheUpdater: refetch,
             successMessage: AppStrings.paymentType_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -31,25 +38,21 @@ const AddPaymentType = () => {
     }
 
 
-    const paymentType = activeTab === 'CashMoney' ? {
-        CashMoney: true,
-        IsCredit: false,
-    } : {
-        CashMoney: false,
-        IsCredit: true,
-    };
 
     const handleTabClick = (type) => {
-        setActiveTab(type);
+        setActiveTab({
+            CashMoney: type === 'CashMoney',
+            IsCredit: type === 'IsCredit',
+        });
     };
     return (
         <FormCard icon={faCreditCard} title={t(AppStrings.add_new_paymentType)} optionComponent={
             <>
-                <TabsSelect handleTabClick={handleTabClick} activeTab={activeTab} options={paymentTypeFormFields} />
+                <TabsSelect handleTabClick={handleTabClick} activeTab={activeTab.CashMoney ? "CashMoney" : "IsCredit"} options={paymentTypeFormFields} />
                 <NavButton icon={'list'} title={AppStrings.list_paymentTypes} path={routes.paymentMethod.list} />
             </>
         }  >
-            <PaymentTypeForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ Ptype: currentKey, IsActive: true, Commissions: 0, ...paymentType }} />
+            <PaymentTypeForm isLoading={isAdding} enableReset={true} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{  IsActive: true, Commissions: 0 }} />
         </FormCard>
     )
 }

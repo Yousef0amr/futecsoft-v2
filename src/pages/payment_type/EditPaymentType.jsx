@@ -13,22 +13,20 @@ import { paymentTypeFormFields } from './../../config/formFields'
 const EditPaymentType = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState(loaction.state.CashMoney ? "CashMoney" : "IsCredit");
 
-    const paymentType = activeTab === 'CashMoney' ? {
-        CashMoney: true,
-        IsCredit: false,
-    } : {
-        CashMoney: false,
-        IsCredit: true,
-    };
+   const paymentType = loaction.state.CashMoney  ? { CashMoney: true, IsCredit: false } : { CashMoney: false, IsCredit: true }
+    const [activeTab, setActiveTab] = useState(paymentType);
+
 
     const handleTabClick = (type) => {
-        setActiveTab(type);
+        setActiveTab({
+            CashMoney: type === 'CashMoney',
+            IsCredit: type === 'IsCredit',
+        });
     };
     return (
         <EditComponent
-            optionComponent={<TabsSelect handleTabClick={handleTabClick} activeTab={activeTab} options={paymentTypeFormFields} />}
+            optionComponent={<TabsSelect handleTabClick={handleTabClick} activeTab={ activeTab.CashMoney ? 'CashMoney' : 'IsCredit'} options={paymentTypeFormFields} />}
             errorMessage={AppStrings.something_went_wrong}
             successMessage={AppStrings.paymentType_updated_successfully}
             fetchHook={usePaymentTypeManagement}

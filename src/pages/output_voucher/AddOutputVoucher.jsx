@@ -14,7 +14,7 @@ import { useRef } from 'react';
 
 const AddOutputVoucher = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useVoucherOutputManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useVoucherOutputManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherOutputKeyQuery();
   const tableRef = useRef()
@@ -22,10 +22,10 @@ const AddOutputVoucher = () => {
 
       const onSubmit = async (voucher) => {
       const data = tableRef.current?.getDirtyData();
-          const products = data.reduce((acc, item,) => {
+          const products = data?.filter(item => item?.ItemID != null && item?.UnitID != null).reduce((acc, item,) => {
               acc.push({
                   ItemId: item.ItemID,
-                  Qty: item.Qty,
+                  Qty: item.Qty ?? 1,
                   Unit: item.UnitID,
                   Cost: item.Cost,
                   OutputType: voucher.OutputType
@@ -36,6 +36,7 @@ const AddOutputVoucher = () => {
 
               const invoiceData = {
                   ...voucher,
+                  DocNo: currentKey,
                   voucher_Ouput_Insert_Detail: products
               }
               const result =   await handleEntityOperation({
@@ -45,6 +46,9 @@ const AddOutputVoucher = () => {
             successMessage: AppStrings.voucher_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
+              if(result?.Success){
+                tableRef.current?.resetTable()
+              }
               return result;
           
       };
@@ -55,7 +59,10 @@ const AddOutputVoucher = () => {
                 <NavButton icon={'list'} title={AppStrings.list_vouchers_output} path={routes.output_voucher.list} />
             </>
         }  >
-            <VoucherOutputForm tableRef={tableRef} isAdd={true} isLoading={isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], DocType: defaultVoucherTypes.outputVoucher, ...defaultInvoiceItem }} />
+            <div className='w-100'>
+            <VoucherOutputForm isSuccess={ isAddedSuccess} enableReset={true} tableRef={tableRef} isAdd={true} isLoading={isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocNo: currentKey, DocDate: new Date().toISOString().split("T")[0], DocType: defaultVoucherTypes.outputVoucher, ...defaultInvoiceItem }} />
+
+            </div>
         </FormCard>
     )
 }

@@ -14,14 +14,22 @@ import { offerTypeFormFields } from '../../config/formFields'
 
 const AddOffer = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch } = useOfferManagement();
+    const { addEntity, isAdding, refetch , isAddedSuccess } = useOfferManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentOfferKeyQuery();
-    const [activeTab, setActiveTab] = useState(offerTypeFormFields[0].name);
+    const [activeTab, setActiveTab] = useState({
+        PriceOffer: true,
+        QtyOffer:   false,
+        ExtraOffer: false,
+    });
     const onSubmit = async (data) => {
         handleEntityOperation({
             operation: 'add',
-            data,
+            data: {
+                ...data,
+                OfferId: currentKey,
+
+            },
             cacheUpdater: refetch,
             successMessage: AppStrings.offer_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -29,30 +37,20 @@ const AddOffer = () => {
     }
 
 
-    const offerType = activeTab === 'PriceOffer' ? {
-        PriceOffer: true,
-        QtyOffer: false,
-        ExtraOffer: false
-    } : activeTab === 'QtyOffer' ? {
-        PriceOffer: false,
-        QtyOffer: true,
-        ExtraOffer: false
-    } : {
-        PriceOffer: false,
-        QtyOffer: false,
-        ExtraOffer: true
-    };
-
-
-
     const handleTabClick = (type) => {
-        setActiveTab(type);
+        setActiveTab({
+    PriceOffer: type === 'PriceOffer',
+    QtyOffer:   type === 'QtyOffer',
+    ExtraOffer: type === 'ExtraOffer',
+  });
     };
     return (
         <FormCard icon={faStar} title={t(AppStrings.add_new_offer)} navButton={<NavButton icon={'list'} title={AppStrings.list_offers} path={routes.offer.list} />} optionComponent={
-            <TabsSelect handleTabClick={handleTabClick} activeTab={activeTab} options={offerTypeFormFields} />
+            <TabsSelect handleTabClick={handleTabClick} activeTab={
+                activeTab.PriceOffer ? 'PriceOffer' : activeTab.QtyOffer ? 'QtyOffer' : 'ExtraOffer'
+            } options={offerTypeFormFields} />
         }  >
-            <OfferForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ OfferId: currentKey, IsActive: true, ...offerType }} />
+            <OfferForm activeTab={activeTab} isLoading={isAdding} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ Price: 0,Qty: 0, IsActive: true,...activeTab }} />
         </FormCard>
     )
 }

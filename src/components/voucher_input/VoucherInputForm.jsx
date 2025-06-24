@@ -4,13 +4,13 @@ import FormComponent from '../common/FormComponent';
 import VoucherInputFormFields from './VoucherInputFormFields';
 import ListVoucherInputItem from './ListVoucherInputItem';
 
-const VoucherInputForm = ({ tableRef ,onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
+const VoucherInputForm = ({ isSuccess, enableReset, tableRef ,onSubmit, isLoading, defaultValuesEdit = {}, isAdd = false }) => {
     const { voucherInputSchema, voucherInputUpdatedSchema } = useValidators();
 
     return (
-        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={voucherInputUpdatedSchema} onSubmit={onSubmit}>
+        <FormComponent isSuccess={isSuccess} enableReset={enableReset}  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={voucherInputUpdatedSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) =>
-                <div>
+                <div className='w-100'>
                     <VoucherInputFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
                     <ListVoucherInputItem tableRef={tableRef} isAdd={isAdd}  voucher={
                         {

@@ -8,11 +8,11 @@ import ProductImageField from './ProductImageField';
 import ListProductUnits from './ListProductUnits';
 
 
-const ProductForm = ({ isAdd,tableRef, onSubmit, isLoading,  defaultValuesEdit = {} }) => {
+const ProductForm = ({ isAdd,tableRef, isSuccess,enableReset, onSubmit, isLoading,  defaultValuesEdit = {} }) => {
     const { productSchema } = useValidators();
 
     return (
-        <FormComponent  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={productSchema} onSubmit={onSubmit}>
+        <FormComponent enableReset={enableReset} isSuccess={isSuccess}  isLoading={isLoading} defaultValues={defaultValuesEdit} schema={productSchema} onSubmit={onSubmit}>
             {({ register, errors, setValue, watch }) => (
                 <>
                     <Row style={{ marginTop: '15px' }} lg={1}>

@@ -11,7 +11,7 @@ import NavButton from '../../components/common/NavButton'
 
 const AddCurrency = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, addEntityToCache } = useCurrencyManagment();
+    const { addEntity, isAdding, addEntityToCache ,isAddedSuccess} = useCurrencyManagment();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
 
     const onSubmit = async (data) => {
@@ -30,7 +30,7 @@ const AddCurrency = () => {
                 <NavButton icon={'list'} title={AppStrings.list_currencies} path={routes.currency.list} />
             </>
         }  >
-            <CurrencyForm isLoading={isAdding} resetForm={!isAdding} onSubmit={onSubmit} defaultValuesEdit={{ IsDefault: true }} />
+            <CurrencyForm isLoading={isAdding} enableReset={true} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ IsDefault: true }} />
         </FormCard>
     )
 }

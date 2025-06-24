@@ -5,13 +5,13 @@ import BranchFormFields from './BranchFormFields';
 
 
 
-const BranchForm = ({ onSubmit, isLoading, defaultValuesEdit = {} ,resetForm ,enableReset }) => {
+const BranchForm = ({ onSubmit, isLoading, defaultValuesEdit = {} ,isSuccess ,enableReset }) => {
     const { branchSchema } = useValidators();
 
     return (
-        <FormComponent resetForm={resetForm} isLoading={isLoading} enableReset={enableReset} defaultValues={defaultValuesEdit} schema={branchSchema} onSubmit={onSubmit}>
-            {({ register, errors }) => (
-                <BranchFormFields register={register} errors={errors} />
+        <FormComponent isSuccess={isSuccess}  isLoading={isLoading} enableReset={enableReset} defaultValues={defaultValuesEdit} schema={branchSchema} onSubmit={onSubmit}>
+            {({ watch , register, errors,setValue }) => (
+                <BranchFormFields watch={watch} setValue={setValue} register={register} errors={errors} />
             )}
         </FormComponent>
     );
