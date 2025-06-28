@@ -33,7 +33,7 @@ const EditUserPermission = () => {
             Allow: value
         }));
 
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'update',
             data: { Insert: userPermissions },
             cacheUpdater: refetch,

@@ -17,14 +17,12 @@ const AddCategory = () => {
     const { data: currentKey } = useGetCurrentCategoryKeyQuery();
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data: {
                 ...data,
                 Id: currentKey
             },
-            cacheUpdater: refetch,
-            cacheData: data,
             successMessage: AppStrings.category_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
@@ -35,7 +33,7 @@ const AddCategory = () => {
                 <NavButton icon={'list'} title={AppStrings.list_categories} path={routes.category.list} />
             </>
         }  >
-            <CategoryForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true}  onSubmit={onSubmit} defaultValuesEdit={{ Saleable: true, IsActive: true }} />
+            <CategoryForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{ Saleable: true, IsActive: true }} />
         </FormCard>
     )
 }

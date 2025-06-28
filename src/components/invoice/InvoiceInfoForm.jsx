@@ -23,7 +23,7 @@ const InvoiceInfoForm = ({ isSuccess, enableReset, onSubmit, tableRef,  isLoadin
                 <Stack gap={2}>
                     <InvoiceInfoFormFields register={register} errors={errors} setValue={setValue} watch={watch} />
 
-                    <ListInvoiceItems tableRef={tableRef}  setValue={setValue} isAdd={isAdd} invoice={{
+                    <ListInvoiceItems onSubmit={onSubmit} tableRef={tableRef}  setValue={setValue} isAdd={isAdd} invoice={{
                         ...defaultValuesEdit,
                         Warehouse: watch('Warehouse'),
                         InvoiceNo: watch('InvoiceNo'),

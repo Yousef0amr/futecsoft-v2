@@ -12,6 +12,13 @@ const EditCategory = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
 
+
+    const Branch = typeof loaction.state.BranchId === 'string'
+        ? loaction.state.BranchId.split(',')
+        : Array.isArray(loaction.state.BranchId)
+            ? loaction.state.BranchId
+            : []
+
     return (
         <EditComponent
             errorMessage={AppStrings.something_went_wrong}
@@ -21,7 +28,7 @@ const EditCategory = () => {
             title={t(AppStrings.edit_category) + '  | ' + loaction.state.Id}
             path={routes.category.list}
             Form={CategoryForm}
-            editData={{ ...loaction.state, Warehouse: loaction.state.BranchId.split(',') }}
+            editData={{ ...loaction.state, Warehouse: Branch }}
         />
     )
 }

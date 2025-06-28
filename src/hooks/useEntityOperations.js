@@ -34,13 +34,13 @@ const useEntityOperations = ({ addEntity = () => { }, updateEntity = () => { }, 
             if (result?.Success) {
                 cacheUpdater && cacheUpdater(cacheData);
                 success(t(successMessage));
-                return result;
+                return { Success: true, data: result };
             } else {
                 throw new Error(result);
             }
         } catch (e) {
-            error(t(enableApiMessage ? e.data.ErrorMessage  : errorMessage));
-            return e;
+            error(t(enableApiMessage ? e.data.ErrorMessage : errorMessage));
+            return { Success: false, error: e };
         } finally {
             finalCallback && finalCallback();
         }

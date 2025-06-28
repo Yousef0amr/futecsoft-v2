@@ -27,9 +27,11 @@ export const productFormFields = [
     { name: 'NameAr', label: AppStrings.productNameAr, required: true, type: 'text' },
     { name: 'NameEn', label: AppStrings.productNameEn, required: true, type: 'text' },
      { name: 'MinQty', label: AppStrings.minQty, required: false, type: 'number' },
-      { name: 'ReqQty', label: AppStrings.reqQty, required: false, type: 'check' },
-   
 ];
+
+export const productFormQtyField = 
+      { name: 'ReqQty', label: AppStrings.reqQty, required: false, type: 'check' }
+   
 
 export const productSelectFormFields = [
     { name: 'Warehouse', label: AppStrings.branch, required: true, multiple: true, options: [], type: 'select' },

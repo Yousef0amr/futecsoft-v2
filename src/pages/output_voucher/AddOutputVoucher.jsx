@@ -42,7 +42,6 @@ const AddOutputVoucher = () => {
               const result =   await handleEntityOperation({
             operation: 'add',
             data: invoiceData,
-            cacheUpdater: refetch,
             successMessage: AppStrings.voucher_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })

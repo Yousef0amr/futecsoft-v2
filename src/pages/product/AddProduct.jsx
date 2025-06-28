@@ -15,20 +15,20 @@ import useNotification from '../../hooks/useNotification';
 const AddProduct = () => {
     const { t } = useTranslation();
     const { addEntity, isAdding, refetch, isAddedSuccess } = useProductManagement()
-     
+
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const location = useLocation();
-        const {error} = useNotification()
-        const tableRef = useRef()
-        const navigate = useNavigate();
-        const CompositeMaterial = location.state?.CompositeMaterial
+    const { error } = useNotification()
+    const tableRef = useRef()
+    const navigate = useNavigate();
+    const CompositeMaterial = location.state?.CompositeMaterial
 
-    
-      const onSubmit = async (product) => {
+
+    const onSubmit = async (product) => {
         const data = tableRef.current?.getDirtyData();
 
-        if(data) {
-       const unitsProducts = data.reduce((acc, item,) => {
+        if (data) {
+            const unitsProducts = data.reduce((acc, item,) => {
                 acc.push({
                     ItemID: product.Id,
                     UnitID: item.UnitId,
@@ -43,52 +43,50 @@ const AddProduct = () => {
                 return acc;
             }, []);
 
-                      const newProduct = {
-                    ...product,
-                    Barcode: product.Barcode,
-                    Price: unitsProducts[0].Price1,
-                    Price2: unitsProducts[0].Price2,
-                    Price3: unitsProducts[0].Price3,
-                    Price4: unitsProducts[0].Price4,
-                    UnitID: unitsProducts[0].UnitID,
-                    IsSmall: unitsProducts[0].IsSmall,
-                    Factor: unitsProducts[0].Factor,
-                    Warehouse: product.Warehouse.join(',') || product.Tag,
-                    TaxPercentage: Number(product.TaxPercentage ?? 0) ,
-                    Icon: product.Icon || 'لا يوجد صورة',
-                    Items_Insert_Details: unitsProducts
-                };
-                const result =   await handleEntityOperation({
-            operation: 'add',
-            data: { product: newProduct },
-            cacheUpdater: refetch,
-            cacheData: data,
-            successMessage: AppStrings.product_added_successfully,
-            errorMessage: AppStrings.something_went_wrong,
-            enableApiMessage: true
-                             })
-    
-                if (result?.Success) {
-                    tableRef.current?.resetTable()
-                }
-                return result;
+            const newProduct = {
+                ...product,
+                Barcode: product.Barcode,
+                Price: unitsProducts[0].Price1,
+                Price2: unitsProducts[0].Price2,
+                Price3: unitsProducts[0].Price3,
+                Price4: unitsProducts[0].Price4,
+                UnitID: unitsProducts[0].UnitID,
+                IsSmall: unitsProducts[0].IsSmall,
+                Factor: unitsProducts[0].Factor,
+                Warehouse: product.Warehouse.join(',') || product.Tag,
+                TaxPercentage: Number(product.TaxPercentage ?? 0),
+                Icon: product.Icon || 'لا يوجد صورة',
+                Items_Insert_Details: unitsProducts
+            };
+            const result = await handleEntityOperation({
+                operation: 'add',
+                data: { product: newProduct },
+                successMessage: AppStrings.product_added_successfully,
+                errorMessage: AppStrings.something_went_wrong,
+                enableApiMessage: true
+            })
+
+            if (result?.Success) {
+                tableRef.current?.resetTable()
+            }
+            return result;
         } else {
-                error(t(AppStrings.please_add_at_least_one_unit))
+            error(t(AppStrings.please_add_at_least_one_unit))
         }
-        };
-    
-   
+    };
+
+
 
     return (
         <FormCard icon={faBarcode} title={t(AppStrings.add_new_product)}
             navButton={
                 <div className='d-flex gap-3'>
-                    <NavButton icon={"list"}   title={AppStrings.list_products} path={
+                    <NavButton icon={"list"} title={AppStrings.list_products} path={
                         CompositeMaterial ? routes.product.compositeComponents : routes.product.list
                     } />
                 </div>
             }>
-            <ProductForm tableRef={tableRef}  isAdd={true} enableReset={true} isLoading={isAdding} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ ...defaultProductValues ,StandardItem: !CompositeMaterial, CompositeMaterial}} />
+            <ProductForm tableRef={tableRef} isAdd={true} enableReset={true} isLoading={isAdding} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ ...defaultProductValues, StandardItem: !CompositeMaterial, CompositeMaterial }} />
         </FormCard>
     )
 }

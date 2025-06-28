@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Form, Stack } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -6,11 +6,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import AppStrings from '../../config/appStrings';
 import { Button } from '@mui/material';
 import SpinnerLoader from '../common/Spinner';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const FormComponent = ({
     schema,
-    onSubmit = () => {},
+    onSubmit = async () => { },
     isLoading,
     isSuccess,
     defaultValues = {},
@@ -20,9 +20,8 @@ const FormComponent = ({
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [enableClose, setEnableClose] = React.useState(false);
+    const location = useLocation()
 
-
-    
     const {
         register,
         handleSubmit,
@@ -31,7 +30,7 @@ const FormComponent = ({
         watch,
         formState: { errors },
     } = useForm({
-        defaultValues,
+        values: defaultValues,
         resolver: yupResolver(schema),
     });
 
@@ -41,22 +40,32 @@ const FormComponent = ({
         }
     }, [isSuccess, enableReset, reset]);
 
+    const cleanPath = useCallback((pathname) => pathname.replace(/\/(add|edit)$/, "/list"), []);
 
-    useEffect (() => {
-        if (isSuccess && enableClose) {
-            navigate(-1);
+    const onHandleSubmit = async (data) => {
+        const response = await onSubmit(data);
+        if (response?.Success || isSuccess) {
+            if (enableClose) {
+                return navigate(cleanPath(location.pathname), { replace: true });
+            } else {
+                return navigate(location.pathname, {
+                    replace: true,
+                    state: data
+                });
+            }
+
         }
-    }, [isSuccess, navigate, enableClose]);
+    };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(onHandleSubmit)}>
             {typeof children === 'function' ? children({ register, errors, setValue, watch, defaultValues }) : children}
             <Stack direction="horizontal" gap={3} className=" flex justify-content-center">
                 {
                     <>
-                       <Button
+                        <Button
                             type="submit"
-
+                            onClick={() => setEnableClose(false)}
                             sx={{
                                 fontSize: '16px',
                                 width: '50%',
@@ -66,9 +75,9 @@ const FormComponent = ({
                                 backgroundColor: 'var(--primary-color)',
                             }}
                         >
-                            {(isLoading && !enableClose)  ? <SpinnerLoader /> : t(AppStrings.save)}
+                            {(isLoading && !enableClose) ? <SpinnerLoader /> : t(AppStrings.save)}
                         </Button>
-                         <Button
+                        <Button
                             type="submit"
                             onClick={() => setEnableClose(true)}
                             sx={{
@@ -83,7 +92,7 @@ const FormComponent = ({
                             {(isLoading && enableClose) ? <SpinnerLoader /> : t(AppStrings.saveAndClose)}
                         </Button>
                     </>
-                     
+
                 }
             </Stack>
         </Form>

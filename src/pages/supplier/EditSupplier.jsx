@@ -11,11 +11,11 @@ import AppStrings from '../../config/appStrings'
 const EditSupplier = () => {
     const location = useLocation()
     const { t } = useTranslation();
-const Branch = typeof location.state.Warehouse === 'string'
-  ? location.state.Warehouse.split(',')
-  : Array.isArray(location.state.Warehouse)
-    ? location.state.Warehouse
-    : [];
+    const Branch = typeof location.state.Warehouse === 'string'
+        ? location.state.Warehouse.split(',')
+        : Array.isArray(location.state.Warehouse)
+            ? location.state.Warehouse
+            : [];
     return (
         <EditComponent
             errorMessage={AppStrings.something_went_wrong}
@@ -25,7 +25,7 @@ const Branch = typeof location.state.Warehouse === 'string'
             title={t(AppStrings.edit_supplier) + '  | ' + location.state.SupplierId}
             path={routes.supplier.list}
             Form={SupplierForm}
-            editData={{ ...location.state, Warehouse:Branch }}
+            editData={{ ...location.state, Warehouse: Branch }}
         />
     )
 }

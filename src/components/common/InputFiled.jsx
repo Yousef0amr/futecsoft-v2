@@ -2,7 +2,7 @@ import { Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import AppStrings from '../../config/appStrings';
 
-const InputField = ({ name, label, disabled = false, register, errors, required, type = 'text', min }) => {
+const InputField = ({ onBlur, onChange, name, label, disabled = false, register, errors, required, type = 'text', min }) => {
     const { t } = useTranslation()
     return <Form.Group controlId={name} >
         <Form.Label style={{ color: 'var(--text-color)' }}>
@@ -11,6 +11,8 @@ const InputField = ({ name, label, disabled = false, register, errors, required,
         </Form.Label>
         <Form.Control
             {...register(name)}
+            onBlur={onBlur}
+            onChange={onChange}
             type={type}
             placeholder={`${t(AppStrings.enter)}  ${t(label)}`}
             min={min}

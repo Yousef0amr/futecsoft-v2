@@ -1,47 +1,33 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+
 
 export const useAutoSyncField = ({
-  watch,
   sourceField,
   targetField,
   setValue,
-  delay = 300,
 }) => {
-  const hasUserEditedTarget = useRef(false);
-  const [sourceValue, setSourceValue] = useState("");
-  const [targetValue, setTargetValue] = useState("");
-  const [shouldSync, setShouldSync] = useState(false);
+  const [isTargetBlurred, setIsTargetBlurred] = useState(false);
+  const onChange = (e) => {
+    if (e.target.name === sourceField && !isTargetBlurred) {
+      setValue(targetField, e.target.value);
+      setValue(sourceField, e.target.value);
+    } else if (e.target.name === sourceField) {
+      setValue(sourceField, e.target.value);
+    } else {
+      setValue(e.target.name, e.target.value);
+    }
+  }
 
-//   useEffect(() => {
-//     const subscription = watch((values) => {
-//       const src = values?.[sourceField] ?? "";
-//       const tgt = values?.[targetField] ?? "";
+  const onBlur = (e) => {
+    if (e.target.name === targetField) {
+      setIsTargetBlurred(true)
+    }
+  }
 
-//       setSourceValue(src);
-//       setTargetValue(tgt);
 
-//       // If user types into target → stop syncing
-//       if (!hasUserEditedTarget.current && tgt && tgt !== src) {
-//         hasUserEditedTarget.current = true;
-//         setShouldSync(false);
-//       }
+  return {
+    onChange,
+    onBlur
+  }
 
-//       // If target is empty and source has value → start syncing
-//       if (!hasUserEditedTarget.current && !tgt && src) {
-//         setShouldSync(true);
-//       }
-//     });
-
-//     return () => subscription.unsubscribe?.();
-//   }, [watch, sourceField, targetField]);
-
-//   useEffect(() => {
-//     if (!shouldSync) return;
-
-//     const timer = setTimeout(() => {
-//       setValue(targetField, sourceValue);
-//     }, delay);
-
-//     return () => clearTimeout(timer);
-//   }, [sourceValue, shouldSync, setValue, targetField, delay]);
 };

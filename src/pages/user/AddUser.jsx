@@ -18,13 +18,13 @@ const AddUser = () => {
     const { data: currentKey } = useGetCurrentUserKeyQuery();
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data: {
                 ...data,
                 UserNo: currentKey
             },
-            cacheUpdater: refetch,
+
             successMessage: AppStrings.user_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })

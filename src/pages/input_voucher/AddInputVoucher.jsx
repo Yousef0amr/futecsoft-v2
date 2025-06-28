@@ -18,39 +18,47 @@ const AddInputVoucher = () => {
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentVoucherInputKeyQuery();
 
-   const tableRef = useRef()
-   
-        const onSubmit = async (invoice) => {
-       const data = tableRef.current?.getDirtyData();
-            const products = data.filter(item => item?.ItemID != null && item?.UnitID != null && item?.UnitPrice != null).reduce((acc, item,) => {
-                acc.push({
+    const tableRef = useRef()
+
+    const onSubmit = async (invoice) => {
+        const data = tableRef.current?.getDirtyData();
+
+        const products = data
+            .filter(item => item?.ItemID != null && item?.UnitID != null && item?.UnitPrice != null)
+            .map(item => {
+                const qty = item.Qty ?? 1;
+                const price = item.UnitPrice;
+
+                return {
                     ItemId: item.ItemID,
-                    Qty: item.Qty ?? 1,
+                    Qty: qty,
                     Unit: item.UnitID,
-                    UnitPrice: item.UnitPrice,
-                    ItemDiscountPercentage: item.DiscountPercentage,
-                    ItemDiscount: item.Discount
-                });
-                return acc;
-            }, []);
-                const invoiceData = {
-                    ...invoice, 
-                    DocID: currentKey,
-                    voucher_Input_Insert_Detail: products
-                }
-                const result = await  handleEntityOperation({
+                    UnitPrice: price,
+                    ItemDiscountPercentage: item.DiscountPercentage ?? 0,
+                    ItemDiscount: item.Discount ?? 0,
+                    GrandTotal: qty * price,
+                };
+            });
+
+        const netTotal = products.reduce((sum, item) => sum + item.GrandTotal, 0);
+        const invoiceData = {
+            ...invoice,
+            DocID: currentKey,
+            netTotal,
+            voucher_Input_Insert_Detail: products
+        }
+        const result = await handleEntityOperation({
             operation: 'add',
             data: invoiceData,
-            cacheUpdater: refetch,
             successMessage: AppStrings.voucher_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
 
-                if(result?.Success){
-                   tableRef.current?.resetTable()
-                  }
-                return result;
-        };
+        if (result?.Success) {
+            tableRef.current?.resetTable()
+        }
+        return result;
+    };
 
     return (
         <FormCard icon={faTruck} title={t(AppStrings.add_new_voucher_input)} optionComponent={
@@ -59,7 +67,7 @@ const AddInputVoucher = () => {
             </>
         }  >
             <div className='w-100'>
-            <VoucherInputForm isSuccess={isAddedSuccess} enableReset={true} tableRef={tableRef}  isAdd={true} isLoading={isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.inputVoucher, ...defaultInvoiceItem }} />
+                <VoucherInputForm isSuccess={isAddedSuccess} enableReset={true} tableRef={tableRef} isAdd={true} isLoading={isAdding} onSubmit={onSubmit} defaultValuesEdit={{ DocID: currentKey, DocDate: new Date().toISOString().split("T")[0], Vtype: defaultVoucherTypes.inputVoucher, ...defaultInvoiceItem }} />
 
             </div>
         </FormCard>

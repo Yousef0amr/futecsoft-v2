@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useEntityOperations from '../../hooks/useEntityOperations';
 import AppStrings from '../../config/appStrings';
 import { useVoucherInputItemsColDefs } from '../../config/agGridColConfig';
-import { useVoucherInputItemsManagement } from '../../hook/useVoucherInputManagement';
+import useVoucherInputManagement, { useVoucherInputItemsManagement } from '../../hook/useVoucherInputManagement';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import useUnitManagement from '../../hook/useUnitManagement'
@@ -11,7 +11,8 @@ import SearchModal from '../common/SearchModal'
 
 
 const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
-    const { data: voucherProducts, isLoading, addEntity, updateEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID, skip: isAdd ,queryParams: {          refetchOnMountOrArgChange: true,} });
+    const { data: voucherProducts, isLoading, addEntity, deleteEntityFromCache, deleteEntity, isDeleting, refetch } = useVoucherInputItemsManagement({ id: voucher.DocID, skip: isAdd, queryParams: { refetchOnMountOrArgChange: true, } });
+    const { updateEntity, isAdding, isAddedSuccess } = useVoucherInputManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
 
@@ -53,8 +54,9 @@ const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
         : [];
 
 
-    const handleOnDeleteClick = async (data,handleCancel) => {
-        return await handleEntityOperation({
+    const handleOnDeleteClick = async (data, handleCancel) => {
+
+        const result = await handleEntityOperation({
             operation: "delete",
             data: { ItemId: data.ItemID, DocID: voucher.DocID, Warehouse: voucher.Warehouse, Unit: data.UnitID, LineID: data.LineId },
             cacheUpdater: deleteEntityFromCache(data.ItemID),
@@ -62,6 +64,40 @@ const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
             errorMessage: AppStrings.something_went_wrong,
             finalCallback: handleCancel
         })
+
+        if (result?.Success) {
+            const updatedData = tableRef.current?.getData();
+            const products = updatedData
+                .filter(item => item?.ItemID != null && item?.UnitID != null && item?.UnitPrice != null && item?.ItemID !== data.ItemID)
+                .map(item => {
+                    const qty = item.Qty ?? 1;
+                    const price = item.UnitPrice;
+
+                    return {
+                        ItemId: item.ItemID,
+                        Qty: qty,
+                        Unit: item.UnitID,
+                        UnitPrice: price,
+                        ItemDiscountPercentage: item.DiscountPercentage ?? 0,
+                        ItemDiscount: item.Discount ?? 0,
+                        GrandTotal: qty * price,
+                    };
+                });
+
+            const netTotal = products.reduce((sum, item) => sum + item.GrandTotal, 0);
+            const invoiceData = {
+                ...voucher,
+                netTotal,
+                Vtype: 1,
+                voucher_Input_Update_dtls: products
+            }
+            await handleEntityOperation({
+                operation: "update",
+                data: invoiceData,
+                successMessage: AppStrings.product_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong
+            })
+        }
     };
 
     const handleOpenModal = ({
@@ -75,7 +111,7 @@ const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
         });
     };
 
-       const handleSaveOption = (item) => {
+    const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
 
         if (selectedRowParams) {
@@ -150,7 +186,7 @@ const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
                 columns={columns}
                 initialData={voucherProducts}
             />
-            <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} handleSaveOption={handleSaveOption} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units}  selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
+            <SearchModal open={modalOpen.open} handleSelectChange={handleSelectChange} handleSaveOption={handleSaveOption} options={modalOpen.type === 'product' ? products : filteredUnits ? filteredUnits : units} selectedOption={modalOpen.type === 'product' ? selectedProduct : selectedUnit} handleClose={() => setModalOpen({ open: false, params: null, type: null })} />
 
         </div>
 

@@ -1,6 +1,4 @@
 export const restructureData = ({ data, invoice }) => {
-
-    console.log(data)
     return data
         .filter(item =>
             item?.ItemID != null &&

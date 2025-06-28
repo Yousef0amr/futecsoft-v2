@@ -1,20 +1,10 @@
-import React, { useEffect } from 'react'
+
 import { branchFormFields } from '../../config/formFields'
 import FormFieldsComponent from '../common/FormFieldsComponent'
 
-const BranchFormFields = ({ setValue ,watch ,register, errors }) => {
-
-//  const branchNameAr = watch("BranchNameAr");
-//  const branchNameEn = watch("BranchNameEn");
-
-// useEffect(() => {
-//     if (branchNameAr && !branchNameEn) {
-//         setValue("BranchNameEn", branchNameAr);
-//     }
-// }, [branchNameAr, setValue, branchNameEn]);
-
+const BranchFormFields = ({ setValue, register, errors }) => {
     return (
-        <FormFieldsComponent errors={errors} register={register} fields={branchFormFields} />
+        <FormFieldsComponent setValue={setValue} errors={errors} register={register} fields={branchFormFields} />
     )
 }
 

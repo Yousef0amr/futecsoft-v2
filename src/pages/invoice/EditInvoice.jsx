@@ -9,48 +9,48 @@ import AppStrings from '../../config/appStrings'
 import useInvoiceManagement, { useInvoiceItemsManagement } from '../../hook/useInvoiceManagement'
 import { Stack } from '@mui/material'
 import useEntityOperations from '../../hooks/useEntityOperations'
-import { calculateItemDetails, calculateInvoiceTotals,restructureData } from '../../utils/calcInvoiceDetl'
+import { calculateItemDetails, calculateInvoiceTotals, restructureData } from '../../utils/calcInvoiceDetl'
 
 
 const EditInvoice = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
-        const { updateEntity,  refetch } = useInvoiceManagement();
-          const {   refetch: refetchItems } = useInvoiceItemsManagement({ id: loaction.state?.DocID,queryParams: {          refetchOnMountOrArgChange: true,} });
-        const { handleEntityOperation } = useEntityOperations({ updateEntity });
-    
-          const tableRef = useRef()
-   const [defaultCalData,setDefaultCalData] = useState()
+    const { updateEntity, refetch, isUpdating } = useInvoiceManagement();
+    const { refetch: refetchItems } = useInvoiceItemsManagement({ id: loaction.state?.DocID, queryParams: { refetchOnMountOrArgChange: true, } });
+    const { handleEntityOperation } = useEntityOperations({ updateEntity });
 
-        const onSubmit = async (invoice) => {
-            const data = tableRef.current?.getData();
-            const products = restructureData({ data, invoice })
-    
-            const val = calculateItemDetails(products, invoice)
-            const totals = calculateInvoiceTotals(val)
-    
-    
-              setDefaultCalData({
-                Tax: totals.tax,
-                Discount: totals.discount,
-                GrandTotal: totals.netTotal,
-                SubTotal: totals.subTotal
-            })
-   
-   
-            const invoiceData = {
-                DocID: invoice.DocID, ...totals,
-                Vtype: invoice.Vtype ?? defaultVoucherTypes.invoice,
-                InvoiceNo: invoice.InvoiceNo,
-                DocDate: invoice.DocDate,
-                Supplier: invoice.Supplier,
-                PriceIncludeTax: invoice.PriceIncludeTax,
-                Note: invoice.Note,
-                Warehouse: invoice.Warehouse,
-                PayType: invoice.PayType,
-                purchace_Invoice_Update_dtls: val
-            }
-                const result = await handleEntityOperation({
+    const tableRef = useRef()
+    const [defaultCalData, setDefaultCalData] = useState()
+
+    const onSubmit = async (invoice) => {
+        const data = tableRef.current?.getData();
+        const products = restructureData({ data, invoice })
+
+        const val = calculateItemDetails(products, invoice)
+        const totals = calculateInvoiceTotals(val)
+
+
+        setDefaultCalData({
+            Tax: totals.tax,
+            Discount: totals.discount,
+            GrandTotal: totals.netTotal,
+            SubTotal: totals.subTotal
+        })
+
+
+        const invoiceData = {
+            DocID: invoice.DocID, ...totals,
+            Vtype: invoice.Vtype ?? defaultVoucherTypes.invoice,
+            InvoiceNo: invoice.InvoiceNo,
+            DocDate: invoice.DocDate,
+            Supplier: invoice.Supplier,
+            PriceIncludeTax: invoice.PriceIncludeTax,
+            Note: invoice.Note,
+            Warehouse: invoice.Warehouse,
+            PayType: invoice.PayType,
+            purchace_Invoice_Update_dtls: val
+        }
+        const result = await handleEntityOperation({
             operation: 'update',
             data: invoiceData,
             cacheUpdater: refetch,
@@ -62,8 +62,8 @@ const EditInvoice = () => {
             refetchItems()
         }
 
-                return result;
-        };
+        return result;
+    };
     return (
         <Stack gap={2}>
             <EditComponent
@@ -72,12 +72,13 @@ const EditInvoice = () => {
                 fetchHook={useInvoiceManagement}
                 isRefetch={true}
                 onSubmit={onSubmit}
+                isExternalUpdate={isUpdating}
                 tableRef={tableRef}
                 icon={faFileInvoice}
                 title={t(AppStrings.edit_invoice) + '  | ' + loaction.state.DocID}
                 path={routes.invoice.list}
                 Form={InvoiceInfoForm}
-                editData={{...loaction.state , ...defaultCalData , DiscountValue: 0}}
+                editData={{ ...loaction.state, ...defaultCalData, DiscountValue: 0 }}
             />
         </Stack>
     )

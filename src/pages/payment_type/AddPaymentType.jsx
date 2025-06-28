@@ -24,14 +24,13 @@ const AddPaymentType = () => {
     });
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data: {
                 ...data,
                 Ptype: currentKey,
                 ...activeTab
             },
-            cacheUpdater: refetch,
             successMessage: AppStrings.paymentType_added_successfully,
             errorMessage: AppStrings.something_went_wrong
         })
@@ -52,7 +51,7 @@ const AddPaymentType = () => {
                 <NavButton icon={'list'} title={AppStrings.list_paymentTypes} path={routes.paymentMethod.list} />
             </>
         }  >
-            <PaymentTypeForm isLoading={isAdding} enableReset={true} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{  IsActive: true, Commissions: 0 }} />
+            <PaymentTypeForm isLoading={isAdding} enableReset={true} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ IsActive: true, Commissions: 0 }} />
         </FormCard>
     )
 }

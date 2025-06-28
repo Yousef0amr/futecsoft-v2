@@ -41,7 +41,7 @@ const transformProductData = (data) => {
         Taxable: data.Taxable,
         Icon: data.Icon,
         MinQty: data.MinQty ?? 0,
-        ReqQty: data.ReqQty ?? false,
+        ReqQty: true,
         CompositeMaterial: data.CompositeMaterial ?? false,
         HotGroup: data.HotGroup
     };
@@ -68,7 +68,7 @@ export const productsApi = createApi({
             query: ({ pageNumber, pageSize }) => ({
                 url: `/GetAll?paging.PageNumber=${pageNumber}&paging.PageSize=${pageSize}`,
             }),
-           providesTags: ['products'],
+            providesTags: ['products'],
             keepUnusedDataFor: longCacheTime,
             transformResponse: (response) => {
                 const data = response.Response || response;
@@ -103,6 +103,7 @@ export const productsApi = createApi({
                     const { data } = await queryFulfilled;
                     if (data?.Success) {
                         dispatch(productsApi.util.invalidateTags(['Product_id']));
+                        dispatch(productsApi.util.invalidateTags(['products']));
                     }
                 } catch (error) {
                     return error
@@ -111,12 +112,12 @@ export const productsApi = createApi({
         }),
 
         updateProduct: builder.mutation({
-            query: ({product}) => ({
-                url: `/Update`,
+            query: ({ product }) => ({
+                url: `/UpdateItemList`,
                 method: 'POST',
                 body: product,
             }),
-      invalidatesTags: ['products']
+            invalidatesTags: ['products']
         }),
         getProductUnits: builder.query({
             query: (id) => ({
@@ -131,7 +132,7 @@ export const productsApi = createApi({
                 body: convertToFormData(id),
             }),
         }),
-          getCompositeComponentsById: builder.query({
+        getCompositeComponentsById: builder.query({
             query: (id) => ({
                 url: `/AppGetItemRecipeById?Id=${id}`,
             }),
@@ -157,13 +158,13 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Components']
         }),
-           deleteProductUnit: builder.mutation({
+        deleteProductUnit: builder.mutation({
             query: (component) => ({
                 url: `/DeleteItemUnit`,
                 method: 'POST',
                 body: convertToFormData(component),
             }),
-              invalidatesTags: ['products']
+            invalidatesTags: ['products']
         }),
 
         deleteComponent: builder.mutation({
@@ -186,7 +187,7 @@ export const productsApi = createApi({
                 method: 'POST',
                 body: convertToFormData(product),
             }),
-                  invalidatesTags: ['products']
+            invalidatesTags: ['products']
         }),
         getProductsCost: builder.query({
             query: ({ CatID, Warehouse }) => ({

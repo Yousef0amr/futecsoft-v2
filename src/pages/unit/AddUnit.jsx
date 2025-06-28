@@ -12,18 +12,18 @@ import UnitForm from '../../components/unit/UnitForm';
 
 const AddUnit = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, refetch,isAddedSuccess } = useUnitManagement();
+    const { addEntity, isAdding, refetch, isAddedSuccess } = useUnitManagement();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
     const { data: currentKey } = useGetCurrentUnitKeyQuery();
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data: {
                 ...data,
                 UnitID: currentKey
             },
-            cacheUpdater: refetch,
+
             cacheData: data,
             successMessage: AppStrings.unit_added_successfully,
             errorMessage: AppStrings.something_went_wrong
@@ -35,7 +35,7 @@ const AddUnit = () => {
                 <NavButton icon={'list'} title={AppStrings.list_units} path={routes.unit.list} />
             </>
         }  >
-            <UnitForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{  Active: true }} />
+            <UnitForm isLoading={isAdding} isSuccess={isAddedSuccess} enableReset={true} onSubmit={onSubmit} defaultValuesEdit={{ Active: true }} />
         </FormCard>
     )
 }

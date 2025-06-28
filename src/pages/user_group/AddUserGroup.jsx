@@ -17,13 +17,13 @@ const AddUserGroup = () => {
     const { data: currentKey } = useGetCurrentUserGroupKeyQuery();
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data: {
                 ...data,
                 GroupId: currentKey
             },
-            cacheUpdater: refetch,
+
             cacheData: data,
             successMessage: AppStrings.group_added_successfully,
             errorMessage: AppStrings.something_went_wrong

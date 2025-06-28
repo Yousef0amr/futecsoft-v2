@@ -27,6 +27,7 @@ const createDynamicApi = ({ active = true, updateString,updateJson=false, reduce
                         url: `/GetAll?paging.PageNumber=${pageNumber}&paging.PageSize=${pageSize}`,
                     }),
                     keepUnusedDataFor: longCacheTime,
+                    providesTags:  [`${reducerPath}`] ,
                     transformResponse: (response) => {
                         const data = response.Response || response;
                         if (Array.isArray(data)) {
@@ -42,11 +43,13 @@ const createDynamicApi = ({ active = true, updateString,updateJson=false, reduce
                         method: 'POST',
                         body: isJson ? data : convertToFormData(data),
                     }),
+                   
                     onQueryStarted: async (data, { dispatch, queryFulfilled }) => {
                         try {
                             const { data: responseData } = await queryFulfilled;
                             if (responseData?.Success) {
                                 active && dispatch(api.util.invalidateTags([`${reducerPath}_id`]));
+                               dispatch(api.util.invalidateTags([`${reducerPath}`]));
                             }
                         } catch (error) {
                             return error;
@@ -59,6 +62,17 @@ const createDynamicApi = ({ active = true, updateString,updateJson=false, reduce
                         method: 'POST',
                         body: updateJson ?data :  convertToFormData(data),
                     }),
+                    onQueryStarted: async (data, { dispatch, queryFulfilled }) => {
+                        try {
+                            const { data: responseData } = await queryFulfilled;
+                            if (responseData?.Success) {
+                              dispatch(api.util.invalidateTags([`${reducerPath}`]));
+                            }
+                        } catch (error) {
+                            return error;
+                        }
+                    },
+                
                 }),
                 delete: builder.mutation({
                     query: (id) => ({

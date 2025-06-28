@@ -13,46 +13,45 @@ import useEntityOperations from '../../hooks/useEntityOperations';
 const EditOutputVoucher = () => {
     const loaction = useLocation()
     const { t } = useTranslation();
-    
-    const { updateEntity,  refetch } = useVoucherOutputManagement();
-      const {   refetch: refetchItems } = useVoucherOutputItemsManagement({ id: loaction.state?.DocNo,queryParams: {          refetchOnMountOrArgChange: true,} });
+
+    const { updateEntity, isUpdating } = useVoucherOutputManagement();
+    const { refetch: refetchItems } = useVoucherOutputItemsManagement({ id: loaction.state?.DocNo, queryParams: { refetchOnMountOrArgChange: true, } });
     const { handleEntityOperation } = useEntityOperations({ updateEntity });
 
-      const tableRef = useRef()
-    
-    
-          const onSubmit = async (voucher) => {
-          const data = tableRef.current?.getData();
-              const products = data.reduce((acc, item,) => {
-                  acc.push({
-                      ItemId: item.ItemID,
-                      Qty: item.Qty,
-                      Unit: item.UnitID,
-                      Cost: item.Cost,
-                      OutputType: voucher.OutputType
-                  });
-                  return acc;
-              }, []);
-      
-    
-                  const invoiceData = {
-                      ...voucher,
-                      voucher_Output_Update_dtls: products
-                  }
-                  const result =   await handleEntityOperation({
-                operation: 'update',
-                data: invoiceData,
-                cacheUpdater: refetch,
-                successMessage: AppStrings.voucher_updated_successfully,
-                errorMessage: AppStrings.something_went_wrong
-            })
-              if(result?.Success){
-                    refetchItems()
-                  }
-                  return result;
-              
-          };
-    
+    const tableRef = useRef()
+
+
+    const onSubmit = async (voucher) => {
+        const data = tableRef.current?.getData();
+        const products = data.reduce((acc, item,) => {
+            acc.push({
+                ItemId: item.ItemID,
+                Qty: item.Qty,
+                Unit: item.UnitID,
+                Cost: item.Cost,
+                OutputType: voucher.OutputType
+            });
+            return acc;
+        }, []);
+
+
+        const invoiceData = {
+            ...voucher,
+            voucher_Output_Update_dtls: products
+        }
+        const result = await handleEntityOperation({
+            operation: 'update',
+            data: invoiceData,
+            successMessage: AppStrings.voucher_updated_successfully,
+            errorMessage: AppStrings.something_went_wrong
+        })
+        if (result?.Success) {
+            refetchItems()
+        }
+        return result;
+
+    };
+
     return (
         <Stack gap={2}>
             <EditComponent
@@ -61,6 +60,7 @@ const EditOutputVoucher = () => {
                 fetchHook={useVoucherOutputManagement}
                 isRefetch={true}
                 onSubmit={onSubmit}
+                isExternalUpdate={isUpdating}
                 tableRef={tableRef}
                 icon={faTruck}
                 title={t(AppStrings.edit_voucher_output) + '  | ' + loaction.state.DocNo}

@@ -37,6 +37,7 @@ export const categoriesApi = createApi({
                 url: `/GetAll?paging.PageNumber=${pageNumber}&paging.PageSize=${pageSize}`,
             }),
             keepUnusedDataFor: longCacheTime,
+            providesTags: ['categories'],
             transformResponse: (response) => {
                 const data = response.Response || response;
                 if (Array.isArray(data)) {
@@ -70,6 +71,7 @@ export const categoriesApi = createApi({
                     const { data } = await queryFulfilled;
                     if (data?.Success) {
                         dispatch(categoriesApi.util.invalidateTags(['Category_id']));
+                        dispatch(categoriesApi.util.invalidateTags(['categories']));
                     }
                 } catch (error) {
                     return error
@@ -82,6 +84,16 @@ export const categoriesApi = createApi({
                 method: 'POST',
                 body: convertToFormData(category),
             }),
+            onQueryStarted: async (category, { dispatch, queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data?.Success) {
+                        dispatch(categoriesApi.util.invalidateTags(['categories']));
+                    }
+                } catch (error) {
+                    return error
+                }
+            },
         }),
         deleteCategory: builder.mutation({
             query: (id) => ({

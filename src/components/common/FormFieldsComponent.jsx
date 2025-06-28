@@ -4,17 +4,64 @@ import InputField from './InputFiled'
 import SelectMenu from './SelectMenu'
 import CheckBox from './CheckBox'
 import CustomInput from './CustomInput'
+import { useAutoSyncField } from '../../hooks/useAutoSyncField'
 
 
 const FormFieldsComponent = ({ handleModalClick, isLoading, selectedValue = [], fields, options, triggerEvent = () => { }, register, errors, watch, setValue }) => {
+
+    const useAutoSyncFieldsMap = (setValue) => {
+        return {
+            NameAr: useAutoSyncField({
+                sourceField: "NameAr",
+                targetField: "NameEn",
+                setValue,
+            }),
+            BranchNameAr: useAutoSyncField({
+                sourceField: "BranchNameAr",
+                targetField: "BranchNameEn",
+                setValue,
+            }),
+            DiscountTypeAR: useAutoSyncField({
+                sourceField: "DiscountTypeAR",
+                targetField: "DiscountTypeEN",
+                setValue,
+            }),
+            TaxAr: useAutoSyncField({
+                sourceField: "TaxAr",
+                targetField: "TaxEn",
+                setValue,
+            }),
+            PaymentArDesc: useAutoSyncField({
+                sourceField: "PaymentArDesc",
+                targetField: "PaymentEnDesc",
+                setValue,
+            }),
+            GroupArName: useAutoSyncField({
+                sourceField: "GroupArName",
+                targetField: "GroupEnName",
+                setValue,
+            }),
+            Unit_AR: useAutoSyncField({
+                sourceField: "Unit_AR",
+                targetField: "Unit_EN",
+                setValue,
+            }),
+        };
+    };
+    const syncHandlers = useAutoSyncFieldsMap(setValue);
+
     return (
         <Row style={{ marginTop: '10px' }}>
             {fields.map((field) => {
+                const sync = syncHandlers[field.name];
+
                 return <Col xs={12} md={6} key={field.name} style={{ marginBottom: '10px' }} >
                     {(field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'date' || field.type === 'password') &&
                         <InputField
                             name={field.name}
                             label={field.label}
+                            onChange={sync?.onChange}
+                            onBlur={sync?.onBlur}
                             register={register}
                             disabled={field.disabled}
                             errors={errors}

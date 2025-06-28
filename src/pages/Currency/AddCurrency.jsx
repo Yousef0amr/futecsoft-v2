@@ -11,11 +11,11 @@ import NavButton from '../../components/common/NavButton'
 
 const AddCurrency = () => {
     const { t } = useTranslation();
-    const { addEntity, isAdding, addEntityToCache ,isAddedSuccess} = useCurrencyManagment();
+    const { addEntity, isAdding, addEntityToCache, isAddedSuccess } = useCurrencyManagment();
     const { handleEntityOperation } = useEntityOperations({ addEntity });
 
     const onSubmit = async (data) => {
-        handleEntityOperation({
+        return await handleEntityOperation({
             operation: 'add',
             data,
             cacheUpdater: addEntityToCache,
