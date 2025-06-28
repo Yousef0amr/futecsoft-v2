@@ -9,11 +9,11 @@ export const routes = {
         list: '/products/list',
         add: '/products/add',
         edit: '/products/edit',
-        compositeComponents: '/products/composite-products',
-        compositeProductAdd: '/products/composite-products/add',
-        compositeComponentsAdd: '/products/composite-components/add',
+        compositeComponents: '/composite-products/list',
+        compositeProductAdd: '/composite-products/add',
+        compositeComponentsAdd: '/composite-components/add',
         pricesAndCosts: '/products/prices-and-costs',
-        compositeComponentsEdit: '/products/composite-components/edit'
+        compositeComponentsEdit: '/composite-products/edit'
     },
     branch: {
         list: '/branches/list',
@@ -219,7 +219,7 @@ export const menuList = [
         label: AppStrings.materials_list,
         icon: faBarcode,
         subActions: [
-        
+
             {
                 label: AppStrings.categories,
                 icon: faWindowRestore,
@@ -228,7 +228,7 @@ export const menuList = [
                 href: routes.category.list,
                 subHrefEdit: routes.category.edit
             },
-                {
+            {
                 label: AppStrings.readyProducts,
                 icon: faBarcode,
                 type: 'unExpanded',
@@ -236,12 +236,12 @@ export const menuList = [
                 href: routes.product.list,
                 subHrefEdit: routes.product.edit
             },
-                {
+            {
                 label: AppStrings.compositeComponents,
                 icon: faBarcode,
                 type: 'unExpanded',
                 href: routes.product.compositeComponents,
-                 subHref: routes.product.compositeProductAdd,
+                subHref: routes.product.compositeProductAdd,
                 subHrefEdit: routes.product.compositeComponentsEdit || routes.product.compositeComponentsAdd
             },
             // {
@@ -382,7 +382,7 @@ export const menuList = [
                 href: routes.permission.list,
                 subHrefEdit: routes.permission.edit,
             },
-               {
+            {
                 label: AppStrings.dashboard_permissions,
                 icon: faDashboard,
                 type: 'unExpanded',

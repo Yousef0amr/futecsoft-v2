@@ -6,9 +6,9 @@ import convertToFormData from '../utils/convertToFormData.js';
 
 const transformData = (data) => ({
     ...data,
-   OutputType: data.OutputTypes,
+    OutputType: data.OutputTypes,
     DocDate: data.DocDate
-        ? new Date(data.DocDate).toISOString().split('T')[0]
+        ? new Date(data.DocDate).toLocaleDateString('en-CA')
         : null,
 });
 
@@ -37,14 +37,14 @@ export const voucherOutputDetailsApi = createApi({
                 url: '/GetAllOutputVoucherType',
             }),
             transformResponse: (response) => response.Response || response,
-    
+
         }),
         getAllVoucherOutputDetails: builder.query({
             query: ({ id }) => ({
                 url: `/GetDatailsByDocID?DocID=${id}`,
             }),
             transformResponse: (response) => response.Response || response,
-                   providesTags: ["voucher"]
+            providesTags: ["voucher"]
         }),
         updateVoucherOutputDetails: builder.mutation({
             query: (data) => ({
@@ -58,7 +58,7 @@ export const voucherOutputDetailsApi = createApi({
                 url: '/DeleteVoucherDtl',
                 method: 'POST',
                 body: convertToFormData(data),
-                         invalidatesTags: ["voucher"]
+                invalidatesTags: ["voucher"]
             }),
         }),
     }),

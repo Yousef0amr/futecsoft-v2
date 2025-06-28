@@ -9,7 +9,7 @@ const transformVoucherData = (data) => ({
     ...data,
     DocID: data.DocId,
     DocDate: data.DocDate
-        ? new Date(data.DocDate).toISOString().split('T')[0]
+        ? new Date(data.DocDate).toLocaleDateString('en-CA')
         : null,
 });
 
@@ -38,7 +38,7 @@ export const voucherInputDetailsApi = createApi({
                 url: `/GetDatailsByDocID?DocID=${id}`,
             }),
             transformResponse: (response) => response.Response || response,
-              providesTags: ["voucher"]
+            providesTags: ["voucher"]
         }),
         updateVoucherInputDetails: builder.mutation({
             query: (data) => ({
@@ -53,7 +53,7 @@ export const voucherInputDetailsApi = createApi({
                 method: 'POST',
                 body: convertToFormData(data),
             }),
-                     invalidatesTags: ["voucher"]
+            invalidatesTags: ["voucher"]
         }),
     }),
 })

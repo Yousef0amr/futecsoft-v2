@@ -16,6 +16,7 @@ const FormComponent = ({
     defaultValues = {},
     children,
     enableReset = true,
+    enableUpdateLocation = true
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -34,6 +35,7 @@ const FormComponent = ({
         resolver: yupResolver(schema),
     });
 
+
     useEffect(() => {
         if (enableReset && isSuccess) {
             reset();
@@ -46,8 +48,8 @@ const FormComponent = ({
         const response = await onSubmit(data);
         if (response?.Success || isSuccess) {
             if (enableClose) {
-                return navigate(cleanPath(location.pathname), { replace: true });
-            } else {
+                return navigate(-1, { replace: true });
+            } else if (enableUpdateLocation) {
                 return navigate(location.pathname, {
                     replace: true,
                     state: data

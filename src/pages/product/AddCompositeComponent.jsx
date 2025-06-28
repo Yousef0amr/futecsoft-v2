@@ -16,11 +16,11 @@ import useEntityOperations from '../../hooks/useEntityOperations'
 
 
 const AddCompositeComponent = () => {
-      const location = useLocation()
+    const location = useLocation()
     const [quickFilterText, setQuickFilterText] = useState();
     const { defaultActions, handleCancel, active } = useTableActions({ path: null });
 
-    const { data, isLoading, addEntity, isAdding, deleteEntity, isDeleting, isUpdating, updateEntity } = useCompComponentsManagement(location.state?.Id || location.state?.ItemId)
+    const { data, isLoading, addEntity, isAdding, deleteEntity, isDeleting, isUpdating, updateEntity, isAddedSuccess, isUpdatedSuccess } = useCompComponentsManagement(location.state?.Id || location.state?.ItemId)
     const { t } = useTranslation();
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
 
@@ -35,8 +35,8 @@ const AddCompositeComponent = () => {
 
 
     useEffect(() => {
-           if (isEditing) {
-                   setEditData({
+        if (isEditing) {
+            setEditData({
                 SubItem: active?.data?.SubItem,
                 Father: active?.data?.Father,
                 Unit: active?.data?.Unit,
@@ -53,7 +53,7 @@ const AddCompositeComponent = () => {
 
     const onSubmit = async (data) => {
         const operationType = isEditing ? "update" : "add";
-        await handleEntityOperation({
+        return await handleEntityOperation({
             operation: operationType,
             data,
             cacheUpdater: (updatedData) => {
@@ -90,14 +90,14 @@ const AddCompositeComponent = () => {
     return (
         <FormCard open={active.isOpen} handleDelete={handleOnDeleteClick} handleCancel={handleCancel} isLoading={isDeleting}
             icon={faBarcode} title={t(AppStrings.list_components)} navButton={
-            
-                    <NavButton icon={faArrowRight} title={AppStrings.back} path={routes.product.compositeComponents} />
+
+                <NavButton icon={faArrowRight} title={AppStrings.back} path={routes.product.compositeComponents} />
             } optionComponent={
                 <>
                     <FilterSearch onFilterTextBoxChanged={setQuickFilterText} />
                 </>
             }>
-            <ListCompositeProducts  isEditing={isEditing} handleAddClick={handleAddClick} resetForm={isAdding} actionLoading={isEditing ? isUpdating : isAdding} onSubmit={onSubmit} data={data} isLoading={isLoading} actions={defaultActions} quickFilterText={quickFilterText} defaultValuesEdit={editData} />
+            <ListCompositeProducts isSuccess={isAddedSuccess || isUpdatedSuccess} isEditing={isEditing} handleAddClick={handleAddClick} actionLoading={isEditing ? isUpdating : isAdding} onSubmit={onSubmit} data={data} isLoading={isLoading} actions={defaultActions} quickFilterText={quickFilterText} defaultValuesEdit={editData} />
         </FormCard>
     )
 }

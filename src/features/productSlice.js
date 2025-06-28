@@ -119,6 +119,14 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['products']
         }),
+        updateProductHeader: builder.mutation({
+            query: ({ product }) => ({
+                url: `/Update`,
+                method: 'POST',
+                body: convertToFormData(product),
+            }),
+            invalidatesTags: ['products']
+        }),
         getProductUnits: builder.query({
             query: (id) => ({
                 url: `/AppGetItemUnits?ItemID=${id}`,
@@ -217,6 +225,7 @@ export const {
     useUpdateProductMutation,
     useGetProductUnitsByIdQuery,
     useLazyGetProductsByCategoryQuery,
+    useUpdateProductHeaderMutation,
     useUpdateComponentMutation,
     useDeleteComponentMutation,
     useGetAllProductsQuery,

@@ -51,7 +51,7 @@ const AddPaymentType = () => {
                 <NavButton icon={'list'} title={AppStrings.list_paymentTypes} path={routes.paymentMethod.list} />
             </>
         }  >
-            <PaymentTypeForm isLoading={isAdding} enableReset={true} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ IsActive: true, Commissions: 0 }} />
+            <PaymentTypeForm isLoading={isAdding} enableReset={true} isSuccess={isAddedSuccess} onSubmit={onSubmit} defaultValuesEdit={{ Ptype: currentKey, IsActive: true, Commissions: 0 }} />
         </FormCard>
     )
 }

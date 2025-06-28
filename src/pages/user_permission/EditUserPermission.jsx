@@ -16,8 +16,10 @@ const EditUserPermission = () => {
     const { t } = useTranslation()
     const location = useLocation();
     const { data: permissionsData, isLoading, refetch } = useGetAllUserPermissionsQuery({ id: location.state.UserNo })
-    const [addUserPermission, { isLoading: isAdding }] = useAddUserPermissionMutation()
+    const [addUserPermission, { isLoading: isAdding, isSuccess }] = useAddUserPermissionMutation()
     const { handleEntityOperation } = useEntityOperations({ updateEntity: addUserPermission })
+
+    console.log(location.state)
 
     const permissions = !isLoading && permissionsData ?
         permissionsData.reduce((acc, item) => {
@@ -26,6 +28,8 @@ const EditUserPermission = () => {
         }, {}) : permissionsDefaultValues;
 
     const onSubmit = async (data) => {
+
+        console.log(data)
         const userPermissions = Object.entries(data).map(([key, value]) => ({
             UserNo: location.state.UserNo,
             WarehouseId: Number(location.state.Branch),
@@ -44,7 +48,7 @@ const EditUserPermission = () => {
 
     return (
         <FormCard icon={faUserLock} title={t(AppStrings.edit_user_permission) + " | " + location.state.UserNo} navButton={<NavButton icon={faArrowRight} title={AppStrings.back} path={routes.permission.list} />}>
-            <UserPermissionForm isLoading={isAdding} defaultValuesEdit={permissions} onSubmit={onSubmit} />
+            <UserPermissionForm isSuccess={isSuccess} isLoading={isAdding} defaultValuesEdit={permissions} onSubmit={onSubmit} />
         </FormCard>
     )
 }

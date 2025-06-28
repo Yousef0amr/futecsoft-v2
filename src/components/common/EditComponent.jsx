@@ -11,6 +11,7 @@ const EditComponent = ({ icon, title, optionalTab, successMessage, onSubmit, tab
     const [updatedData, setUpdatedData] = React.useState(editData)
 
     const onSubmitDefault = async (data) => {
+        console.log(data)
         const response = await handleEntityOperation({
             operation: 'update',
             data,

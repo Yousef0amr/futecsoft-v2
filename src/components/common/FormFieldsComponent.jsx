@@ -9,46 +9,15 @@ import { useAutoSyncField } from '../../hooks/useAutoSyncField'
 
 const FormFieldsComponent = ({ handleModalClick, isLoading, selectedValue = [], fields, options, triggerEvent = () => { }, register, errors, watch, setValue }) => {
 
-    const useAutoSyncFieldsMap = (setValue) => {
-        return {
-            NameAr: useAutoSyncField({
-                sourceField: "NameAr",
-                targetField: "NameEn",
-                setValue,
-            }),
-            BranchNameAr: useAutoSyncField({
-                sourceField: "BranchNameAr",
-                targetField: "BranchNameEn",
-                setValue,
-            }),
-            DiscountTypeAR: useAutoSyncField({
-                sourceField: "DiscountTypeAR",
-                targetField: "DiscountTypeEN",
-                setValue,
-            }),
-            TaxAr: useAutoSyncField({
-                sourceField: "TaxAr",
-                targetField: "TaxEn",
-                setValue,
-            }),
-            PaymentArDesc: useAutoSyncField({
-                sourceField: "PaymentArDesc",
-                targetField: "PaymentEnDesc",
-                setValue,
-            }),
-            GroupArName: useAutoSyncField({
-                sourceField: "GroupArName",
-                targetField: "GroupEnName",
-                setValue,
-            }),
-            Unit_AR: useAutoSyncField({
-                sourceField: "Unit_AR",
-                targetField: "Unit_EN",
-                setValue,
-            }),
-        };
+    const syncHandlers = {
+        NameAr: useAutoSyncField({ sourceField: "NameAr", targetField: "NameEn", setValue }),
+        BranchNameAr: useAutoSyncField({ sourceField: "BranchNameAr", targetField: "BranchNameEn", setValue }),
+        DiscountTypeAr: useAutoSyncField({ sourceField: "DiscountTypeAr", targetField: "DiscountTypeEn", setValue }),
+        TaxAr: useAutoSyncField({ sourceField: "TaxAr", targetField: "TaxEn", setValue }),
+        PaymentArDesc: useAutoSyncField({ sourceField: "PaymentArDesc", targetField: "PaymentEnDesc", setValue }),
+        GroupArName: useAutoSyncField({ sourceField: "GroupArName", targetField: "GroupEnName", setValue }),
+        Unit_AR: useAutoSyncField({ sourceField: "Unit_AR", targetField: "Unit_EN", setValue }),
     };
-    const syncHandlers = useAutoSyncFieldsMap(setValue);
 
     return (
         <Row style={{ marginTop: '10px' }}>

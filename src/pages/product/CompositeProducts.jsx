@@ -12,6 +12,7 @@ import useProductManagement from '../../hook/useProductManagement';
 import useTableActions from '../../hooks/useTableActions';
 import useEntityOperations from '../../hooks/useEntityOperations';
 import { useEffect, useState } from 'react';
+import { useUpdateProductHeaderMutation } from '../../features/productSlice';
 
 
 
@@ -23,7 +24,8 @@ const CompositeProducts = () => {
     const { t } = useTranslation();
 
     const { data, isLoading, deleteEntity, isDeleting, updateEntity, updateEntityInCache, deleteEntityFromCache } = useProductManagement();
-    const { handleEntityOperation } = useEntityOperations({ deleteEntity, updateEntity });
+    const [updateProductHeader] = useUpdateProductHeaderMutation()
+    const { handleEntityOperation } = useEntityOperations({ deleteEntity, updateEntity: updateProductHeader });
     const [quickFilterText, setQuickFilterText] = useState();
     const [loading, setLoading] = useState(true);
     const { defaultActions, active, handleCancel } = useTableActions({
@@ -39,8 +41,7 @@ const CompositeProducts = () => {
     const handleActiveChange = (data) => {
         handleEntityOperation({
             operation: 'update',
-            data: { ...data, Father: data.CatID, Warehouse: data.Tag, Icon: "..." },
-            cacheUpdater: updateEntityInCache(data),
+            data: { product: { ...data, Father: data.CatID, Warehouse: data.Tag, Icon: "..." } },
             successMessage: AppStrings.product_updated_successfully,
             errorMessage: AppStrings.something_went_wrong
         })

@@ -146,8 +146,8 @@ const MainMenuValidators = () => {
 
       const discountSchemaValidator = {
             DiscountPercentage: yup.number().integer(t(AppStrings.integer_value_required)).required(t(AppStrings.discount_percentage_required)).nullable(),
-            DiscountTypeAR: yup.string().required(t(AppStrings.discount_type_ar_required)).nullable(),
-            DiscountTypeEN: yup.string().required(t(AppStrings.discount_type_en_required)).nullable(),
+            DiscountTypeAr: yup.string().required(t(AppStrings.discount_type_ar_required)).nullable(),
+            DiscountTypeEn: yup.string().required(t(AppStrings.discount_type_en_required)).nullable(),
             IsActive: yup.boolean().nullable()
                   .notRequired(),
       }
@@ -175,7 +175,7 @@ const MainMenuValidators = () => {
             Ptype: yup.string().required(t(AppStrings.paymentTypeId_required)).nullable(),
             PaymentArDesc: yup.string().required(t(AppStrings.paymentTypeAr_required)).nullable(),
             PaymentEnDesc: yup.string().required(t(AppStrings.paymentTypeEn_required)).nullable(),
-            CompanyID: yup.string().transform((value) => value ?? "").default("").nullable(),
+            // CompanyID: yup.string().transform((value) => value ?? "").default("").nullable(),
             Commissions: yup.number().required(t(AppStrings.commissions_required)).nullable(),
             IsActive: yup.boolean().nullable()
                   .notRequired(),

@@ -5,10 +5,10 @@ const transformOfferData = (data) => ({
     ...data,
     Product: data.ProductId,
     FromDate: data.FromDate
-        ? new Date(data.FromDate).toISOString().split('T')[0]
+        ? new Date(data.FromDate).toLocaleDateString('en-CA')
         : null,
     ToDate: data.ToDate
-        ? new Date(data.ToDate).toISOString().split('T')[0]
+        ? new Date(data.ToDate).toLocaleDateString('en-CA')
         : null,
 
 });

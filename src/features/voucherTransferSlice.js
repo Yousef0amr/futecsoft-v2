@@ -8,7 +8,7 @@ import convertToFormData from '../utils/convertToFormData.js';
 const transformData = (data) => ({
     ...data,
     DocDate: data.DocDate
-        ? new Date(data.DocDate).toISOString().split('T')[0]
+        ? new Date(data.DocDate).toLocaleDateString('en-CA')
         : null,
 });
 
@@ -18,7 +18,7 @@ export const voucherTransferApi = createDynamicApi({
     baseEndpoint: BASEURL + VOUCHER_TRANSFER,
     active: true,
     isJson: true,
-        updateJson: true,
+    updateJson: true,
     transformData
 });
 

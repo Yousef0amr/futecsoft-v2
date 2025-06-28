@@ -95,6 +95,16 @@ export const useProductColDefs = ({ handleActiveChange = () => { } }) => {
             }
         },
         {
+            field: "HotGroup",
+            headerName: t(AppStrings.hotGroup),
+            filter: 'agTextColumnFilter',
+            cellRenderer: ActiveEditor,
+            cellRendererParams: {
+                handleActiveChange: handleActiveChange,
+                field: "HotGroup"
+            }
+        },
+        {
             field: "Taxable",
             headerName: t(AppStrings.taxable),
             filter: 'agTextColumnFilter',
@@ -192,7 +202,7 @@ export const useDiscountsColDefs = () => {
 
     return useMemo(() => [
         { field: "Serial", headerName: t(AppStrings.discountId), filter: 'agTextColumnFilter' },
-        { field: i18n.language === 'en' ? "DiscountTypeEN" : "DiscountTypeAR", headerName: t(i18n.language === 'en' ? AppStrings.discount_type_en : AppStrings.discount_type_ar), filter: 'agTextColumnFilter' },
+        { field: i18n.language === 'en' ? "DiscountTypeEn" : "DiscountTypeAr", headerName: t(i18n.language === 'en' ? AppStrings.discount_type_en : AppStrings.discount_type_ar), filter: 'agTextColumnFilter' },
         { field: "DiscountPercentage", headerName: t(AppStrings.discount_percentage), filter: 'agTextColumnFilter' },
         { field: "IsActive", headerName: t(AppStrings.isActive), filter: 'agTextColumnFilter', cellRenderer: (params) => params.value ? t(AppStrings.yes) : t(AppStrings.no) },
     ], [t, i18n]);
@@ -372,10 +382,10 @@ export const useInvoicesItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: true,
             cellDataType: 'number',
-          valueGetter: (params) => {
-    const qty = params.data?.Qty;
-    return qty != null ? Number(qty) : 1;
-},
+            valueGetter: (params) => {
+                const qty = params.data?.Qty;
+                return qty != null ? Number(qty) : 1;
+            },
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -385,7 +395,7 @@ export const useInvoicesItemsColDefs = ({
             headerClass: 'ag-header-center',
             editable: true,
             cellDataType: 'number',
-            valueGetter: (params) => Number(params.data?.UnitPrice ?? 0 ),
+            valueGetter: (params) => Number(params.data?.UnitPrice ?? 0),
             valueParser: (params) => Number(params.newValue),
         },
         {
@@ -430,29 +440,29 @@ export const useInvoicesItemsColDefs = ({
 };
 
 
-export const useItemsUnitsColDefs = ({ units = [], loading ,defaultBarcode }) => {
+export const useItemsUnitsColDefs = ({ units = [], loading, defaultBarcode }) => {
     const { t } = useTranslation();
 
     return useMemo(() => [
-      {
-    field: 'UnitId',
-    headerName: t(AppStrings.unit),
-    flex: 1,
-    headerClass: 'ag-header-center',
-    editable: true,
-    cellEditor: 'agSelectCellEditor',
-    cellEditorParams: (params) => {
-        return loading
-            ? { values: [] } // or ['Loading...'] to show dummy
-            : { values: units.map(u => Number(u.value)) };
-    },
-    valueParser: params => Number(params.newValue),
-    valueFormatter: (params) => {
-        if (loading) return t(AppStrings.loading); // Show "loading..." in cell
-        const selected = units.find(u => u.value === params.value);
-        return selected ? selected.label : '';
-    },
-},
+        {
+            field: 'UnitId',
+            headerName: t(AppStrings.unit),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: (params) => {
+                return loading
+                    ? { values: [] } // or ['Loading...'] to show dummy
+                    : { values: units.map(u => Number(u.value)) };
+            },
+            valueParser: params => Number(params.newValue),
+            valueFormatter: (params) => {
+                if (loading) return t(AppStrings.loading); // Show "loading..." in cell
+                const selected = units.find(u => u.value === params.value);
+                return selected ? selected.label : '';
+            },
+        },
         {
             field: 'Barcode',
             headerName: t(AppStrings.barcode),
@@ -462,20 +472,20 @@ export const useItemsUnitsColDefs = ({ units = [], loading ,defaultBarcode }) =>
             valueParser: params => Number(params.newValue),
             valueGetter: params => params.data?.Barcode ?? defaultBarcode,
         },
-  {
-    field: 'Factor',
-    headerName: t(AppStrings.factor),
-    flex: 1,
-    headerClass: 'ag-header-center',
-    editable: true,
-    valueGetter: (params) => {
-        if (params.data?.IsSmall === true) {
-            return 1;
-        }
-        return params.data?.Factor ?? 0;
-    },
-    valueParser: (params) => Number(params.newValue),
-},
+        {
+            field: 'Factor',
+            headerName: t(AppStrings.factor),
+            flex: 1,
+            headerClass: 'ag-header-center',
+            editable: true,
+            valueGetter: (params) => {
+                if (params.data?.IsSmall === true) {
+                    return 1;
+                }
+                return params.data?.Factor ?? 0;
+            },
+            valueParser: (params) => Number(params.newValue),
+        },
         {
             field: 'IsSmall',
             headerName: t(AppStrings.isSmall),
@@ -577,7 +587,7 @@ export const useItemsUnitsColDefs = ({ units = [], loading ,defaultBarcode }) =>
                 return true;
             }
         }
-    ], [t, units, defaultBarcode , loading]);
+    ], [t, units, defaultBarcode, loading]);
 };
 
 
@@ -915,7 +925,7 @@ export const useVoucherTransferColDefs = () => {
     const { t } = useTranslation();
 
     return useMemo(() => [
-        { field: "DocNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
+        { field: "TransferNo", headerName: t(AppStrings.voucherId), filter: 'agTextColumnFilter' },
         { field: "CreatedByDesc", headerName: t(AppStrings.createdBy), filter: 'agTextColumnFilter' },
         { field: "DocDate", headerName: t(AppStrings.date), filter: 'agTextColumnFilter' },
         { field: "Note", headerName: t(AppStrings.note), filter: 'agTextColumnFilter' },
@@ -1112,58 +1122,58 @@ export const useReturnByItemColDefs = () => {
 }
 
 
-export const useDashboardPermissionColDefs = ({ handleActiveChange = () => { }}) => {
+export const useDashboardPermissionColDefs = ({ handleActiveChange = () => { } }) => {
     const { t } = useTranslation();
 
     return useMemo(() => [
-      {
+        {
             field: "page",
             headerName: "",
             filter: 'agTextColumnFilter',
-   flex: 1,
+            flex: 1,
             cellRenderer: (params) => {
                 return <span className="">{params.value}</span>;
             }
         },
-      {
+        {
             field: "view",
             headerName: t(AppStrings.view),
             filter: 'agTextColumnFilter',
             cellRenderer: ActiveEditor,
-               flex: 1,
+            flex: 1,
             cellRendererParams: {
                 handleActiveChange: handleActiveChange,
                 field: "view"
             }
         },
-      {
+        {
             field: "edit",
             headerName: t(AppStrings.edit),
             filter: 'agTextColumnFilter',
-               flex: 1,
+            flex: 1,
             cellRenderer: ActiveEditor,
             cellRendererParams: {
                 handleActiveChange: handleActiveChange,
                 field: "edit"
             }
         },
-      {
+        {
             field: "create",
             headerName: t(AppStrings.create),
             filter: 'agTextColumnFilter',
             cellRenderer: ActiveEditor,
-               flex: 1,
+            flex: 1,
             cellRendererParams: {
                 handleActiveChange: handleActiveChange,
                 field: "create"
             }
         },
-      {
+        {
             field: "delete",
             headerName: t(AppStrings.delete),
             filter: 'agTextColumnFilter',
             cellRenderer: ActiveEditor,
-               flex: 1,
+            flex: 1,
             cellRendererParams: {
                 handleActiveChange: handleActiveChange,
                 field: "delete"

@@ -7,7 +7,7 @@ import AppStrings from '../../config/appStrings';
 import { useTranslation } from 'react-i18next';
 
 
-const CompositeComponents = ({ handleAddClick, isEditing, data, isLoading, enableReset, onSubmit, resetForm, actionLoading, actions, quickFilterText, defaultValuesEdit }) => {
+const CompositeComponents = ({ handleAddClick, isEditing, data, isLoading, enableReset, onSubmit, isSuccess, actionLoading, actions, quickFilterText, defaultValuesEdit }) => {
     const componentsColDefs = useComponentsColDefs();
     const AgGridTableMemo = React.memo(AgGridTable);
     const { t } = useTranslation();
@@ -26,9 +26,9 @@ const CompositeComponents = ({ handleAddClick, isEditing, data, isLoading, enabl
                 <Col >
                     {
                         isEditing ?
-                            <Button  style={{ border: ' none', backgroundColor: 'rgba(255, 0, 0, 0.651)', fontSize: '14px', fontWeight: '600', marginTop: '20px', marginBottom: '20px' }} onClick={handleAddClick}>{t(AppStrings.cancel_editing)}</Button> : null
+                            <Button style={{ border: ' none', backgroundColor: 'rgba(255, 0, 0, 0.651)', fontSize: '14px', fontWeight: '600', marginTop: '20px', marginBottom: '20px' }} onClick={handleAddClick}>{t(AppStrings.cancel_editing)}</Button> : null
                     }
-                    <CompositeComponentsForm enableReset={enableReset} isLoadingKey={actionLoading} onSubmit={onSubmit} resetForm={resetForm} defaultValuesEdit={defaultValuesEdit} />
+                    <CompositeComponentsForm isSuccess={isSuccess} enableReset={enableReset} isLoadingKey={actionLoading} onSubmit={onSubmit} defaultValuesEdit={defaultValuesEdit} />
                 </Col>
             </Row>
         </div>

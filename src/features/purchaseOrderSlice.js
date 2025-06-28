@@ -9,7 +9,7 @@ const transformPurchaseOrderData = (data) => ({
     ...data,
     DocID: data.DocId,
     LineDate: data.LineDate
-        ? new Date(data.LineDate).toISOString().split('T')[0]
+        ? new Date(data.LineDate).toLocaleDateString('en-CA')
         : null,
 });
 

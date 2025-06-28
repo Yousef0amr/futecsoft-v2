@@ -7,12 +7,12 @@ import { useInvoicesItemsColDefs } from '../../config/agGridColConfig';
 import TableWithCRUD from '../common/TableWithCRUD'
 import { useGetAllProductsQuery, useGetProductUnitsByIdQuery } from '../../features/productSlice'
 import SearchModal from '../common/SearchModal'
-import { calculateItemDetails, calculateInvoiceTotals,restructureData,checkRequiredData } from '../../utils/calcInvoiceDetl'
+import { calculateItemDetails, calculateInvoiceTotals, restructureData, checkRequiredData } from '../../utils/calcInvoiceDetl'
 import { defaultVoucherTypes } from '../../config/constants'
 
 const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) => {
     const { data: allUnits, isLoading: isLoadingUnits } = useUnitManagement();
-      const { updateEntity, isAdding, isAddedSuccess } = useInvoiceManagement();
+    const { updateEntity, isAdding, isAddedSuccess } = useInvoiceManagement();
 
     const [modalOpen, setModalOpen] = useState({
         open: false,
@@ -39,7 +39,7 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
 
     const { data: voucherProducts, isLoading, addEntity, deleteEntity, isDeleting, refetch }
         = useInvoiceItemsManagement(
-            { id: invoice.DocID, skip: isAdd ,queryParams: {} }
+            { id: invoice.DocID, skip: isAdd, queryParams: {} }
         );
 
     const { handleEntityOperation } = useEntityOperations({ addEntity, updateEntity, deleteEntity });
@@ -59,6 +59,7 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
 
 
     const handleOnDeleteClick = async (data, handleCancel) => {
+        console.log(data)
         const res = await handleEntityOperation({
             operation: "delete",
             data: { ItemId: data.ItemID, DocID: invoice.DocID, Warehouse: invoice.Warehouse, Unit: data.UnitID, LineID: data.LineId },
@@ -69,42 +70,42 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
         })
 
         if (res?.Success) {
-                  const tableData = tableRef.current?.getData();
-                        const products = restructureData({ data: tableData, invoice })
-                        const val = calculateItemDetails(products?.filter((item) => item.ItemId !== data.ItemID), invoice)
-                        const totals = calculateInvoiceTotals(val)
+            const tableData = tableRef.current?.getData();
+            const products = restructureData({ data: tableData?.filter((item) => item.id !== data.id), invoice })
+            const val = calculateItemDetails(products, invoice)
+            const totals = calculateInvoiceTotals(val)
 
-                        const invoiceData = {
-                            DocID: invoice.DocID, ...totals,
-                            Vtype: invoice.Vtype ?? defaultVoucherTypes.invoice,
-                            InvoiceNo: invoice.InvoiceNo,
-                            DocDate: invoice.DocDate,
-                            Supplier: invoice.Supplier,
-                            PriceIncludeTax: invoice.PriceIncludeTax,
-                            Note: invoice.Note,
-                            Warehouse: invoice.Warehouse,
-                            PayType: invoice.PayType,
-                            purchace_Invoice_Update_dtls: val
-                        }
+            const invoiceData = {
+                DocID: invoice.DocID, ...totals,
+                Vtype: invoice.Vtype ?? defaultVoucherTypes.invoice,
+                InvoiceNo: invoice.InvoiceNo,
+                DocDate: invoice.DocDate,
+                Supplier: invoice.Supplier,
+                PriceIncludeTax: invoice.PriceIncludeTax,
+                Note: invoice.Note,
+                Warehouse: invoice.Warehouse,
+                PayType: invoice.PayType,
+                purchace_Invoice_Update_dtls: val
+            }
 
-                             setValue("Tax", totals.tax)
-        setValue("Discount", totals.discount)
-        setValue("GrandTotal", totals.netTotal)
-        setValue("SubTotal", totals.subTotal)
+            setValue("Tax", totals.tax)
+            setValue("Discount", totals.discount)
+            setValue("GrandTotal", totals.netTotal)
+            setValue("SubTotal", totals.subTotal)
 
 
-                 const result = await handleEntityOperation({
-                    operation: 'update',
-                    data: invoiceData,
-                    cacheUpdater: refetch,
-                    successMessage: AppStrings.invoice_updated_successfully,
-                    errorMessage: AppStrings.something_went_wrong
-                })
-        
-                if (result?.Success) {
-                   refetch()
-                }
-               
+            const result = await handleEntityOperation({
+                operation: 'update',
+                data: invoiceData,
+                cacheUpdater: refetch,
+                successMessage: AppStrings.invoice_updated_successfully,
+                errorMessage: AppStrings.something_went_wrong
+            })
+
+            if (result?.Success) {
+                refetch()
+            }
+
         }
     };
 
@@ -120,7 +121,7 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
         });
     };
 
-       const handleSaveOption = (item) => {
+    const handleSaveOption = (item) => {
         const selectedRowParams = modalOpen.params;
 
         if (selectedRowParams) {
@@ -167,7 +168,7 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
         }
     };
 
- 
+
 
     const columns = useInvoicesItemsColDefs({
         selectProduct: (value) => {
@@ -209,13 +210,13 @@ const ListInvoiceItems = ({ tableRef, invoice = [], isAdd = false, setValue }) =
         setValue("SubTotal", totals.subTotal)
     }
 
-     const resetTotals = () => {
-            setValue("GrandTotal", 0)
-            setValue("SubTotal", 0)
-            setValue("Tax", 0)
-            setValue("Discount", 0)
-        }
-    
+    const resetTotals = () => {
+        setValue("GrandTotal", 0)
+        setValue("SubTotal", 0)
+        setValue("Tax", 0)
+        setValue("Discount", 0)
+    }
+
     return (
         <div> <TableWithCRUD
             add_title={AppStrings.add_new_product}

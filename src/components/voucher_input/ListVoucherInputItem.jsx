@@ -68,7 +68,7 @@ const ListVoucherInputItem = ({ voucher, tableRef, isAdd = false }) => {
         if (result?.Success) {
             const updatedData = tableRef.current?.getData();
             const products = updatedData
-                .filter(item => item?.ItemID != null && item?.UnitID != null && item?.UnitPrice != null && item?.ItemID !== data.ItemID)
+                .filter(item => item?.ItemID != null && item?.UnitID != null && item?.UnitPrice != null && item?.id !== data.id)
                 .map(item => {
                     const qty = item.Qty ?? 1;
                     const price = item.UnitPrice;

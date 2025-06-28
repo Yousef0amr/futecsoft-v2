@@ -106,7 +106,7 @@ const pagesList = [
     { path: routes.product.list, component: <ListProduct /> },
     { path: routes.product.add, component: <AddProduct /> },
     { path: routes.product.edit, component: <EditProduct /> },
-    { path: routes.product.pricesAndCosts, component: <PricesAndCosts /> },
+    // { path: routes.product.pricesAndCosts, component: <PricesAndCosts /> },
     // Categories
     { path: routes.category.list, component: <ListCategory /> },
     { path: routes.category.add, component: <AddCategory /> },
@@ -139,14 +139,14 @@ const pagesList = [
     { path: routes.supplier.list, component: <ListSupplier /> },
     { path: routes.supplier.add, component: <AddSupplier /> },
     { path: routes.supplier.edit, component: <EditSupplier /> },
-    // Delivery Companies
-    { path: routes.delivery_company.list, component: <ListDeliveryCompany /> },
-    { path: routes.delivery_company.add, component: <AddDeliveryCompany /> },
-    { path: routes.delivery_company.edit, component: <EditDeliveryCompany /> },
-    // Delivery Discounts
-    { path: routes.delivery_discount.list, component: <ListDeliveryDiscount /> },
-    { path: routes.delivery_discount.add, component: <AddDeliveryDiscount /> },
-    { path: routes.delivery_discount.edit, component: <EditDeliveryDiscount /> },
+    // // Delivery Companies
+    // { path: routes.delivery_company.list, component: <ListDeliveryCompany /> },
+    // { path: routes.delivery_company.add, component: <AddDeliveryCompany /> },
+    // { path: routes.delivery_company.edit, component: <EditDeliveryCompany /> },
+    // // Delivery Discounts
+    // { path: routes.delivery_discount.list, component: <ListDeliveryDiscount /> },
+    // { path: routes.delivery_discount.add, component: <AddDeliveryDiscount /> },
+    // { path: routes.delivery_discount.edit, component: <EditDeliveryDiscount /> },
     //User Groups
     { path: routes.user_group.list, component: <ListUserGroup /> },
     { path: routes.user_group.add, component: <AddUserGroup /> },
@@ -192,11 +192,11 @@ const pagesList = [
     { path: routes.recieving_voucher.add, component: <AddVoucherRecieving /> },
     { path: routes.recieving_voucher.edit, component: <EditVoucherRecieving /> },
 
-    {path : routes.product.compositeComponents, component : <CompositeProducts />},
-    {path : routes.product.compositeComponentsAdd, component : <AddCompositeComponent />},
+    { path: routes.product.compositeComponents, component: <CompositeProducts /> },
+    { path: routes.product.compositeComponentsAdd, component: <AddCompositeComponent /> },
 
-    {path : routes.product.compositeProductAdd, component : <AddProduct />},
-    {path : routes.product.compositeComponentsEdit, component : <EditProduct />},
+    { path: routes.product.compositeProductAdd, component: <AddProduct /> },
+    { path: routes.product.compositeComponentsEdit, component: <EditProduct /> },
 ];
 
 const reportsPages = [

@@ -9,7 +9,7 @@ const transformData = (data) => ({
     ...data,
     DocID: data.DocId,
     DocDate: data.DocDate
-        ? new Date(data.DocDate).toISOString().split('T')[0]
+        ? new Date(data.DocDate).toLocaleDateString('en-CA')
         : null,
 });
 
@@ -40,7 +40,7 @@ export const invoiceDetailsApi = createApi({
                 };
             },
             transformResponse: (response) => response.Response || response,
-              providesTags: ["voucher"]
+            providesTags: ["voucher"]
         }),
         updateInvoiceDetails: builder.mutation({
             query: (data) => ({
@@ -54,7 +54,7 @@ export const invoiceDetailsApi = createApi({
                 url: '/DeleteVoucherDtl',
                 method: 'POST',
                 body: convertToFormData(data),
-                
+
             }),
             invalidatesTags: ["voucher"]
         }),

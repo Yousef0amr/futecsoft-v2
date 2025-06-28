@@ -8,7 +8,7 @@ import convertToFormData from '../utils/convertToFormData.js';
 const transformVoucherRecievingData = (data) => ({
     ...data,
     DocDate: data.DocDate
-        ? new Date(data.DocDate).toISOString().split('T')[0]
+        ? new Date(data.DocDate).toLocaleDateString('en-CA')
         : null,
 });
 

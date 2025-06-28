@@ -14,21 +14,21 @@ const FilterStatisForm = React.lazy(() => import('../components/home/FilterStati
 const Home = () => {
     const [filter, setFilter] = useState(null);
     const { data: itemsData } = useGetBestSellerItemsQuery(
-        { from_date: "2023-01-01", to_date: new Date().toISOString().split('T')[0], warehouse: filter },
+        { from_date: "2023-01-01", to_date: new Date().toLocaleDateString('en-CA'), warehouse: filter },
         {
             skip: !filter
         }
 
     );
-    const { data: categoryData } = useGetBestSellerCategoryQuery({ from_date: "2023-01-01", to_date: new Date().toISOString().split('T')[0], warehouse: filter },
+    const { data: categoryData } = useGetBestSellerCategoryQuery({ from_date: "2023-01-01", to_date: new Date().toLocaleDateString('en-CA'), warehouse: filter },
         {
             skip: !filter
         });
-    const { data: salesDayData } = useGetSalesByDaysQuery({ from_date: "2023-01-01", to_date: new Date().toISOString().split('T')[0], warehouse: filter },
+    const { data: salesDayData } = useGetSalesByDaysQuery({ from_date: "2023-01-01", to_date: new Date().toLocaleDateString('en-CA'), warehouse: filter },
         {
             skip: !filter
         });
-    const { data: salesHourData } = useGetSalesByHoursQuery({ from_date: "2023-01-01", to_date: new Date().toISOString().split('T')[0], warehouse: filter },
+    const { data: salesHourData } = useGetSalesByHoursQuery({ from_date: "2023-01-01", to_date: new Date().toLocaleDateString('en-CA'), warehouse: filter },
         {
             skip: !filter
         });

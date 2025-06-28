@@ -10,30 +10,28 @@ const ComponentFormFields = ({ register, errors, watch, setValue }) => {
     const { data: unitsData, isLoading: isLoadingUnits } = useGetProductUnitsByIdQuery(watch('SubItem'));
     const { data: productsData, isLoading: isLoadingProducts } = useGetProductsByCategoryQuery(watch('Father'));
 
-    const categories = useMemo(()=> !isLoadingCategories
+    const categories = useMemo(() => !isLoadingCategories
         ? categoriesData?.map((item) => ({ value: item.Id, label: item.NameAr }))
         : []
         , [isLoadingCategories, categoriesData]);
 
-    const units = useMemo(()=> !isLoadingUnits
+    const units = useMemo(() => !isLoadingUnits
         ? unitsData?.map((item) => ({ value: item.UnitId, label: item.UnitAr }))
         : []
         , [isLoadingUnits, unitsData]);
 
 
-    const products = useMemo(()=>!isLoadingProducts
+    const products = useMemo(() => !isLoadingProducts
         ? productsData?.map((item) => ({ value: item.ProID, label: item.Pro_AR_Name }))
         : [],
-        [isLoadingProducts, productsData]); 
+        [isLoadingProducts, productsData]);
 
     return (
         <Col>
-            <FormFieldsComponent errors={errors} register={register} watch={watch} setValue={setValue} fields={productComponentsFormFields} />
+            <FormFieldsComponent errors={errors} register={register} watch={watch} options={{ Father: categories, SubItem: products }} setValue={setValue} fields={productComponentsFormFields} />
             <FormFieldsComponent errors={errors} register={register} watch={watch} setValue={setValue} options={
                 {
-                    Father: categories,
                     Unit: units,
-                    SubItem: products
                 }
             } fields={productComponentsFormFields1} />
         </Col>
